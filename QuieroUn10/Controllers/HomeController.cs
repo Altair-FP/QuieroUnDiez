@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using QuieroUn10.Models;
@@ -20,6 +21,7 @@ namespace QuieroUn10.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.userId = HttpContext.Session.GetString("user");
             return View();
         }
 
