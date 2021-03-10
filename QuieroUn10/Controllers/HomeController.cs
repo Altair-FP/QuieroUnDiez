@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using QuieroUn10.Data;
+using QuieroUn10.Dtos;
 using QuieroUn10.Models;
 
 namespace QuieroUn10.Controllers
@@ -13,10 +15,11 @@ namespace QuieroUn10.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly QuieroUnDiezDBContex _context;
+        public HomeController(ILogger<HomeController> logger, QuieroUnDiezDBContex context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -24,7 +27,6 @@ namespace QuieroUn10.Controllers
             ViewBag.userId = HttpContext.Session.GetString("user");
             return View();
         }
-
         public IActionResult Privacy()
         {
             return View();

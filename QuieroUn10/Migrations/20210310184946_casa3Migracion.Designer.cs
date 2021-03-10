@@ -10,8 +10,8 @@ using QuieroUn10.Data;
 namespace QuieroUn10.Migrations
 {
     [DbContext(typeof(QuieroUnDiezDBContex))]
-    [Migration("20210310120743_clase1Migracion")]
-    partial class clase1Migracion
+    [Migration("20210310184946_casa3Migracion")]
+    partial class casa3Migracion
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,55 +20,6 @@ namespace QuieroUn10.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.3")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("QuieroUn10.Dtos.StudentDto", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("Birthdate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ConfirmPassword")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(70)
-                        .HasColumnType("nvarchar(70)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Phone")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("nvarchar(40)");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("StudentDto");
-                });
 
             modelBuilder.Entity("QuieroUn10.Models.Admin", b =>
                 {
@@ -98,7 +49,122 @@ namespace QuieroUn10.Migrations
 
                     b.HasIndex("UserAccountId");
 
-                    b.ToTable("Admin");
+                    b.ToTable("ADMIN");
+                });
+
+            modelBuilder.Entity("QuieroUn10.Models.Course", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("COURSE");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Name = "1º"
+                        },
+                        new
+                        {
+                            ID = 2,
+                            Name = "2º"
+                        },
+                        new
+                        {
+                            ID = 3,
+                            Name = "3º"
+                        },
+                        new
+                        {
+                            ID = 4,
+                            Name = "4º"
+                        },
+                        new
+                        {
+                            ID = 5,
+                            Name = "5º"
+                        },
+                        new
+                        {
+                            ID = 6,
+                            Name = "6º"
+                        });
+                });
+
+            modelBuilder.Entity("QuieroUn10.Models.CourseHasSubject", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("StudiesHasCourseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SubjectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("StudiesHasCourseId");
+
+                    b.HasIndex("SubjectId");
+
+                    b.ToTable("COURSE_HAS_SUBJECT");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            StudiesHasCourseId = 5,
+                            SubjectId = 1
+                        },
+                        new
+                        {
+                            ID = 2,
+                            StudiesHasCourseId = 5,
+                            SubjectId = 2
+                        },
+                        new
+                        {
+                            ID = 3,
+                            StudiesHasCourseId = 5,
+                            SubjectId = 3
+                        },
+                        new
+                        {
+                            ID = 4,
+                            StudiesHasCourseId = 5,
+                            SubjectId = 4
+                        },
+                        new
+                        {
+                            ID = 5,
+                            StudiesHasCourseId = 5,
+                            SubjectId = 5
+                        },
+                        new
+                        {
+                            ID = 6,
+                            StudiesHasCourseId = 5,
+                            SubjectId = 6
+                        },
+                        new
+                        {
+                            ID = 7,
+                            StudiesHasCourseId = 5,
+                            SubjectId = 7
+                        });
                 });
 
             modelBuilder.Entity("QuieroUn10.Models.Menu", b =>
@@ -125,7 +191,7 @@ namespace QuieroUn10.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Menu");
+                    b.ToTable("MENU");
                 });
 
             modelBuilder.Entity("QuieroUn10.Models.Role", b =>
@@ -222,6 +288,168 @@ namespace QuieroUn10.Migrations
                     b.ToTable("STUDENT");
                 });
 
+            modelBuilder.Entity("QuieroUn10.Models.Studies", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("STUDIES");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Name = "ESO"
+                        },
+                        new
+                        {
+                            ID = 2,
+                            Name = "BACHILLERATO"
+                        },
+                        new
+                        {
+                            ID = 3,
+                            Name = "FP"
+                        },
+                        new
+                        {
+                            ID = 4,
+                            Name = "UNIVERSIDAD"
+                        });
+                });
+
+            modelBuilder.Entity("QuieroUn10.Models.StudiesHasCourse", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StudiesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("StudiesId");
+
+                    b.ToTable("STUDIES_HAS_COURSE");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            CourseId = 1,
+                            Nombre = "1º ESO",
+                            StudiesId = 1
+                        },
+                        new
+                        {
+                            ID = 2,
+                            CourseId = 2,
+                            Nombre = "2º ESO",
+                            StudiesId = 1
+                        },
+                        new
+                        {
+                            ID = 3,
+                            CourseId = 3,
+                            Nombre = "3º ESO",
+                            StudiesId = 1
+                        },
+                        new
+                        {
+                            ID = 4,
+                            CourseId = 4,
+                            Nombre = "4º ESO",
+                            StudiesId = 1
+                        },
+                        new
+                        {
+                            ID = 5,
+                            CourseId = 1,
+                            Nombre = "1º Bachillerato",
+                            StudiesId = 2
+                        },
+                        new
+                        {
+                            ID = 6,
+                            CourseId = 2,
+                            Nombre = "2º Bachillerato",
+                            StudiesId = 2
+                        });
+                });
+
+            modelBuilder.Entity("QuieroUn10.Models.Subject", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("SUBJECT");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Name = "Matemáticas I"
+                        },
+                        new
+                        {
+                            ID = 2,
+                            Name = "Lengua Castellana y Literatura I"
+                        },
+                        new
+                        {
+                            ID = 3,
+                            Name = "Primera Lengua Extranjera I"
+                        },
+                        new
+                        {
+                            ID = 4,
+                            Name = "Filosofía"
+                        },
+                        new
+                        {
+                            ID = 5,
+                            Name = "Biología y Geología"
+                        },
+                        new
+                        {
+                            ID = 6,
+                            Name = "Dibujo Técnico I"
+                        },
+                        new
+                        {
+                            ID = 7,
+                            Name = "Física y Química"
+                        });
+                });
+
             modelBuilder.Entity("QuieroUn10.Models.UserAccount", b =>
                 {
                     b.Property<int>("ID")
@@ -294,6 +522,25 @@ namespace QuieroUn10.Migrations
                     b.Navigation("UserAccount");
                 });
 
+            modelBuilder.Entity("QuieroUn10.Models.CourseHasSubject", b =>
+                {
+                    b.HasOne("QuieroUn10.Models.StudiesHasCourse", "StudiesHasCourse")
+                        .WithMany("CourseHasSubjects")
+                        .HasForeignKey("StudiesHasCourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("QuieroUn10.Models.Subject", "Subject")
+                        .WithMany("CourseHasSubjects")
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("StudiesHasCourse");
+
+                    b.Navigation("Subject");
+                });
+
             modelBuilder.Entity("QuieroUn10.Models.RoleHasMenu", b =>
                 {
                     b.HasOne("QuieroUn10.Models.Menu", "Menu")
@@ -324,6 +571,25 @@ namespace QuieroUn10.Migrations
                     b.Navigation("UserAccount");
                 });
 
+            modelBuilder.Entity("QuieroUn10.Models.StudiesHasCourse", b =>
+                {
+                    b.HasOne("QuieroUn10.Models.Course", "Course")
+                        .WithMany("StudiesHasCourses")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("QuieroUn10.Models.Studies", "Studies")
+                        .WithMany("StudiesHasCourses")
+                        .HasForeignKey("StudiesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Studies");
+                });
+
             modelBuilder.Entity("QuieroUn10.Models.UserAccount", b =>
                 {
                     b.HasOne("QuieroUn10.Models.Role", "Role")
@@ -346,6 +612,11 @@ namespace QuieroUn10.Migrations
                     b.Navigation("UserAccount");
                 });
 
+            modelBuilder.Entity("QuieroUn10.Models.Course", b =>
+                {
+                    b.Navigation("StudiesHasCourses");
+                });
+
             modelBuilder.Entity("QuieroUn10.Models.Menu", b =>
                 {
                     b.Navigation("RoleHasMenus");
@@ -356,6 +627,21 @@ namespace QuieroUn10.Migrations
                     b.Navigation("RoleHasMenus");
 
                     b.Navigation("UserAccounts");
+                });
+
+            modelBuilder.Entity("QuieroUn10.Models.Studies", b =>
+                {
+                    b.Navigation("StudiesHasCourses");
+                });
+
+            modelBuilder.Entity("QuieroUn10.Models.StudiesHasCourse", b =>
+                {
+                    b.Navigation("CourseHasSubjects");
+                });
+
+            modelBuilder.Entity("QuieroUn10.Models.Subject", b =>
+                {
+                    b.Navigation("CourseHasSubjects");
                 });
 
             modelBuilder.Entity("QuieroUn10.Models.UserAccount", b =>

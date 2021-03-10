@@ -26,8 +26,16 @@ namespace QuieroUn10.Data
         public DbSet<RoleHasMenu> RoleHasMenu { get; set; }
         public DbSet<UserToken> UserToken { get; set; }
         public DbSet<Role> Role { get; set; }
-        public DbSet<StudentDto> StudentDto { get; set; }
         public DbSet<Student> Student { get; set; }
+        public DbSet<Admin> Admin { get; set; }
+        public DbSet<Menu> Menu { get; set; }
+
+        public DbSet<Study> Studies { get; set; }
+
+        public DbSet<Subject> Subject { get; set; }
+
+        public DbSet<StudyHasSubject> StudyHasSubject { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -44,6 +52,11 @@ namespace QuieroUn10.Data
             modelBuilder.Entity<UserToken>().ToTable("USER_TOKEN");
             modelBuilder.Entity<Role>().ToTable("ROLE");
             modelBuilder.Entity<Student>().ToTable("STUDENT");
+            modelBuilder.Entity<Admin>().ToTable("ADMIN");
+            modelBuilder.Entity<Menu>().ToTable("MENU");
+            modelBuilder.Entity<Study>().ToTable("STUDY");
+            modelBuilder.Entity<Subject>().ToTable("SUBJECT");
+            modelBuilder.Entity<StudyHasSubject>().ToTable("STUDY_HAS_SUBJECT");
 
 
             modelBuilder.Entity<Student>()
@@ -69,12 +82,21 @@ namespace QuieroUn10.Data
                {
                    ID = 2,
                    Name = "STUDENT"
-               }
-              
+               }       
            );
+            
 
+            
+
+
+           
+           
 
         }
+
+
+
+       
 
 
     }

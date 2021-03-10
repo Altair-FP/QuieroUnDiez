@@ -19,55 +19,6 @@ namespace QuieroUn10.Migrations
                 .HasAnnotation("ProductVersion", "5.0.3")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("QuieroUn10.Dtos.StudentDto", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("Birthdate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ConfirmPassword")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(70)
-                        .HasColumnType("nvarchar(70)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Phone")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("nvarchar(40)");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("StudentDto");
-                });
-
             modelBuilder.Entity("QuieroUn10.Models.Admin", b =>
                 {
                     b.Property<int>("ID")
@@ -96,7 +47,7 @@ namespace QuieroUn10.Migrations
 
                     b.HasIndex("UserAccountId");
 
-                    b.ToTable("Admin");
+                    b.ToTable("ADMIN");
                 });
 
             modelBuilder.Entity("QuieroUn10.Models.Menu", b =>
@@ -123,7 +74,7 @@ namespace QuieroUn10.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Menu");
+                    b.ToTable("MENU");
                 });
 
             modelBuilder.Entity("QuieroUn10.Models.Role", b =>
@@ -218,6 +169,77 @@ namespace QuieroUn10.Migrations
                     b.HasIndex("UserAccountId");
 
                     b.ToTable("STUDENT");
+                });
+
+            modelBuilder.Entity("QuieroUn10.Models.Study", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Acronym")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("STUDY");
+                });
+
+            modelBuilder.Entity("QuieroUn10.Models.StudyHasSubject", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("StudyId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SubjectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("StudyId");
+
+                    b.HasIndex("SubjectId");
+
+                    b.ToTable("STUDY_HAS_SUBJECT");
+                });
+
+            modelBuilder.Entity("QuieroUn10.Models.Subject", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Acronym")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Course")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("SUBJECT");
                 });
 
             modelBuilder.Entity("QuieroUn10.Models.UserAccount", b =>
@@ -320,6 +342,25 @@ namespace QuieroUn10.Migrations
                         .IsRequired();
 
                     b.Navigation("UserAccount");
+                });
+
+            modelBuilder.Entity("QuieroUn10.Models.StudyHasSubject", b =>
+                {
+                    b.HasOne("QuieroUn10.Models.Study", "Study")
+                        .WithMany()
+                        .HasForeignKey("StudyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("QuieroUn10.Models.Subject", "Subject")
+                        .WithMany()
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Study");
+
+                    b.Navigation("Subject");
                 });
 
             modelBuilder.Entity("QuieroUn10.Models.UserAccount", b =>

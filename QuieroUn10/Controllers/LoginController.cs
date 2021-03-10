@@ -26,7 +26,7 @@ namespace QuieroUn10.Controllers
 
         public async Task<IActionResult> Index(string errorMessage, string username)
         {
-            //https://coolors.co/748cab-f6f8f2-f5cb5c-242423-333533 paleta de colores
+
             ViewBag.errorMessage = errorMessage;
             ViewBag.username = username;
 
