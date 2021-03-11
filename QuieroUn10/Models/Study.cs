@@ -20,6 +20,10 @@ namespace QuieroUn10.Models
         [StringLength(50, ErrorMessage = "El campo {0} tiene una longitud máxima de 50 caracteres")]
         public string Acronym { get; set; }
 
+        [InverseProperty("Study")]
+        [Display(Name = "Study Has Subject")]
+        public List<StudyHasSubject> StudyHasSubjects { get; set; }
+
 
     }
 }

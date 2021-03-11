@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,8 +15,13 @@ namespace QuieroUn10.Models
         [Display(Name = "Birthdate")]
         public DateTime Birthdate { get; set; }
 
+        [InverseProperty("Student")]
+        [Display(Name = "Student Has Subject")]
+        public List<StudentHasSubject> StudentHasSubjects { get; set; }
 
-       
+        [InverseProperty("Student")]
+        [Display(Name = "Calendar Task")]
+        public List<CalendarTask> CalendarTasks { get; set; }
 
     }
 }

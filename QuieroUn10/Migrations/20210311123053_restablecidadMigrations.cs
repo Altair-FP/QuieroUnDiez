@@ -3,23 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace QuieroUn10.Migrations
 {
-    public partial class casa3Migracion : Migration
+    public partial class restablecidadMigrations : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "COURSE",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_COURSE", x => x.ID);
-                });
-
             migrationBuilder.CreateTable(
                 name: "MENU",
                 columns: table => new
@@ -51,16 +38,17 @@ namespace QuieroUn10.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "STUDIES",
+                name: "STUDY",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Acronym = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_STUDIES", x => x.ID);
+                    table.PrimaryKey("PK_STUDY", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -69,7 +57,9 @@ namespace QuieroUn10.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Course = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Acronym = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -126,28 +116,27 @@ namespace QuieroUn10.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "STUDIES_HAS_COURSE",
+                name: "STUDY_HAS_SUBJECT",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StudiesId = table.Column<int>(type: "int", nullable: false),
-                    CourseId = table.Column<int>(type: "int", nullable: false)
+                    StudyId = table.Column<int>(type: "int", nullable: false),
+                    SubjectId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_STUDIES_HAS_COURSE", x => x.ID);
+                    table.PrimaryKey("PK_STUDY_HAS_SUBJECT", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_STUDIES_HAS_COURSE_COURSE_CourseId",
-                        column: x => x.CourseId,
-                        principalTable: "COURSE",
+                        name: "FK_STUDY_HAS_SUBJECT_STUDY_StudyId",
+                        column: x => x.StudyId,
+                        principalTable: "STUDY",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_STUDIES_HAS_COURSE_STUDIES_StudiesId",
-                        column: x => x.StudiesId,
-                        principalTable: "STUDIES",
+                        name: "FK_STUDY_HAS_SUBJECT_SUBJECT_SubjectId",
+                        column: x => x.SubjectId,
+                        principalTable: "SUBJECT",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -218,42 +207,115 @@ namespace QuieroUn10.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "COURSE_HAS_SUBJECT",
+                name: "CALENDAR_TASK",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SubjectId = table.Column<int>(type: "int", nullable: false),
-                    StudiesHasCourseId = table.Column<int>(type: "int", nullable: false)
+                    Day = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StudentId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_COURSE_HAS_SUBJECT", x => x.ID);
+                    table.PrimaryKey("PK_CALENDAR_TASK", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_COURSE_HAS_SUBJECT_STUDIES_HAS_COURSE_StudiesHasCourseId",
-                        column: x => x.StudiesHasCourseId,
-                        principalTable: "STUDIES_HAS_COURSE",
+                        name: "FK_CALENDAR_TASK_STUDENT_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "STUDENT",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "STUDENT_HAS_SUBJECT",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    InscriptionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StudentId = table.Column<int>(type: "int", nullable: false),
+                    SubjectId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_STUDENT_HAS_SUBJECT", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_STUDENT_HAS_SUBJECT_STUDENT_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "STUDENT",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_COURSE_HAS_SUBJECT_SUBJECT_SubjectId",
+                        name: "FK_STUDENT_HAS_SUBJECT_SUBJECT_SubjectId",
                         column: x => x.SubjectId,
                         principalTable: "SUBJECT",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "DOC",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DocByte = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    DocSourceFileName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DocContentType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StudentHasSubjectId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DOC", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_DOC_STUDENT_HAS_SUBJECT_StudentHasSubjectId",
+                        column: x => x.StudentHasSubjectId,
+                        principalTable: "STUDENT_HAS_SUBJECT",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TASK",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TaskDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    StudentHasSubjectId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TASK", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_TASK_STUDENT_HAS_SUBJECT_StudentHasSubjectId",
+                        column: x => x.StudentHasSubjectId,
+                        principalTable: "STUDENT_HAS_SUBJECT",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
-                table: "COURSE",
-                columns: new[] { "ID", "Name" },
+                table: "MENU",
+                columns: new[] { "ID", "Action", "Controller", "Label" },
                 values: new object[,]
                 {
-                    { 1, "1º" },
-                    { 2, "2º" },
-                    { 3, "3º" },
-                    { 4, "4º" },
-                    { 5, "5º" },
-                    { 6, "6º" }
+                    { 1, "Index", "UserAccounts", "User Accounts" },
+                    { 2, "Index", "Roles", "Roles" },
+                    { 3, "Index", "Students", "Students" },
+                    { 4, "Index", "Admins", "Admins" },
+                    { 5, "Index", "Menus", "Menus" },
+                    { 6, "Index", "Studies", "Studies" },
+                    { 7, "Index", "Subjects", "Subjects" },
+                    { 8, "Index", "StudyHasSubjects", "Study Has Subjects" },
+                    { 9, "Index", "CalendarTasks", "Calendar Tasks" },
+                    { 10, "Index", "Docs", "Documents" },
+                    { 11, "Index", "StudentHasSubjects", "Student Subjects" },
+                    { 12, "Index", "Tasks", "Tasks" },
+                    { 13, "Details", "AdminDtoes", "Profile" },
+                    { 14, "Details", "StudentDtoes", "Profile" }
                 });
 
             migrationBuilder.InsertData(
@@ -266,56 +328,54 @@ namespace QuieroUn10.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "STUDIES",
-                columns: new[] { "ID", "Name" },
+                table: "ROLE_HAS_MENU",
+                columns: new[] { "ID", "MenuId", "RoleId" },
                 values: new object[,]
                 {
-                    { 4, "UNIVERSIDAD" },
-                    { 3, "FP" },
-                    { 2, "BACHILLERATO" },
-                    { 1, "ESO" }
+                    { 1, 1, 1 },
+                    { 17, 12, 2 },
+                    { 16, 10, 2 },
+                    { 15, 9, 2 },
+                    { 14, 14, 1 },
+                    { 13, 13, 1 },
+                    { 12, 12, 1 },
+                    { 18, 14, 2 },
+                    { 10, 10, 1 },
+                    { 11, 11, 1 },
+                    { 8, 8, 1 },
+                    { 7, 7, 1 },
+                    { 6, 6, 1 },
+                    { 5, 5, 1 },
+                    { 4, 4, 1 },
+                    { 3, 3, 1 },
+                    { 2, 2, 1 },
+                    { 9, 9, 1 }
                 });
 
             migrationBuilder.InsertData(
-                table: "SUBJECT",
-                columns: new[] { "ID", "Name" },
+                table: "USER_ACCOUNT",
+                columns: new[] { "ID", "Active", "Email", "Password", "RoleId", "Username" },
                 values: new object[,]
                 {
-                    { 1, "Matemáticas I" },
-                    { 2, "Lengua Castellana y Literatura I" },
-                    { 3, "Primera Lengua Extranjera I" },
-                    { 4, "Filosofía" },
-                    { 5, "Biología y Geología" },
-                    { 6, "Dibujo Técnico I" },
-                    { 7, "Física y Química" }
+                    { 1, true, "admin1@gmail.com", "YQBkAG0AaQBuADEA", 1, "admin1" },
+                    { 2, true, "admin2@gmail.com", "YQBkAG0AaQBuADIA", 1, "admin2" },
+                    { 3, true, "student1@gmail.com", "cwB0AHUAZABlAG4AdAAxAA==", 2, "student1" }
                 });
 
             migrationBuilder.InsertData(
-                table: "STUDIES_HAS_COURSE",
-                columns: new[] { "ID", "CourseId", "Nombre", "StudiesId" },
-                values: new object[,]
-                {
-                    { 1, 1, "1º ESO", 1 },
-                    { 2, 2, "2º ESO", 1 },
-                    { 3, 3, "3º ESO", 1 },
-                    { 4, 4, "4º ESO", 1 },
-                    { 5, 1, "1º Bachillerato", 2 },
-                    { 6, 2, "2º Bachillerato", 2 }
-                });
+                table: "ADMIN",
+                columns: new[] { "ID", "Name", "Phone", "Surname", "UserAccountId" },
+                values: new object[] { 1, "Admin1", "698756483", "Admin1", 1 });
 
             migrationBuilder.InsertData(
-                table: "COURSE_HAS_SUBJECT",
-                columns: new[] { "ID", "StudiesHasCourseId", "SubjectId" },
-                values: new object[,]
-                {
-                    { 1, 5, 1 },
-                    { 2, 5, 2 },
-                    { 3, 5, 3 },
-                    { 4, 5, 4 },
-                    { 5, 5, 5 },
-                    { 6, 5, 6 },
-                    { 7, 5, 7 }
-                });
+                table: "ADMIN",
+                columns: new[] { "ID", "Name", "Phone", "Surname", "UserAccountId" },
+                values: new object[] { 2, "Admin2", "698756483", "Admin2", 2 });
+
+            migrationBuilder.InsertData(
+                table: "STUDENT",
+                columns: new[] { "ID", "Birthdate", "Name", "Phone", "Surname", "UserAccountId" },
+                values: new object[] { 1, new DateTime(1999, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified), "Alejandro", "620730065", "Cruz", 3 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ADMIN_UserAccountId",
@@ -323,14 +383,14 @@ namespace QuieroUn10.Migrations
                 column: "UserAccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_COURSE_HAS_SUBJECT_StudiesHasCourseId",
-                table: "COURSE_HAS_SUBJECT",
-                column: "StudiesHasCourseId");
+                name: "IX_CALENDAR_TASK_StudentId",
+                table: "CALENDAR_TASK",
+                column: "StudentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_COURSE_HAS_SUBJECT_SubjectId",
-                table: "COURSE_HAS_SUBJECT",
-                column: "SubjectId");
+                name: "IX_DOC_StudentHasSubjectId",
+                table: "DOC",
+                column: "StudentHasSubjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ROLE_HAS_MENU_MenuId",
@@ -348,14 +408,29 @@ namespace QuieroUn10.Migrations
                 column: "UserAccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_STUDIES_HAS_COURSE_CourseId",
-                table: "STUDIES_HAS_COURSE",
-                column: "CourseId");
+                name: "IX_STUDENT_HAS_SUBJECT_StudentId",
+                table: "STUDENT_HAS_SUBJECT",
+                column: "StudentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_STUDIES_HAS_COURSE_StudiesId",
-                table: "STUDIES_HAS_COURSE",
-                column: "StudiesId");
+                name: "IX_STUDENT_HAS_SUBJECT_SubjectId",
+                table: "STUDENT_HAS_SUBJECT",
+                column: "SubjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_STUDY_HAS_SUBJECT_StudyId",
+                table: "STUDY_HAS_SUBJECT",
+                column: "StudyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_STUDY_HAS_SUBJECT_SubjectId",
+                table: "STUDY_HAS_SUBJECT",
+                column: "SubjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TASK_StudentHasSubjectId",
+                table: "TASK",
+                column: "StudentHasSubjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_USER_ACCOUNT_RoleId",
@@ -374,34 +449,40 @@ namespace QuieroUn10.Migrations
                 name: "ADMIN");
 
             migrationBuilder.DropTable(
-                name: "COURSE_HAS_SUBJECT");
+                name: "CALENDAR_TASK");
+
+            migrationBuilder.DropTable(
+                name: "DOC");
 
             migrationBuilder.DropTable(
                 name: "ROLE_HAS_MENU");
 
             migrationBuilder.DropTable(
-                name: "STUDENT");
+                name: "STUDY_HAS_SUBJECT");
+
+            migrationBuilder.DropTable(
+                name: "TASK");
 
             migrationBuilder.DropTable(
                 name: "USER_TOKEN");
 
             migrationBuilder.DropTable(
-                name: "STUDIES_HAS_COURSE");
+                name: "MENU");
+
+            migrationBuilder.DropTable(
+                name: "STUDY");
+
+            migrationBuilder.DropTable(
+                name: "STUDENT_HAS_SUBJECT");
+
+            migrationBuilder.DropTable(
+                name: "STUDENT");
 
             migrationBuilder.DropTable(
                 name: "SUBJECT");
 
             migrationBuilder.DropTable(
-                name: "MENU");
-
-            migrationBuilder.DropTable(
                 name: "USER_ACCOUNT");
-
-            migrationBuilder.DropTable(
-                name: "COURSE");
-
-            migrationBuilder.DropTable(
-                name: "STUDIES");
 
             migrationBuilder.DropTable(
                 name: "ROLE");

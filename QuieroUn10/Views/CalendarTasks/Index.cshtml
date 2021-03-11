@@ -1,4 +1,4 @@
-﻿@model IEnumerable<QuieroUn10.Models.StudyHasSubject>
+﻿@model IEnumerable<QuieroUn10.Models.CalendarTask>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,13 +13,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Study)
+                @Html.DisplayNameFor(model => model.Day)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Subject)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Subject.Course)
+                @Html.DisplayNameFor(model => model.Student)
             </th>
             <th></th>
         </tr>
@@ -28,13 +25,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Study.Acronym)
+                @Html.DisplayFor(modelItem => item.Day)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Subject.Acronym)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Subject.Course)
+                @Html.DisplayFor(modelItem => item.Student.Name)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |

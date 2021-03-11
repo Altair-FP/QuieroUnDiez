@@ -1,4 +1,4 @@
-﻿@model IEnumerable<QuieroUn10.Models.StudyHasSubject>
+﻿@model IEnumerable<QuieroUn10.Models.Doc>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,13 +13,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Study)
+                @Html.DisplayNameFor(model => model.DocByte)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Subject)
+                @Html.DisplayNameFor(model => model.DocSourceFileName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Subject.Course)
+                @Html.DisplayNameFor(model => model.DocContentType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StudentHasSubject)
             </th>
             <th></th>
         </tr>
@@ -28,13 +31,16 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Study.Acronym)
+                @Html.DisplayFor(modelItem => item.DocByte)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Subject.Acronym)
+                @Html.DisplayFor(modelItem => item.DocSourceFileName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Subject.Course)
+                @Html.DisplayFor(modelItem => item.DocContentType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StudentHasSubject.ID)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
