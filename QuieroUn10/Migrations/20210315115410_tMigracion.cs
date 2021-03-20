@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace QuieroUn10.Migrations
 {
-    public partial class restablecidadMigrations : Migration
+    public partial class tMigracion : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -333,23 +333,21 @@ namespace QuieroUn10.Migrations
                 values: new object[,]
                 {
                     { 1, 1, 1 },
-                    { 17, 12, 2 },
-                    { 16, 10, 2 },
-                    { 15, 9, 2 },
-                    { 14, 14, 1 },
-                    { 13, 13, 1 },
+                    { 15, 12, 2 },
+                    { 14, 10, 2 },
+                    { 13, 9, 2 },
                     { 12, 12, 1 },
-                    { 18, 14, 2 },
-                    { 10, 10, 1 },
                     { 11, 11, 1 },
-                    { 8, 8, 1 },
+                    { 16, 14, 2 },
+                    { 9, 9, 1 },
+                    { 10, 10, 1 },
                     { 7, 7, 1 },
                     { 6, 6, 1 },
                     { 5, 5, 1 },
                     { 4, 4, 1 },
                     { 3, 3, 1 },
                     { 2, 2, 1 },
-                    { 9, 9, 1 }
+                    { 8, 8, 1 }
                 });
 
             migrationBuilder.InsertData(

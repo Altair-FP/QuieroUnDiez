@@ -1,4 +1,4 @@
-﻿
+﻿@model QuieroUn10.Dtos.InicioDto
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -6,3 +6,27 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
 </div>
+
+<form asp-action="RecogerDatos">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="StudiesId" class="control-label">
+
+        </label>
+        <select asp-for="StudiesId" class="form-control" asp-items="ViewBag.estudios" onchange="this.form.submit()">  <option selected>Open this select menu</option></select>
+    </div>
+
+    <select asp-for="SubjectId" class=" selectpicker" multiple data-live-search="true">
+        @foreach (var asi in ViewBag.asignaturas)
+        {
+            <option value="@asi.Subject.ID">@asi.Subject.Name</option>
+
+        }
+    </select>
+
+    <div class="form-group">
+        <input type="submit" asp-action="GuardarDatos" value="Create" class="btn btn-primary" />
+    </div>
+</form>
+
+

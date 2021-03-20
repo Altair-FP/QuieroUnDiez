@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuieroUn10.Data;
+using QuieroUn10.ENUM;
 using QuieroUn10.Models;
 using Task = QuieroUn10.Models.Task;
 
@@ -36,7 +37,8 @@ namespace QuieroUn10.Controllers
             }
 
             var task = await _context.Task
-                .Include(t => t.StudentHasSubject)
+                .Include(t => t.StudentHasSubject).ThenInclude
+                (t=>t.Student)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (task == null)
             {
@@ -50,6 +52,11 @@ namespace QuieroUn10.Controllers
         public IActionResult Create()
         {
             ViewData["StudentHasSubjectId"] = new SelectList(_context.StudentHasSubject, "ID", "ID");
+            List<TaskType> taskType = new List<TaskType>();
+            taskType.Add(TaskType.EXAM);
+            taskType.Add(TaskType.EXERCISE);
+            taskType.Add(TaskType.PRACTICE);
+            ViewData["Type"] = taskType.ToList();
             return View();
         }
 
@@ -58,15 +65,40 @@ namespace QuieroUn10.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,CreateDate,TaskDate,Type,StudentHasSubjectId")] Task task)
+        public async Task<IActionResult> Create([Bind("ID,Title,Description,Start,End,AllDay,Type,StudentHasSubjectId")] Task task)
         {
             if (ModelState.IsValid)
             {
+                //creamos un calendarTask
+                CalendarTask calendarTask = new CalendarTask();
+                //Buscar el studentHasSubject
+                StudentHasSubject studentHasSubject = _context.StudentHasSubject.Where(s => s.ID == task.StudentHasSubjectId).FirstOrDefault();
+                calendarTask.StudentId = studentHasSubject.StudentId;
+                calendarTask.Day = task.Start;
+                task.CreateDate = DateTime.Now;
+                if (task.Type.Equals(TaskType.PRACTICE))
+                {
+                    task.ClassName = "info";
+                }else if (task.Type.Equals(TaskType.EXAM))
+                {
+                    task.ClassName = "important";
+                }
+                else
+                {
+                    task.ClassName = "success";
+                }
+                _context.Add(calendarTask);
+                await _context.SaveChangesAsync();
                 _context.Add(task);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["StudentHasSubjectId"] = new SelectList(_context.StudentHasSubject, "ID", "ID", task.StudentHasSubjectId);
+            List<TaskType> taskType = new List<TaskType>();
+            taskType.Add(TaskType.EXAM);
+            taskType.Add(TaskType.EXERCISE);
+            taskType.Add(TaskType.PRACTICE);
+            ViewData["Type"] = taskType.ToList();
             return View(task);
         }
 

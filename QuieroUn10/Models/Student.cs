@@ -15,6 +15,9 @@ namespace QuieroUn10.Models
         [Display(Name = "Birthdate")]
         public DateTime Birthdate { get; set; }
 
+        [Required]
+        public Boolean Activate { get; set; }
+
         [InverseProperty("Student")]
         [Display(Name = "Student Has Subject")]
         public List<StudentHasSubject> StudentHasSubjects { get; set; }

@@ -10,8 +10,8 @@ using QuieroUn10.Data;
 namespace QuieroUn10.Migrations
 {
     [DbContext(typeof(QuieroUnDiezDBContex))]
-    [Migration("20210311123053_restablecidadMigrations")]
-    partial class restablecidadMigrations
+    [Migration("20210315203056_nombreMigracion")]
+    partial class nombreMigracion
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -378,36 +378,24 @@ namespace QuieroUn10.Migrations
                         new
                         {
                             ID = 13,
-                            MenuId = 13,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            ID = 14,
-                            MenuId = 14,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            ID = 15,
                             MenuId = 9,
                             RoleId = 2
                         },
                         new
                         {
-                            ID = 16,
+                            ID = 14,
                             MenuId = 10,
                             RoleId = 2
                         },
                         new
                         {
-                            ID = 17,
+                            ID = 15,
                             MenuId = 12,
                             RoleId = 2
                         },
                         new
                         {
-                            ID = 18,
+                            ID = 16,
                             MenuId = 14,
                             RoleId = 2
                         });
@@ -419,6 +407,9 @@ namespace QuieroUn10.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Activate")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("Birthdate")
                         .HasColumnType("datetime2");
@@ -450,6 +441,7 @@ namespace QuieroUn10.Migrations
                         new
                         {
                             ID = 1,
+                            Activate = false,
                             Birthdate = new DateTime(1999, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Alejandro",
                             Phone = "620730065",

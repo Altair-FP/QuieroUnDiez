@@ -1,4 +1,4 @@
-﻿@model QuieroUn10.Models.Doc
+﻿@model QuieroUn10.Dtos.DocDto
 
 @{
     ViewData["Title"] = "Create";
@@ -10,27 +10,14 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
-                <label asp-for="DocByte" class="control-label"></label>
-                <input asp-for="DocByte" class="form-control" />
-                <span asp-validation-for="DocByte" class="text-danger"></span>
+                <label  asp-for="Archivo" class="control-label">Archivo</label>
+                <input  asp-for="Archivo" type="file" name="archivo" class="form-control" />
             </div>
-            <div class="form-group">
-                <label asp-for="DocSourceFileName" class="control-label"></label>
-                <input asp-for="DocSourceFileName" class="form-control" />
-                <span asp-validation-for="DocSourceFileName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DocContentType" class="control-label"></label>
-                <input asp-for="DocContentType" class="form-control" />
-                <span asp-validation-for="DocContentType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StudentHasSubjectId" class="control-label"></label>
-                <select asp-for="StudentHasSubjectId" class ="form-control" asp-items="ViewBag.StudentHasSubjectId"></select>
-            </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

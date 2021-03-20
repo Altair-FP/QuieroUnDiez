@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuieroUn10.Data;
 using QuieroUn10.Models;
+using Task = QuieroUn10.Models.Task;
 
 namespace QuieroUn10.Controllers
 {
@@ -18,14 +20,32 @@ namespace QuieroUn10.Controllers
         {
             _context = context;
         }
-
+        //https://github.com/esausilva/fullcalendar-aspnet-core/blob/96133f88afd1373c2e34f9f734c7523bf2153117/fullcalendar-core/Scripts/calendar.js
         // GET: CalendarTasks
         public async Task<IActionResult> Index()
         {
-            var quieroUnDiezDBContex = _context.CalendarTask.Include(c => c.Student);
-            return View(await quieroUnDiezDBContex.ToListAsync());
-        }
+            var id = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == id).FirstOrDefault();
+            var quieroUnDiezDBContex = new List<CalendarTask>();
+            if (usuario.Role.Name.Equals("ADMIN"))
+            {
+                quieroUnDiezDBContex = _context.CalendarTask.Include(c => c.Student).ToList();
+            }else if (usuario.Role.Name.Equals("STUDENT"))
+            {
+                var student = _context.Student.Where(s => s.UserAccountId == usuario.ID).FirstOrDefault();
+                quieroUnDiezDBContex = _context.CalendarTask.Include(c => c.Student).Where(s=>s.StudentId == student.ID).ToList();
+            }
 
+            ViewBag.tasks = _context.Task.ToList();
+            return View(quieroUnDiezDBContex);
+        }
+        [HttpGet]
+        public IActionResult GetEvents()
+        {
+            List<Task> events = _context.Task.ToList();
+
+            return Json(events);
+        }
         // GET: CalendarTasks/Details/5
         public async Task<IActionResult> Details(int? id)
         {

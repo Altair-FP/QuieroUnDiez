@@ -1,0 +1,133 @@
+﻿
+
+
+
+.main {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.wrap {
+    margin: 2rem;
+    transform-style: preserve-3d;
+    transform: perspective(100rem);
+    cursor: pointer;
+}
+
+.containe {
+    --rX: 0;
+    --rY: 0;
+    --bX: 50%;
+    --bY: 80%;
+    width: 22rem;
+    height: 15rem;
+    border: 1px solid var(--background-color);
+    border-radius: 1.6rem;
+    padding: 4rem;
+    align-items: flex-end;
+    position: relative;
+    transform: rotateX(calc(var(--rX) * 1deg)) rotateY(calc(var(--rY) * 1deg));
+    background-position: var(--bX) var(--bY);
+    background-size: 40rem auto;
+    box-shadow: 0 0 3rem .5rem hsla(0, 0%, 0%, .2);
+    transition: transform .6s 1s;
+}
+
+    .containe::before,
+    .containe::after {
+        content: "";
+        width: 2rem;
+        height: 2rem;
+        border: 1px solid #fff;
+        position: absolute;
+        z-index: 2;
+        opacity: .3;
+        transition: .3s;
+    }
+
+    .containe::before {
+        top: 2rem;
+        right: 2rem;
+        border-bottom-width: 0;
+        border-left-width: 0;
+    }
+
+    .containe::after {
+        bottom: 2rem;
+        left: 2rem;
+        border-top-width: 0;
+        border-right-width: 0;
+    }
+
+.containe--active {
+    transition: none;
+}
+
+.containe--2 {
+    filter: hue-rotate(80deg) saturate(140%);
+}
+
+.containe--3 {
+    filter: hue-rotate(160deg) saturate(140%);
+}
+
+.containe p {
+    color: white;
+    font-size: 2.2rem;
+}
+
+
+.wrap:hover .containe::before,
+.wrap:hover .containe::after {
+    width: calc(100% - 4rem);
+    height: calc(100% - 4rem);
+}
+
+.abs-site-link {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    color: hsla(0, 0%, 0%, .6);
+    font-size: 1.6rem;
+}
+.fa,
+.fas {
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+}
+
+/* a continuación hay que poner la instrucción concreta de cada icono. fijaros que en realidad mediante el pseudo-selector ::before introducimos contenido delante de la etiqueta*/
+
+.fa-thumbs-down:before {
+    content: "\f165";
+}
+
+.fa-thumbs-up:before {
+    content: "\f164";
+}
+
+/*si estás familiarizado con los breakpoints de bootstrap esto te gustará*/
+.fa-lg {
+    font-size: 1.33333em;
+    line-height: 0.75em;
+    vertical-align: -.0667em;
+}
+
+.fa-xs {
+    font-size: .75em;
+}
+
+.fa-sm {
+    font-size: .875em;
+}
+
+/*poner el icono a la izquierda o a la derecha*/
+.fa-pull-left {
+    float: left;
+}
+
+.fa-pull-right {
+    float: right;
+}

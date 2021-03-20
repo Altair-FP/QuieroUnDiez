@@ -13,14 +13,25 @@ namespace QuieroUn10.Models
         public int ID { get; set; }
 
         [Required]
+        public String Title { get; set; }
+        [Required]
+        public String Description { get; set; }
+
+        [Required]
+        [DataType(DataType.Date)]
+        public DateTime Start { get; set; }
+
+        public DateTime End { get; set; }
+
+        public bool AllDay { get; set; }
+
+        public String ClassName { get; set; }
+
+        [Required]
         [DataType(DataType.Date)]
         [Display(Name = "Create Date")]
         public DateTime CreateDate { get; set; }
 
-        [Required]
-        [DataType(DataType.Date)]
-        [Display(Name = "Task Date")]
-        public DateTime TaskDate { get; set; }
 
         [Required]
         [Display(Name = "Type")]

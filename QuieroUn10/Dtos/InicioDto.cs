@@ -14,8 +14,8 @@ namespace QuieroUn10.Dtos
         [Display(Name = "Studies")]
         public int StudiesId { get; set; }
 
-        [Display(Name = "Course")]
-        public int CourseId { get; set; }
+        [Display(Name = "Subjects")]
+        public List<int> SubjectId { get; set; }
 
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuieroUn10.Data;
 
 namespace QuieroUn10.Migrations
 {
     [DbContext(typeof(QuieroUnDiezDBContex))]
-    partial class QuieroUnDiezDBContexModelSnapshot : ModelSnapshot
+    [Migration("20210315115410_tMigracion")]
+    partial class tMigracion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -406,9 +408,6 @@ namespace QuieroUn10.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("Activate")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime>("Birthdate")
                         .HasColumnType("datetime2");
 
@@ -439,7 +438,6 @@ namespace QuieroUn10.Migrations
                         new
                         {
                             ID = 1,
-                            Activate = false,
                             Birthdate = new DateTime(1999, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Alejandro",
                             Phone = "620730065",
@@ -551,31 +549,14 @@ namespace QuieroUn10.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("AllDay")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ClassName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("End")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Start")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("StudentHasSubjectId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("TaskDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");

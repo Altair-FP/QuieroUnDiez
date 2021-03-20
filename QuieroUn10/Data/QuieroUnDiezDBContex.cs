@@ -356,7 +356,8 @@ namespace QuieroUn10.Data
                     Phone = "620730065",
                     StudentHasSubjects = new List<StudentHasSubject>(),
                     Surname = "Cruz",
-                    UserAccountId = 3
+                    UserAccountId = 3,
+                    Activate = false
                 }
            );
 

@@ -50,7 +50,7 @@ namespace QuieroUn10.Controllers
         public IActionResult Create()
         {
             ViewData["StudyId"] = new SelectList(_context.Studies, "ID", "Acronym");
-            ViewData["SubjectId"] = new SelectList(_context.Subject, "ID", "Acronym");
+            ViewData["SubjectId"] = new SelectList(_context.Subject, "ID", "Name");
             return View();
         }
 
@@ -68,7 +68,7 @@ namespace QuieroUn10.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["StudyId"] = new SelectList(_context.Studies, "ID", "Acronym", studyHasSubject.StudyId);
-            ViewData["SubjectId"] = new SelectList(_context.Subject, "ID", "Acronym", studyHasSubject.SubjectId);
+            ViewData["SubjectId"] = new SelectList(_context.Subject, "ID", "Name", studyHasSubject.SubjectId);
             return View(studyHasSubject);
         }
 
@@ -86,7 +86,7 @@ namespace QuieroUn10.Controllers
                 return NotFound();
             }
             ViewData["StudyId"] = new SelectList(_context.Studies, "ID", "Acronym", studyHasSubject.StudyId);
-            ViewData["SubjectId"] = new SelectList(_context.Subject, "ID", "Acronym", studyHasSubject.SubjectId);
+            ViewData["SubjectId"] = new SelectList(_context.Subject, "ID", "Name", studyHasSubject.SubjectId);
             return View(studyHasSubject);
         }
 
@@ -123,7 +123,7 @@ namespace QuieroUn10.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["StudyId"] = new SelectList(_context.Studies, "ID", "Acronym", studyHasSubject.StudyId);
-            ViewData["SubjectId"] = new SelectList(_context.Subject, "ID", "Acronym", studyHasSubject.SubjectId);
+            ViewData["SubjectId"] = new SelectList(_context.Subject, "ID", "Name", studyHasSubject.SubjectId);
             return View(studyHasSubject);
         }
 
