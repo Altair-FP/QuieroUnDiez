@@ -31,6 +31,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.ID" asp-route-eli="@ViewBag.eli"><i class="fas fa-edit text-primary" title="Editar tarea"></i></a> |
+    <a asp-action="Details" asp-controller="StudentHasSubjects" asp-route-id="@ViewBag.eli"><i class="fas fa-home" title="Volver a la asignatura"></i></a>
 </div>

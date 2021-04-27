@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuieroUn10.Data;
 using QuieroUn10.Models;
+using Rotativa.AspNetCore;
 using Task = QuieroUn10.Models.Task;
 
 namespace QuieroUn10.Controllers
@@ -37,15 +38,20 @@ namespace QuieroUn10.Controllers
             }
 
             ViewBag.tasks = _context.Task.ToList();
-            return View(quieroUnDiezDBContex);
+            
+           return View(quieroUnDiezDBContex);
         }
         [HttpGet]
         public IActionResult GetEvents()
         {
-            List<Task> events = _context.Task.ToList();
+
+            List<Task> events = _context.Task.Include(t=>t.StudentHasSubject).ThenInclude(t=>t.Student).Where(t=>t.StudentHasSubject.Student.UserAccountId == Convert.ToInt32(HttpContext.Session.GetString("user"))).ToList();
 
             return Json(events);
         }
+
+
+
         // GET: CalendarTasks/Details/5
         public async Task<IActionResult> Details(int? id)
         {

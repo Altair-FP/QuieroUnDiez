@@ -2,35 +2,201 @@
 
 @{
     ViewData["Title"] = "Details";
+
 }
 
-<h1>Details</h1>
+@if (ViewBag.errorMessage != null)
+{
+  
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.errorMessage
+    </div>
+    
+}
+@if (ViewBag.successMessage != null)
+{
+    <div class="alert alert-success" role="alert">
+        @ViewBag.successMessage
+    </div>
+}
+
+
+<h1 class="text-center">@Html.DisplayFor(model => model.Subject.Name)</h1>
 
 <div>
-    <h4>StudentHasSubject</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.InscriptionDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.InscriptionDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Student)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Student.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Subject)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Subject.Acronym)
-        </dd>
-    </dl>
+    <a asp-action="Delete" asp-route-id="@Model.ID"><i class="fas fa-trash-alt text-danger" title="Eliminar asignatura"></i></a> |
+    <a asp-action="Index"><i class="fas fa-home" title="Ir a la lista de asignaturas"></i></a>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+<div class="bg-light shadow p-3 mb-5 mt-4  rounded">
+    <h3 class="text-center">Documentos</h3>
+    <p>
+        <a asp-action="Create" asp-controller="Docs" asp-route-id="@Model.ID">Subir archivo</a>
+    </p>
+    @if (ViewBag.listaDocumentos.Count > 0)
+    {
+        <section class="main">
+            <div class="container">
+                <div class="row">
+                    @foreach (var item in ViewBag.listaDocumentos)
+                    {
+
+                        <div class="col-sm-3 ">
+                            <div class="wrap wrap--1 ">
+
+                                <div class="containe containe--1 text-center">
+                                    <div>
+                                        <img src="~/images/pdf.png" alt="Alternate Text" class="w-75" />
+                                    </div>
+                                    <div>
+                                        @if (item.DocSourceFileName.Length > 20)
+                                        {
+                                            <p style="font-size:14px" class=" d-inline" title="@item.DocSourceFileName">@item.DocSourceFileName.Substring(0, 20)...</p>
+                                        }
+                                        else
+                                        {
+                                            <p style="font-size:14px" class=" d-inline">@item.DocSourceFileName</p>
+                                        }
+
+                                        <a asp-action="DownloadFile" asp-controller="Docs" asp-route-id="@item.ID" class="text-decoration-none d-inline" style="color:green"> <i class="fas fa-file-download d-inline" aria-hidden="true" title="Guardar PDF"></i> </a>
+                                        <a asp-action="Delete" asp-controller="Docs" asp-route-id="@item.ID" asp-route-eli="@Model.ID" class="text-decoration-none d-inline" style="color:red"><i class="fas fa-trash-alt" title="Eliminar documento"></i></a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </section>
+    }
+    else
+    {
+        <div class="alert alert-info" role="alert">
+            No tiene ningún documento subido.
+        </div>
+    }
+</div>
+
+<div class="bg-light shadow p-3 mb-5 mt-4  rounded">
+    <h3 class="text-center">Tareas próximas</h3>
+    <p>
+        <a asp-action="Create" asp-controller="Tasks" asp-route-id="@Model.ID">Crear tarea</a> |
+        <a asp-action="Index" asp-controller="Tasks" asp-route-id="@Model.ID">Ver todas las tareas</a>
+    </p>
+    @if (ViewBag.listaExamenes.Count > 0 || ViewBag.listaPracticas.Count > 0 || ViewBag.listaEjercicios.Count > 0)
+    {
+        <div class="container text-center">
+            <div class="row">
+                <div class="col-sm ">
+                    <div class="card border-primary mb-3 shadow rounded mx-auto" style="max-width: 18rem;">
+                        <div class="card-header">Exámenes</div>
+                        <div class="card-body text-primary">
+                            @if (ViewBag.listaExamenes.Count > 0)
+                            {
+                                @foreach (var examen in ViewBag.listaExamenes)
+                                {
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-sm-8" style="font-size:13px;">
+                                                <p class="card-text text-left"><strong>@examen.Title  @examen.Start</strong></p>
+                                            </div>
+                                            <div class="col-sm-4 text-right">
+                                                <a class="d-inline" asp-action="Delete" asp-controller="Tasks" asp-route-id="@examen.ID" asp-route-eli="@Model.ID"><i class="fas fa-trash-alt text-danger" title="Eliminar tarea"></i></a>
+                                                <a class="d-inline" asp-action="Details" asp-controller="Tasks" asp-route-id="@examen.ID" asp-route-eli="@Model.ID"><i class="fas fa-info-circle text-success" title="Detalles de la tarea"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="alert alert-info" role="alert">
+                                    No tienes ningun examen programado
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm ml-2 ">
+                    <div class="card border-warning mb-3 shadow rounded mx-auto" style="max-width: 18rem;">
+                        <div class="card-header">Prácticas</div>
+                        <div class="card-body text-warning">
+
+                            @if (ViewBag.listaPracticas.Count > 0)
+                            {
+                                @foreach (var practica in ViewBag.listaPracticas)
+                                {
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-sm-8" style="font-size:13px;">
+                                                <p class="card-text text-left"><strong>@practica.Title  @practica.Start</strong> </p>
+                                            </div>
+                                            <div class="col-sm-4 text-right">
+                                                <a class="d-inline" asp-action="Delete" asp-controller="Tasks" asp-route-id="@practica.ID" asp-route-eli="@Model.ID"><i class="fas fa-trash-alt text-danger" title="Eliminar tarea"></i></a>
+                                                <a class="d-inline" asp-action="Details" asp-controller="Tasks" asp-route-id="@practica.ID" asp-route-eli="@Model.ID"><i class="fas fa-info-circle text-success" title="Detalles de la tarea"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="alert alert-info" role="alert">
+                                    No tienes ninguna práctica programada
+                                </div>
+                            }
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm ml-2 ">
+                    <div class="card border-light mb-3 shadow rounded mx-auto" style="max-width: 18rem;">
+                        <div class="card-header">Ejercicios</div>
+                        <div class="card-body text-dark">
+
+                            @if (ViewBag.listaEjercicios.Count > 0)
+                            {
+                                @foreach (var ejercicio in ViewBag.listaEjercicios)
+                                {
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-sm-8" style="font-size:13px;">
+                                                <p class="card-text text-left"><strong>@ejercicio.Title @ejercicio.Start</strong></p>
+                                            </div>
+                                            <div class="col-sm-4 text-right">
+                                                <a class="d-inline" asp-action="Delete" asp-controller="Tasks" asp-route-id="@ejercicio.ID" asp-route-eli="@Model.ID"><i class="fas fa-trash-alt text-danger" title="Eliminar tarea"></i></a>
+                                                <a class="d-inline" asp-action="Details" asp-controller="Tasks" asp-route-id="@ejercicio.ID" asp-route-eli="@Model.ID"><i class="fas fa-info-circle text-success" title="Detalles de la tarea"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="alert alert-info" role="alert">
+                                    No tienes ningun ejercicio programado
+                                </div>
+                            }
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info" role="alert">
+            No tienes ninguna tarea programada
+        </div>
+    }
+
+
 </div>

@@ -13,8 +13,13 @@ namespace QuieroUn10.Models
 
         [Required]
         [DataType(DataType.Date)]
-        [Display(Name = "Task Date")]
-        public DateTime Day { get; set; }
+        [Display(Name = "Task Date Start")]
+        public DateTime DayStart { get; set; }
+
+        [Required]
+        [DataType(DataType.Date)]
+        [Display(Name = "Task Date End")]
+        public DateTime DayEnd { get; set; }
 
         [Display(Name = "Student")]
         public int StudentId { get; set; }

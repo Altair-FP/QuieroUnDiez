@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuieroUn10.Data;
 
 namespace QuieroUn10.Migrations
 {
     [DbContext(typeof(QuieroUnDiezDBContex))]
-    partial class QuieroUnDiezDBContexModelSnapshot : ModelSnapshot
+    [Migration("20210415160400_actualizacionMigracion")]
+    partial class actualizacionMigracion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

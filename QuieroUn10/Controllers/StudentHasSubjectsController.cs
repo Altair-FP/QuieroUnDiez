@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuieroUn10.Data;
 using QuieroUn10.Dtos;
+using QuieroUn10.ENUM;
 using QuieroUn10.Models;
 using Task = QuieroUn10.Models.Task;
 
@@ -47,13 +48,14 @@ namespace QuieroUn10.Controllers
             {
                    
                 quieroUnDiezDBContex = _context.StudentHasSubject.Include(s => s.Student).Include(s => s.Subject).Include(s=>s.Tasks).Include(s=>s.Docs).Where(s=>s.StudentId == student.ID).ToList();
+                ViewBag.tasks = _context.Task.Include(s=>s.StudentHasSubject).Where(t => t.StudentHasSubject.StudentId == student.ID  && t.Start.Date >= DateTime.Now.Date).ToList();
             }
-            
+
             return View(quieroUnDiezDBContex);
         }
 
         // GET: StudentHasSubjects/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string? successMessage)
         {
             if (id == null)
             {
@@ -64,9 +66,20 @@ namespace QuieroUn10.Controllers
                 .Include(s => s.Student)
                 .Include(s => s.Subject)
                 .FirstOrDefaultAsync(m => m.ID == id);
+            ViewBag.successMessage = successMessage;
+
             if (studentHasSubject == null)
             {
                 return NotFound();
+            }
+            else
+            {
+                var listaDocumentos = _context.Doc.Where(d => d.StudentHasSubjectId == id).ToList();
+                ViewBag.listaDocumentos = listaDocumentos;
+
+                ViewBag.listaExamenes = _context.Task.Where(t => t.StudentHasSubjectId == id && t.Type.Equals(TaskType.EXAM) && t.Start.Date >= DateTime.Now.Date).ToList();
+                ViewBag.listaPracticas = _context.Task.Where(t => t.StudentHasSubjectId == id && t.Type.Equals(TaskType.PRACTICE) && t.Start.Date >= DateTime.Now.Date).ToList();
+                ViewBag.listaEjercicios = _context.Task.Where(t => t.StudentHasSubjectId == id && t.Type.Equals(TaskType.EXERCISE) && t.Start.Date >= DateTime.Now.Date).ToList();
             }
 
             return View(studentHasSubject);
@@ -75,7 +88,7 @@ namespace QuieroUn10.Controllers
         // GET: StudentHasSubjects/Create
         public IActionResult Create()
         {
-            ViewData["SubjectId"] = new SelectList(_context.Subject, "ID", "Acronym");
+            ViewData["SubjectId"] = new SelectList(_context.Subject, "ID", "Name");
             return View();
         }
 

@@ -1,4 +1,4 @@
-﻿@model QuieroUn10.Models.Task
+﻿@model QuieroUn10.Dtos.TaskDto
 
 @{
     ViewData["Title"] = "Create";
@@ -12,13 +12,7 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="CreateDate" />
 
-            <div class="form-group">
-                <label asp-for="Start" class="control-label"></label>
-                <input asp-for="Start" class="form-control" />
-                <span asp-validation-for="Start" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
@@ -30,9 +24,14 @@
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AllDay" class="control-label"></label>
-                <input asp-for="AllDay" class="form-control" />
-                <span asp-validation-for="AllDay" class="text-danger"></span>
+                <label asp-for="Start" class="control-label"></label>
+                <input asp-for="Start" class="form-control" />
+                <span asp-validation-for="Start" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="End" class="control-label"></label>
+                <input asp-for="End" class="form-control" />
+                <span asp-validation-for="End" class="text-danger"></span>
             </div>
 
             <div class="form-group">
@@ -47,10 +46,6 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="StudentHasSubjectId" class="control-label"></label>
-                <select asp-for="StudentHasSubjectId" class="form-control" asp-items="ViewBag.StudentHasSubjectId"></select>
-            </div>
-            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -58,7 +53,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Details" asp-controller="StudentHasSubjects" asp-route-id="@ViewBag.id">Back to List</a>
 </div>
 
 @section Scripts {

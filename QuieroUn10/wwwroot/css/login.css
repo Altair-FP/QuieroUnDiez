@@ -154,3 +154,8 @@ input {
     #submit:active {
         color: #d0d0d2;
     }
+
+.cambiar{
+    position: relative;
+    top: -80px;
+}

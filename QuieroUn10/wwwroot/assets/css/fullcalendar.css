@@ -133,12 +133,12 @@ html .fc,
 	/* background: #fcf8e3; */
 }
 
-.fc-state-highlight > div > div.fc-day-number{
-    background-color: #ff3b30;
-    color: #FFFFFF;
-    border-radius: 50%;
-    margin: 4px;
-}
+	.fc-state-highlight > div > div.fc-day-number {
+		background-color: #66d7d1;
+		color: #FFFFFF;
+		border-radius: 50%;
+		margin: 4px;
+	}
 	
 .fc-cell-overlay { /* semi-transparent rectangle while dragging */
 	background: #bce8f1;
@@ -211,8 +211,8 @@ html .fc,
 
 
 .fc-state-default {
-	border-color: #ff3b30;
-	color: #ff3b30;	
+	border-color: #66d7d1;
+	color: #66d7d1;
 }
 .fc-button-month.fc-state-default, .fc-button-agendaWeek.fc-state-default, .fc-button-agendaDay.fc-state-default{
     min-width: 67px;
@@ -225,22 +225,22 @@ html .fc,
 .fc-state-active,
 .fc-state-disabled {
 	color: #333333;
-	background-color: #FFE3E3;
+	background-color: #dffaf8;
 	}
 
 .fc-state-hover {
-	color: #ff3b30;
+	color: #66d7d1;
 	text-decoration: none;
 	background-position: 0 -15px;
 	-webkit-transition: background-position 0.1s linear;
-	   -moz-transition: background-position 0.1s linear;
-	     -o-transition: background-position 0.1s linear;
-	        transition: background-position 0.1s linear;
-	}
+	-moz-transition: background-position 0.1s linear;
+	-o-transition: background-position 0.1s linear;
+	transition: background-position 0.1s linear;
+}
 
 .fc-state-down,
 .fc-state-active {
-	background-color: #ff3b30;
+	background-color: #66d7d1;
 	background-image: none;
 	outline: 0;
 	color: #FFFFFF;
@@ -249,12 +249,12 @@ html .fc,
 .fc-state-disabled {
 	cursor: default;
 	background-image: none;
-	background-color: #FFE3E3;
+	background-color: #dffaf8;
 	filter: alpha(opacity=65);
 	box-shadow: none;
-	border:1px solid #FFE3E3;
-	color: #ff3b30;
-	}
+	border: 1px solid #dffaf8;
+	color: #66d7d1;
+}
 
 	
 
@@ -269,11 +269,11 @@ html .fc,
 .fc-event-container > .ui-resizable-resizing {
 	z-index: 9;
 	}
-	 
+
 .fc-event {
 	border: 1px solid #FFF; /* default BORDER color */
 	background-color: #FFF; /* default BACKGROUND color */
-	color: #919191;               /* default TEXT color */
+	color: #302f2f; /* default TEXT color */
 	font-size: 12px;
 	cursor: default;
 }
@@ -288,6 +288,15 @@ html .fc,
 }
 .fc-event.success{
     background-color: #BEFFBF;
+}
+.fc-event.practica {
+	background-color: #FFC05E;
+}
+.fc-event.examen {
+	background-color: #2F9CF1;
+}
+.fc-event.ejercicio {
+	background-color: #A3BBC8;
 }
 .fc-event:hover{
     opacity: 0.7;
@@ -646,8 +655,8 @@ table.fc-header{
     color: #FFFFFF;
     transition: background-color 0.2s;
 }
-.fc-week .fc-day.fc-state-highlight:hover .fc-day-number{
-    background-color:  #ff3b30;
+.fc-week .fc-day.fc-state-highlight:hover .fc-day-number {
+	background-color: #66d7d1;
 }
 .fc-button-today{
     border: 1px solid rgba(255,255,255,.0);

@@ -25,33 +25,19 @@ namespace QuieroUn10.Controllers
         // GET: Docs
         public async Task<IActionResult> Index()
         {
-            var quieroUnDiezDBContex = _context.Doc.Include(d => d.StudentHasSubject);
+            var id = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == id).FirstOrDefault();
+            StudentHasSubject studentHasSubject = _context.StudentHasSubject.Include(s => s.Student).Where(s => s.Student.UserAccountId == usuario.ID).FirstOrDefault();
+
+            var quieroUnDiezDBContex = _context.Doc.Include(d => d.StudentHasSubject).Where(d=>d.StudentHasSubjectId == studentHasSubject.ID);
             return View(await quieroUnDiezDBContex.ToListAsync());
         }
 
-        // GET: Docs/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var doc = await _context.Doc
-                .Include(d => d.StudentHasSubject)
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (doc == null)
-            {
-                return NotFound();
-            }
-
-            return View(doc);
-        }
 
         // GET: Docs/Create
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
-           
+            ViewBag.id = id;
             return View();
         }
 
@@ -60,12 +46,12 @@ namespace QuieroUn10.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Archivo")] DocDto docDto)
+        public async Task<IActionResult> Create(int id,[Bind("Archivo")] DocDto docDto)
         {
             if (ModelState.IsValid)
             {
-                var id = Convert.ToInt32(HttpContext.Session.GetString("user"));
-                var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == id).FirstOrDefault();
+                var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+                var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
                 var student = _context.Student.Where(s => s.UserAccountId == usuario.ID).FirstOrDefault();
                 using (var memoryStream = new MemoryStream())
                 {
@@ -76,7 +62,7 @@ namespace QuieroUn10.Controllers
                         doc.DocByte = memoryStream.ToArray();
                         doc.DocContentType = docDto.Archivo.ContentType;
                         doc.DocSourceFileName = Path.GetFileName(docDto.Archivo.FileName);
-                        doc.StudentHasSubjectId = _context.StudentHasSubject.Where(s => s.StudentId == student.ID).FirstOrDefault().ID;
+                        doc.StudentHasSubjectId = id;
                         
 
                         _context.Add(doc);
@@ -89,7 +75,7 @@ namespace QuieroUn10.Controllers
                     }
                 }
                   
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "StudentHasSubjects",new { id = id });
             }
             
             return View(docDto);
@@ -119,61 +105,9 @@ namespace QuieroUn10.Controllers
             }
         }
 
-        // GET: Docs/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var doc = await _context.Doc.FindAsync(id);
-            if (doc == null)
-            {
-                return NotFound();
-            }
-            ViewData["StudentHasSubjectId"] = new SelectList(_context.Set<StudentHasSubject>(), "ID", "ID", doc.StudentHasSubjectId);
-            return View(doc);
-        }
-
-        // POST: Docs/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,DocByte,DocSourceFileName,DocContentType,StudentHasSubjectId")] Doc doc)
-        {
-            if (id != doc.ID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(doc);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!DocExists(doc.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["StudentHasSubjectId"] = new SelectList(_context.Set<StudentHasSubject>(), "ID", "ID", doc.StudentHasSubjectId);
-            return View(doc);
-        }
-
+      
         // GET: Docs/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, int? eli)
         {
             if (id == null)
             {
@@ -183,6 +117,7 @@ namespace QuieroUn10.Controllers
             var doc = await _context.Doc
                 .Include(d => d.StudentHasSubject)
                 .FirstOrDefaultAsync(m => m.ID == id);
+            ViewBag.eli = eli;
             if (doc == null)
             {
                 return NotFound();
@@ -194,12 +129,12 @@ namespace QuieroUn10.Controllers
         // POST: Docs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id, int eli)
         {
             var doc = await _context.Doc.FindAsync(id);
             _context.Doc.Remove(doc);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "StudentHasSubjects", new { id = eli });
         }
 
         private bool DocExists(int id)

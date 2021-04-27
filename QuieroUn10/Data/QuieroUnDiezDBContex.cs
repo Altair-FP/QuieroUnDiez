@@ -9,6 +9,15 @@ using QuieroUn10.Dtos;
 using Task = QuieroUn10.Models.Task;
 using QuieroUn10.Utilities;
 
+/*//Comando a ejecutar en el cmd, en el directorio del proyecto, para crear los archivos de la migración
+dotnet ef migrations add nombreMigracion
+
+//Comando a ejecutar en el cmd, en el directorio del proyecto, para actualizar la BD con los archivos creados durante la migración
+dotnet ef database update
+
+Si os falla porque no os lee el comando dotnet ef, ejecutar el comando:
+dotnet tool install --global dotnet-ef
+*/
 namespace QuieroUn10.Data
 {
     public class QuieroUnDiezDBContex : DbContext
@@ -169,7 +178,7 @@ namespace QuieroUn10.Data
                    ID = 11,
                    Controller = "StudentHasSubjects",
                    Action = "Index",
-                   Label = "Student Subjects"
+                   Label = "Subjects"
                },
                new Menu
                {
@@ -273,19 +282,19 @@ namespace QuieroUn10.Data
                 {
                     ID = 13,
                     RoleId = 2,
-                    MenuId = 9
+                    MenuId = 11
                 },
                 new RoleHasMenu
                 {
                     ID = 14,
                     RoleId = 2,
-                    MenuId = 10
+                    MenuId = 12
                 },
                 new RoleHasMenu
                 {
                     ID = 15,
                     RoleId = 2,
-                    MenuId = 12
+                    MenuId = 9
                 },
                 new RoleHasMenu
                 {

@@ -3,46 +3,38 @@
 @{
     ViewData["Title"] = "Index";
 }
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
-<h1>Index</h1>
+<h1 class="text-center">Documentos</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Subir archivo</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.DocSourceFileName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DocContentType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StudentHasSubject)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DocSourceFileName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DocContentType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StudentHasSubject.ID)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a> |
-                <a asp-action="DownloadFile" asp-route-id="@item.ID">Download</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<section class="main">
+    <div class="container">
+        <div class="row">
+            @foreach (var item in Model)
+            {
+
+                <div class="col-sm-3 ">
+                    <div class="wrap wrap--1 ">
+                       
+                        <div class="containe containe--1 text-center">
+                            <div>
+                                <img src="~/images/pdf.png" alt="Alternate Text" class="w-75" />
+                            </div>
+                            <div>
+                                <p style="font-size:14px" class=" d-inline">@item.DocSourceFileName</p>
+                                <a asp-action="DownloadFile" asp-route-id="@item.ID" class="text-decoration-none d-inline" style="color:green"> <i class="fas fa-file-download d-inline" aria-hidden="true" title="Guardar PDF"></i> </a>
+                                <a asp-action="Delete" asp-route-id="@item.ID" class="text-decoration-none d-inline" style="color:red" ><i class="fas fa-trash-alt"></i></a>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</section>

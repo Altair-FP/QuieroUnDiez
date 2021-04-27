@@ -20,6 +20,7 @@
         @ViewBag.successMessage
     </div>
 }
+
 <p class="text-right">
 
     <a asp-action="Create"> <img src="~/images/plus.png" alt="Añadir asignatura" style="width:2%" />Añadir Asignatura</a>
@@ -51,13 +52,13 @@
                                             <i class="far fa-file-alt mr-2">@item.Docs.Count</i>
                                         }
 
-                                        @if (item.Tasks == null)
+                                        @if (ViewBag.tasks == null)
                                         {
                                             <i class="fas fa-tasks">0</i>
                                         }
                                         else
                                         {
-                                            <i class="fas fa-tasks">@item.Tasks.Count</i>
+                                            <i class="fas fa-tasks">@ViewBag.tasks.Count</i>
                                         }
 
                                     </div>
@@ -77,4 +78,6 @@
         </div>
     </div>
 </section>
+
+
 

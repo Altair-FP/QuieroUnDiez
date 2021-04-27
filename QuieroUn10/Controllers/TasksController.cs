@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuieroUn10.Data;
+using QuieroUn10.Dtos;
 using QuieroUn10.ENUM;
 using QuieroUn10.Models;
+using Rotativa.AspNetCore;
 using Task = QuieroUn10.Models.Task;
 
 namespace QuieroUn10.Controllers
@@ -21,15 +24,20 @@ namespace QuieroUn10.Controllers
             _context = context;
         }
 
-        // GET: Tasks
-        public async Task<IActionResult> Index()
+        // GET: Tasks Aquí solo puede acceder el Admin
+        public async Task<IActionResult> Index(int? id)
         {
-            var quieroUnDiezDBContex = _context.Task.Include(t => t.StudentHasSubject);
-            return View(await quieroUnDiezDBContex.ToListAsync());
+            var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
+            StudentHasSubject studentHasSubject = _context.StudentHasSubject.Include(s => s.Student).Where(s => s.Student.UserAccountId == usuario.ID).FirstOrDefault();
+            ViewBag.eli = id;
+            var quieroUnDiezDBContex = _context.Task.Include(t => t.StudentHasSubject).ThenInclude(s=>s.Student).Where(t=>t.StudentHasSubject.Student.UserAccountId == usuario.ID);
+           return View(await quieroUnDiezDBContex.ToListAsync());
+
         }
 
         // GET: Tasks/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, int? eli)
         {
             if (id == null)
             {
@@ -40,6 +48,7 @@ namespace QuieroUn10.Controllers
                 .Include(t => t.StudentHasSubject).ThenInclude
                 (t=>t.Student)
                 .FirstOrDefaultAsync(m => m.ID == id);
+            ViewBag.eli = eli;
             if (task == null)
             {
                 return NotFound();
@@ -49,7 +58,7 @@ namespace QuieroUn10.Controllers
         }
 
         // GET: Tasks/Create
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
             ViewData["StudentHasSubjectId"] = new SelectList(_context.StudentHasSubject, "ID", "ID");
             List<TaskType> taskType = new List<TaskType>();
@@ -57,6 +66,7 @@ namespace QuieroUn10.Controllers
             taskType.Add(TaskType.EXERCISE);
             taskType.Add(TaskType.PRACTICE);
             ViewData["Type"] = taskType.ToList();
+            ViewBag.id = id;
             return View();
         }
 
@@ -65,58 +75,83 @@ namespace QuieroUn10.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Title,Description,Start,End,AllDay,Type,StudentHasSubjectId")] Task task)
+        public async Task<IActionResult> Create(int id,[Bind("Title,Description,Start,End,Type")] TaskDto taskDto)
         {
             if (ModelState.IsValid)
             {
+                var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+                var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
+                Task tasks = new Models.Task();
                 //creamos un calendarTask
                 CalendarTask calendarTask = new CalendarTask();
                 //Buscar el studentHasSubject
-                StudentHasSubject studentHasSubject = _context.StudentHasSubject.Where(s => s.ID == task.StudentHasSubjectId).FirstOrDefault();
+                StudentHasSubject studentHasSubject = _context.StudentHasSubject.Include(s => s.Student).Where(s => s.Student.UserAccountId == usuario.ID).FirstOrDefault();
                 calendarTask.StudentId = studentHasSubject.StudentId;
-                calendarTask.Day = task.Start;
-                task.CreateDate = DateTime.Now;
-                if (task.Type.Equals(TaskType.PRACTICE))
+                calendarTask.DayStart = taskDto.Start;
+                calendarTask.DayEnd = taskDto.End;
+
+
+                tasks.AllDay = true;
+                tasks.CreateDate = DateTime.Now;
+                if (taskDto.Type.Equals(TaskType.PRACTICE))
                 {
-                    task.ClassName = "info";
-                }else if (task.Type.Equals(TaskType.EXAM))
+                    tasks.ClassName = "practica";
+                }else if (taskDto.Type.Equals(TaskType.EXAM))
                 {
-                    task.ClassName = "important";
+                    tasks.ClassName = "examen";
                 }
                 else
                 {
-                    task.ClassName = "success";
+                    tasks.ClassName = "ejercicio";
                 }
+                tasks.Description = taskDto.Description;
+                tasks.End = taskDto.End;
+                tasks.Start = taskDto.Start;
+                tasks.StudentHasSubjectId = id;
+                tasks.Title = taskDto.Title;
+                tasks.Type = taskDto.Type;
+
                 _context.Add(calendarTask);
                 await _context.SaveChangesAsync();
-                _context.Add(task);
+                _context.Add(tasks);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "StudentHasSubjects", new { id = id });
             }
-            ViewData["StudentHasSubjectId"] = new SelectList(_context.StudentHasSubject, "ID", "ID", task.StudentHasSubjectId);
             List<TaskType> taskType = new List<TaskType>();
             taskType.Add(TaskType.EXAM);
             taskType.Add(TaskType.EXERCISE);
             taskType.Add(TaskType.PRACTICE);
             ViewData["Type"] = taskType.ToList();
-            return View(task);
+            return View(taskDto);
         }
 
         // GET: Tasks/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, int? eli)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
+            TaskDto taskDto = new TaskDto();
             var task = await _context.Task.FindAsync(id);
+            taskDto.Description = task.Description;
+            taskDto.End = task.End;
+            taskDto.Start = task.Start;
+            taskDto.Title = task.Title;
+            taskDto.Type = task.Type;
+            ViewBag.id = id;
+            ViewBag.eli = eli;
             if (task == null)
             {
                 return NotFound();
             }
+            List<TaskType> taskType = new List<TaskType>();
+            taskType.Add(TaskType.EXAM);
+            taskType.Add(TaskType.EXERCISE);
+            taskType.Add(TaskType.PRACTICE);
+            ViewData["Type"] = taskType.ToList();
             ViewData["StudentHasSubjectId"] = new SelectList(_context.StudentHasSubject, "ID", "ID", task.StudentHasSubjectId);
-            return View(task);
+            return View(taskDto);
         }
 
         // POST: Tasks/Edit/5
@@ -124,9 +159,10 @@ namespace QuieroUn10.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,CreateDate,TaskDate,Type,StudentHasSubjectId")] Task task)
+        public async Task<IActionResult> Edit(int id, int eli, [Bind("Title,Description,Start,End,Type")] TaskDto taskDto)
         {
-            if (id != task.ID)
+            Task tasks = _context.Task.Where(t => t.ID == id).FirstOrDefault();
+            if (tasks == null)
             {
                 return NotFound();
             }
@@ -135,12 +171,36 @@ namespace QuieroUn10.Controllers
             {
                 try
                 {
-                    _context.Update(task);
+
+                    tasks.Title = taskDto.Title;
+                    tasks.Description = taskDto.Description;
+                    tasks.Start = taskDto.Start;
+                    tasks.End = taskDto.End;
+                    tasks.Type = taskDto.Type;
+
+                    if (taskDto.Type.Equals(TaskType.PRACTICE))
+                    {
+                        tasks.ClassName = "practica";
+                    }
+                    else if (taskDto.Type.Equals(TaskType.EXAM))
+                    {
+                        tasks.ClassName = "examen";
+                    }
+                    else
+                    {
+                        tasks.ClassName = "ejercicio";
+                    }
+
+                    _context.Update(tasks);
                     await _context.SaveChangesAsync();
+
+                    //Editamos tambien el calendar task
+
+                    
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TaskExists(task.ID))
+                    if (!TaskExists(tasks.ID))
                     {
                         return NotFound();
                     }
@@ -149,14 +209,14 @@ namespace QuieroUn10.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "StudentHasSubjects", new { id = eli });
             }
-            ViewData["StudentHasSubjectId"] = new SelectList(_context.StudentHasSubject, "ID", "ID", task.StudentHasSubjectId);
-            return View(task);
+            ViewData["StudentHasSubjectId"] = new SelectList(_context.StudentHasSubject, "ID", "ID", tasks.StudentHasSubjectId);
+            return View(tasks);
         }
 
         // GET: Tasks/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, int? eli)
         {
             if (id == null)
             {
@@ -166,6 +226,7 @@ namespace QuieroUn10.Controllers
             var task = await _context.Task
                 .Include(t => t.StudentHasSubject)
                 .FirstOrDefaultAsync(m => m.ID == id);
+            ViewBag.eli = eli;
             if (task == null)
             {
                 return NotFound();
@@ -177,12 +238,12 @@ namespace QuieroUn10.Controllers
         // POST: Tasks/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id, int eli)
         {
             var task = await _context.Task.FindAsync(id);
             _context.Task.Remove(task);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "StudentHasSubjects", new { id = eli, successMessage = "Se ha eliminado la tarea correctamente." });
         }
 
         private bool TaskExists(int id)

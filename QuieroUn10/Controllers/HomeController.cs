@@ -31,18 +31,25 @@ namespace QuieroUn10.Controllers
             var id = Convert.ToInt32(HttpContext.Session.GetString("user"));
             var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == id).FirstOrDefault();
             var student = _context.Student.Where(s => s.UserAccountId == usuario.ID).FirstOrDefault();
-
-            if (!student.Activate)
+            if (usuario.Role.Name.Equals("STUDENT"))
             {
-                ViewData["estudios"] = new SelectList(_context.Studies, "ID", "Name");
-                ViewData["asignaturas"] = _context.StudyHasSubject.Include(i => i.Subject);
-                ViewData["todas"] = false;
-                return View();
+                if (!student.Activate)
+                {
+                    ViewData["estudios"] = new SelectList(_context.Studies, "ID", "Name");
+                    ViewData["asignaturas"] = _context.StudyHasSubject.Include(i => i.Subject);
+                    ViewData["todas"] = false;
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("Index", "StudentHasSubjects");
+                }
             }
             else
             {
                 return RedirectToAction("Index", "StudentHasSubjects");
-            }  
+            }
+            
         }
         public IActionResult RecogerDatos([Bind("ID,StudiesId,SubjectId")] InicioDto inicioDto)
         {

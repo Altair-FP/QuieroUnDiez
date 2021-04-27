@@ -4,22 +4,25 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Todas las tareas</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.CreateDate)
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Type)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StudentHasSubject)
+                @Html.DisplayNameFor(model => model.Start)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.End)
             </th>
             <th></th>
         </tr>
@@ -28,18 +31,24 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.CreateDate)
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Type)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.StudentHasSubject.ID)
+                @Html.DisplayFor(modelItem => item.Start)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                @Html.DisplayFor(modelItem => item.End)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ID" asp-route-eli="@ViewBag.eli"><i class="fas fa-edit text-primary" title="Editar tarea"></i></a> |
+                <a asp-action="Details" asp-route-id="@item.ID" asp-route-eli="@ViewBag.eli"><i class="fas fa-info-circle text-success" title="Detalles de la tarea"></i></a> |
+                <a asp-action="Delete" asp-route-id="@item.ID" asp-route-eli="@ViewBag.eli"><i class="fas fa-trash-alt text-danger" title="Eliminar tarea"></i></a>
             </td>
         </tr>
 }

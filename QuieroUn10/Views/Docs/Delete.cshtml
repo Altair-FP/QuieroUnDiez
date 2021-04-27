@@ -12,12 +12,6 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DocByte)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DocByte)
-        </dd>
-        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.DocSourceFileName)
         </dt>
         <dd class = "col-sm-10">
@@ -29,17 +23,11 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.DocContentType)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StudentHasSubject)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StudentHasSubject.ID)
-        </dd class>
     </dl>
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="ID" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <a asp-action="Details" asp-controller="StudentHasSubjects" asp-route-id="@ViewBag.eli">Back to List</a>
     </form>
 </div>
