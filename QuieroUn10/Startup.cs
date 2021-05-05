@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using QuieroUn10.Data;
+using QuieroUn10.Hubs;
 
 namespace QuieroUn10
 {
@@ -27,6 +28,7 @@ namespace QuieroUn10
         {
             services.AddControllersWithViews();
             services.AddSession();
+            services.AddSignalR();
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
@@ -73,6 +75,7 @@ namespace QuieroUn10
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Login}/{action=Index}/{id?}/{eli?}");
+                endpoints.MapHub<ChatHub>("/chatHub");
             });
 
             Rotativa.AspNetCore.RotativaConfiguration.Setup((Microsoft.AspNetCore.Hosting.IHostingEnvironment)env, "..\\Rotativa\\bin\\");
