@@ -9,7 +9,7 @@ connection.on("ReceiveMessage", function (user, message) {
     var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     var encodedMsg = user + " says " + msg;
     var li = document.createElement("li");
-    li.textContent = encodedMsg + ":" + encodedMsgMenssage;
+    li.textContent = encodedMsg;
     li.style.listStyle = "none";
     li.className = "border border-primary rounded-sm mt-2"
     document.getElementById("messagesList").appendChild(li);
