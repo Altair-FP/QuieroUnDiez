@@ -20,7 +20,7 @@ namespace QuieroUn10.Dtos
         public DateTime Start { get; set; }
 
         [DataType(DataType.Date)]
-        public DateTime End { get; set; }
+        public DateTime? End { get; set; }
 
         [Required]
         [Display(Name = "Type")]

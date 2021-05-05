@@ -21,6 +21,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.Acronym)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Active)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Student_Create)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -37,9 +43,19 @@
                 @Html.DisplayFor(modelItem => item.Acronym)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Active)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student_Create)
+            </td>
+            <td>
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a> 
+                @if (item.Student_Create && !item.Active)
+                {
+                    <a asp-action="HabDesH" asp-route-id="@item.ID">Habilitar</a>
+                }
             </td>
         </tr>
 }

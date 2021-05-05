@@ -42,13 +42,15 @@ namespace QuieroUn10.Controllers
             var quieroUnDiezDBContex = new List<StudentHasSubject>();
             if (usuario.Role.Name.Equals("ADMIN"))
             {
-                 quieroUnDiezDBContex = _context.StudentHasSubject.Include(s => s.Student).Include(s => s.Subject).ToList();
+                 quieroUnDiezDBContex = _context.StudentHasSubject.Include(s => s.Student).Include(s => s.Subject).Include(s=>s.Docs).ToList();
             }
             else if (usuario.Role.Name.Equals("STUDENT"))
             {
-                   
-                quieroUnDiezDBContex = _context.StudentHasSubject.Include(s => s.Student).Include(s => s.Subject).Include(s=>s.Tasks).Include(s=>s.Docs).Where(s=>s.StudentId == student.ID).ToList();
-                ViewBag.tasks = _context.Task.Include(s=>s.StudentHasSubject).Where(t => t.StudentHasSubject.StudentId == student.ID  && t.Start.Date >= DateTime.Now.Date).ToList();
+                //Solo te tienen que salir el número de las tasks futuras.
+                
+                ViewBag.TasksProximas = _context.StudentHasSubject.Include(s => s.Tasks).Where(s => s.StudentId == student.ID && s.Subject.Active ).Select(s=>s.Tasks.Where(t => t.Start.Date >= DateTime.Now.Date)).ToList();
+
+                quieroUnDiezDBContex = _context.StudentHasSubject.Include(s => s.Student).Include(s => s.Subject).Include(s=>s.Tasks).Include(s=>s.Docs).Where(s=>s.StudentId == student.ID && s.Subject.Active).ToList();
             }
 
             return View(quieroUnDiezDBContex);

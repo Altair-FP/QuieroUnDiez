@@ -25,13 +25,13 @@ namespace QuieroUn10.Controllers
         }
 
         // GET: Tasks Aquí solo puede acceder el Admin
-        public async Task<IActionResult> Index(int? id)
+        public async Task<IActionResult> Index(int? id, int eli)
         {
             var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
             var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
             StudentHasSubject studentHasSubject = _context.StudentHasSubject.Include(s => s.Student).Where(s => s.Student.UserAccountId == usuario.ID).FirstOrDefault();
             ViewBag.eli = id;
-            var quieroUnDiezDBContex = _context.Task.Include(t => t.StudentHasSubject).ThenInclude(s=>s.Student).Where(t=>t.StudentHasSubject.Student.UserAccountId == usuario.ID);
+            var quieroUnDiezDBContex = _context.Task.Include(t => t.StudentHasSubject).ThenInclude(s=>s.Student).Where(t=>t.StudentHasSubject.Student.UserAccountId == usuario.ID && t.StudentHasSubject.SubjectId == eli);
            return View(await quieroUnDiezDBContex.ToListAsync());
 
         }

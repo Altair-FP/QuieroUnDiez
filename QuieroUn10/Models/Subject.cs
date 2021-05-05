@@ -15,6 +15,12 @@ namespace QuieroUn10.Models
         public string Name { get; set; }
 
         [Required]
+        public bool Active { get; set; }
+
+        [Required]
+        public bool Student_Create { get; set; }
+
+        [Required]
         [StringLength(50, ErrorMessage = "El campo {0} tiene una longitud máxima de 50 caracteres")]
         public string Course { get; set; }
 

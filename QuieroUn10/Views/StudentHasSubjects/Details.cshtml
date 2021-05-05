@@ -1,5 +1,5 @@
 ﻿@model QuieroUn10.Models.StudentHasSubject
-
+@using Task = QuieroUn10.Models.Task
 @{
     ViewData["Title"] = "Details";
 
@@ -84,7 +84,7 @@
     <h3 class="text-center">Tareas próximas</h3>
     <p>
         <a asp-action="Create" asp-controller="Tasks" asp-route-id="@Model.ID">Crear tarea</a> |
-        <a asp-action="Index" asp-controller="Tasks" asp-route-id="@Model.ID">Ver todas las tareas</a>
+        <a asp-action="Index" asp-controller="Tasks" asp-route-id="@Model.ID" asp-route-eli="@Model.SubjectId">Ver todas las tareas</a>
     </p>
     @if (ViewBag.listaExamenes.Count > 0 || ViewBag.listaPracticas.Count > 0 || ViewBag.listaEjercicios.Count > 0)
     {
@@ -101,7 +101,7 @@
                                     <div class="container">
                                         <div class="row">
                                             <div class="col-sm-8" style="font-size:13px;">
-                                                <p class="card-text text-left"><strong>@examen.Title  @examen.Start</strong></p>
+                                                <p class="card-text text-left"><strong>@examen.Title  @examen.Start.ToString("dd/MM/yyyy")</strong></p>
                                             </div>
                                             <div class="col-sm-4 text-right">
                                                 <a class="d-inline" asp-action="Delete" asp-controller="Tasks" asp-route-id="@examen.ID" asp-route-eli="@Model.ID"><i class="fas fa-trash-alt text-danger" title="Eliminar tarea"></i></a>
@@ -133,7 +133,7 @@
                                     <div class="container">
                                         <div class="row">
                                             <div class="col-sm-8" style="font-size:13px;">
-                                                <p class="card-text text-left"><strong>@practica.Title  @practica.Start</strong> </p>
+                                                <p class="card-text text-left"><strong>@practica.Title  @practica.Start.ToString("dd/MM/yyyy")</strong> </p>
                                             </div>
                                             <div class="col-sm-4 text-right">
                                                 <a class="d-inline" asp-action="Delete" asp-controller="Tasks" asp-route-id="@practica.ID" asp-route-eli="@Model.ID"><i class="fas fa-trash-alt text-danger" title="Eliminar tarea"></i></a>
@@ -161,12 +161,12 @@
 
                             @if (ViewBag.listaEjercicios.Count > 0)
                             {
-                                @foreach (var ejercicio in ViewBag.listaEjercicios)
+                                @foreach (Task ejercicio in ViewBag.listaEjercicios)
                                 {
                                     <div class="container">
                                         <div class="row">
                                             <div class="col-sm-8" style="font-size:13px;">
-                                                <p class="card-text text-left"><strong>@ejercicio.Title @ejercicio.Start</strong></p>
+                                                <p class="card-text text-left"><strong>@ejercicio.Title @ejercicio.Start.ToString("dd/MM/yyyy")</strong></p>
                                             </div>
                                             <div class="col-sm-4 text-right">
                                                 <a class="d-inline" asp-action="Delete" asp-controller="Tasks" asp-route-id="@ejercicio.ID" asp-route-eli="@Model.ID"><i class="fas fa-trash-alt text-danger" title="Eliminar tarea"></i></a>

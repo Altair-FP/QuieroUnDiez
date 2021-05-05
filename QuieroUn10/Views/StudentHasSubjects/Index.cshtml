@@ -2,6 +2,7 @@
 
 @{
     int contador = 0;
+    int aux = 0;
     ViewData["Title"] = "Index";
 }
 
@@ -52,13 +53,16 @@
                                             <i class="far fa-file-alt mr-2">@item.Docs.Count</i>
                                         }
 
-                                        @if (ViewBag.tasks == null)
+                                        @if (ViewBag.TasksProximas == null)
                                         {
                                             <i class="fas fa-tasks">0</i>
                                         }
                                         else
                                         {
-                                            <i class="fas fa-tasks">@ViewBag.tasks.Count</i>
+
+                                           
+                                            <i class="fas fa-tasks">@ViewBag.TasksProximas[aux].Count</i>
+                                            aux++;
                                         }
 
                                     </div>

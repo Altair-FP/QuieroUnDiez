@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -49,17 +50,68 @@ namespace QuieroUn10.Controllers
             return View();
         }
 
+        public async Task<IActionResult> HabDesH(int id)
+        {
+            var subject =  _context.Subject
+               .FirstOrDefault(m => m.ID == id);
+            if (subject == null)
+            {
+                return NotFound();
+            }
+
+            subject.Active = true;
+            _context.Update(subject);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
         // POST: Subjects/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Name,Course,Acronym")] Subject subject)
+        public async Task<IActionResult> Create([Bind("ID,Name,Course,Acronym,Active,Student_Create")] Subject subject)
         {
             if (ModelState.IsValid)
             {
+                var id = Convert.ToInt32(HttpContext.Session.GetString("user"));
+                var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == id).FirstOrDefault();
+                if (usuario.Role.Name.Equals("ADMIN"))
+                {
+                    subject.Active = true;
+                    subject.Student_Create = false;
+                    
+                }
+                else
+                {
+                    subject.Active = false;
+                    subject.Student_Create = true;
+                }
+               
                 _context.Add(subject);
                 await _context.SaveChangesAsync();
+                if (usuario.Role.Name.Equals("STUDENT"))
+                {
+                    Student student = _context.Student.Include(s => s.UserAccount).Where(s => s.UserAccountId == usuario.ID).FirstOrDefault();
+                    //Creamos un  studenHasSubject
+                    StudentHasSubject studentHasSubject = new StudentHasSubject();
+                    studentHasSubject.Docs = new List<Doc>();
+                    studentHasSubject.InscriptionDate = DateTime.Now;
+                    studentHasSubject.StudentId = student.ID;
+                    studentHasSubject.SubjectId = subject.ID;
+                    studentHasSubject.Tasks = new List<Models.Task>();
+                    _context.Add(studentHasSubject);
+                    await _context.SaveChangesAsync();
+
+                   /* var admins = _context.Admin.Include(a => a.UserAccount).ToList();
+                    foreach (var admin in admins)
+                    {
+                        Utilities.Utility.SendEmail(admin.UserAccount.Email, "Nueva asignatura creada", "Se ha creado una asignatura nueva, tiene que validarla para que se pueda usar.");
+
+                    }*/
+                }
+               
+                
                 return RedirectToAction(nameof(Index));
             }
             return View(subject);
@@ -86,7 +138,7 @@ namespace QuieroUn10.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Course,Acronym")] Subject subject)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Course,Acronym,Active,Student_Create")] Subject subject)
         {
             if (id != subject.ID)
             {
