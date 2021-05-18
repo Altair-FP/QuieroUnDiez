@@ -14,7 +14,7 @@ namespace QuieroUn10.Models
 
         [Required]
         public String Title { get; set; }
-        [Required]
+
         public String Description { get; set; }
 
         [Required]

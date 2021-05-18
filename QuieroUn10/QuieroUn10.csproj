@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <Folder Include="Rotativa\" />
+    <Folder Include="wwwroot\music\" />
   </ItemGroup>
 
 </Project>

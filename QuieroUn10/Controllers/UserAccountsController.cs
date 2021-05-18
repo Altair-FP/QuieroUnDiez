@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuieroUn10.Data;
 using QuieroUn10.Models;
+using QuieroUn10.Utilities;
 
 namespace QuieroUn10.Controllers
 {
@@ -102,6 +103,7 @@ namespace QuieroUn10.Controllers
             {
                 try
                 {
+                    userAccount.Password = Utility.Encriptar(userAccount.Password);
                     _context.Update(userAccount);
                     await _context.SaveChangesAsync();
                 }

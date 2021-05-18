@@ -20,9 +20,11 @@ namespace QuieroUn10.Controllers
         }
 
         // GET: StudyHasSubjects
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? errorMessage, string? successMessage)
         {
             var quieroUnDiezDBContex = _context.StudyHasSubject.Include(s => s.Study).Include(s => s.Subject);
+            ViewBag.errorMessage = errorMessage;
+            ViewBag.successMessage = successMessage;
             return View(await quieroUnDiezDBContex.ToListAsync());
         }
 
@@ -106,8 +108,27 @@ namespace QuieroUn10.Controllers
             {
                 try
                 {
-                    _context.Update(studyHasSubject);
-                    await _context.SaveChangesAsync();
+                    Study study = _context.Studies.Where(s => s.ID == studyHasSubject.StudyId).FirstOrDefault();
+                    if(study != null)
+                    {
+                        Subject subject = _context.Subject.Where(c => c.ID == studyHasSubject.SubjectId).FirstOrDefault();
+                        if(subject != null)
+                        {
+                            _context.Update(studyHasSubject);
+                            await _context.SaveChangesAsync();
+                        }
+                        else
+                        {
+                            return RedirectToAction(nameof(Index), new { errorMessage = "Error, no se ha podido realizar esa acción." });
+                        }
+
+                    }
+                    else
+                    {
+                        return RedirectToAction(nameof(Index), new { errorMessage = "Error, no se ha podido realizar esa acción." });
+                    }
+
+                   
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -120,7 +141,7 @@ namespace QuieroUn10.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { successMessage = "Se ha editado correctamente"});
             }
             ViewData["StudyId"] = new SelectList(_context.Studies, "ID", "Acronym", studyHasSubject.StudyId);
             ViewData["SubjectId"] = new SelectList(_context.Subject, "ID", "Name", studyHasSubject.SubjectId);

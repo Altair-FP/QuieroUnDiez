@@ -45,82 +45,6 @@ namespace QuieroUn10.Controllers
             return View(student);
         }
 
-        // GET: Students/Create
-        public IActionResult Create()
-        {
-            ViewData["UserAccountId"] = new SelectList(_context.UserAccount, "ID", "Password");
-            return View();
-        }
-
-        // POST: Students/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Birthdate,ID,Name,Surname,Phone,UserAccountId")] Student student)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(student);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UserAccountId"] = new SelectList(_context.UserAccount, "ID", "Password", student.UserAccountId);
-            return View(student);
-        }
-
-        // GET: Students/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var student = await _context.Student.FindAsync(id);
-            if (student == null)
-            {
-                return NotFound();
-            }
-            ViewData["UserAccountId"] = new SelectList(_context.UserAccount, "ID", "Password", student.UserAccountId);
-            return View(student);
-        }
-
-        // POST: Students/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Birthdate,ID,Name,Surname,Phone,UserAccountId")] Student student)
-        {
-            if (id != student.ID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(student);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!StudentExists(student.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UserAccountId"] = new SelectList(_context.UserAccount, "ID", "Password", student.UserAccountId);
-            return View(student);
-        }
 
         // GET: Students/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -147,8 +71,12 @@ namespace QuieroUn10.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var student = await _context.Student.FindAsync(id);
+            var user = _context.UserAccount.Where(u => u.ID == student.UserAccountId).FirstOrDefault();
             _context.Student.Remove(student);
             await _context.SaveChangesAsync();
+            _context.UserAccount.Remove(user);
+            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 

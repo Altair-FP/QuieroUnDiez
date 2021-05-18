@@ -22,7 +22,12 @@ namespace QuieroUn10.Controllers
             _context = context;
         }
 
-        
+        public async Task<IActionResult> Index()
+        {
+            var quieroUnDiezDBContex = _context.Admin.Include(s => s.UserAccount);
+            return View(await quieroUnDiezDBContex.ToListAsync());
+        }
+
 
         // GET: AdminDtoes/Details/5
         public async Task<IActionResult> Details(string errorMessage)

@@ -4,6 +4,19 @@
     ViewData["Title"] = "Index";
 }
 
+@if (ViewBag.errorMessage != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.errorMessage
+    </div>
+}
+@if (ViewBag.successMessage != null)
+{
+    <div class="alert alert-success" role="alert">
+        @ViewBag.successMessage
+    </div>
+}
+
 <h1>Index</h1>
 
 <p>
@@ -25,23 +38,24 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Study.Acronym)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Subject.Acronym)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Subject.Course)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Study.Acronym)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subject.Acronym)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subject.Course)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

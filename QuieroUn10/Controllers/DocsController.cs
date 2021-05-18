@@ -72,6 +72,7 @@ namespace QuieroUn10.Controllers
                     else
                     {
                         ModelState.AddModelError("File", "The file is too large.");
+                        return RedirectToAction("Details", "StudentHasSubjects", new { id = id, errorMessage = "No se ha podido subir el archivo, pesa más de 2 MB" });
                     }
                 }
                   
@@ -83,8 +84,12 @@ namespace QuieroUn10.Controllers
 
         public async Task<IActionResult> DownloadFile(int id)
         {
+            var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
+            var student = _context.Student.Where(s => s.UserAccountId == usuario.ID).FirstOrDefault();
 
-            var myDoc = await _context.Doc.FirstOrDefaultAsync(m => m.ID == id);
+            var myDoc = await _context.Doc.FirstOrDefaultAsync(m => m.ID == id && m.StudentHasSubject.StudentId == student.ID);
+
             if (myDoc == null)
             {
                 return NotFound();
@@ -105,7 +110,37 @@ namespace QuieroUn10.Controllers
             }
         }
 
-      
+        public async Task<IActionResult> ViewFile(int id)
+        {
+            var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
+            var student = _context.Student.Where(s => s.UserAccountId == usuario.ID).FirstOrDefault();
+
+            var myDoc = await _context.Doc.FirstOrDefaultAsync(m => m.ID == id && m.StudentHasSubject.StudentId == student.ID);
+            if (myDoc == null)
+            {
+                return NotFound();
+            }
+
+            if (myDoc.DocByte == null)
+            {
+                return View();
+            }
+            else
+            {
+                Stream stream = new MemoryStream(myDoc.DocByte);
+                
+                string contentType = myDoc.DocContentType;
+                string fileName = myDoc.DocSourceFileName;
+
+                var file = File(stream, contentType);
+                
+                return file;
+
+            }
+        }
+
+
         // GET: Docs/Delete/5
         public async Task<IActionResult> Delete(int? id, int? eli)
         {

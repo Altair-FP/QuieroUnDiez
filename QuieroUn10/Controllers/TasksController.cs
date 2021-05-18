@@ -31,11 +31,21 @@ namespace QuieroUn10.Controllers
             var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
             StudentHasSubject studentHasSubject = _context.StudentHasSubject.Include(s => s.Student).Where(s => s.Student.UserAccountId == usuario.ID).FirstOrDefault();
             ViewBag.eli = id;
+            ViewBag.eli2 = eli;
             var quieroUnDiezDBContex = _context.Task.Include(t => t.StudentHasSubject).ThenInclude(s=>s.Student).Where(t=>t.StudentHasSubject.Student.UserAccountId == usuario.ID && t.StudentHasSubject.SubjectId == eli);
            return View(await quieroUnDiezDBContex.ToListAsync());
 
         }
-
+        public async Task<IActionResult> ContactPDF(int? id, int eli)
+        {
+            var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
+            // return View(await _context.Customers.ToListAsync());
+            return new ViewAsPdf("Index", await _context.Task.Include(t => t.StudentHasSubject).ThenInclude(s => s.Student).Where(t => t.StudentHasSubject.Student.UserAccountId == usuario.ID && t.StudentHasSubject.SubjectId == eli).ToListAsync())
+            {
+                // ...
+            };
+        }
         // GET: Tasks/Details/5
         public async Task<IActionResult> Details(int? id, int? eli)
         {
@@ -46,7 +56,7 @@ namespace QuieroUn10.Controllers
 
             var task = await _context.Task
                 .Include(t => t.StudentHasSubject).ThenInclude
-                (t=>t.Student)
+                (t=>t.Student).Include(t=>t.StudentHasSubject.Subject)
                 .FirstOrDefaultAsync(m => m.ID == id);
             ViewBag.eli = eli;
             if (task == null)
@@ -62,9 +72,9 @@ namespace QuieroUn10.Controllers
         {
             ViewData["StudentHasSubjectId"] = new SelectList(_context.StudentHasSubject, "ID", "ID");
             List<TaskType> taskType = new List<TaskType>();
-            taskType.Add(TaskType.EXAM);
-            taskType.Add(TaskType.EXERCISE);
-            taskType.Add(TaskType.PRACTICE);
+            taskType.Add(TaskType.Examen);
+            taskType.Add(TaskType.Ejercicio);
+            taskType.Add(TaskType.Practica);
             ViewData["Type"] = taskType.ToList();
             ViewBag.id = id;
             return View();
@@ -93,10 +103,10 @@ namespace QuieroUn10.Controllers
 
                 tasks.AllDay = true;
                 tasks.CreateDate = DateTime.Now;
-                if (taskDto.Type.Equals(TaskType.PRACTICE))
+                if (taskDto.Type.Equals(TaskType.Practica))
                 {
                     tasks.ClassName = "practica";
-                }else if (taskDto.Type.Equals(TaskType.EXAM))
+                }else if (taskDto.Type.Equals(TaskType.Examen))
                 {
                     tasks.ClassName = "examen";
                 }
@@ -111,16 +121,28 @@ namespace QuieroUn10.Controllers
                 tasks.Title = taskDto.Title;
                 tasks.Type = taskDto.Type;
 
+
                 _context.Add(calendarTask);
                 await _context.SaveChangesAsync();
                 _context.Add(tasks);
                 await _context.SaveChangesAsync();
+                if(tasks.End == null)
+                {
+                    Utilities.Utility.SendEmail(usuario.Email, "Nueva tarea programada", "Se ha registrado una nueva tarea con el nombre de: " + tasks.Title + "para el dia " + tasks.Start + ". La tarea es de tipo: " + tasks.Type);
+
+                }
+                else
+                {
+                    Utilities.Utility.SendEmail(usuario.Email, "Nueva tarea programada", "Se ha registrado una nueva tarea con el nombre de: " + tasks.Title + "para el dia " + tasks.Start + ". La tarea es de tipo: " + tasks.Type);
+
+                }
+
                 return RedirectToAction("Details", "StudentHasSubjects", new { id = id });
             }
             List<TaskType> taskType = new List<TaskType>();
-            taskType.Add(TaskType.EXAM);
-            taskType.Add(TaskType.EXERCISE);
-            taskType.Add(TaskType.PRACTICE);
+            taskType.Add(TaskType.Examen);
+            taskType.Add(TaskType.Ejercicio);
+            taskType.Add(TaskType.Practica);
             ViewData["Type"] = taskType.ToList();
             return View(taskDto);
         }
@@ -146,9 +168,9 @@ namespace QuieroUn10.Controllers
                 return NotFound();
             }
             List<TaskType> taskType = new List<TaskType>();
-            taskType.Add(TaskType.EXAM);
-            taskType.Add(TaskType.EXERCISE);
-            taskType.Add(TaskType.PRACTICE);
+            taskType.Add(TaskType.Examen);
+            taskType.Add(TaskType.Ejercicio);
+            taskType.Add(TaskType.Practica);
             ViewData["Type"] = taskType.ToList();
             ViewData["StudentHasSubjectId"] = new SelectList(_context.StudentHasSubject, "ID", "ID", task.StudentHasSubjectId);
             return View(taskDto);
@@ -178,11 +200,11 @@ namespace QuieroUn10.Controllers
                     tasks.End = taskDto.End;
                     tasks.Type = taskDto.Type;
 
-                    if (taskDto.Type.Equals(TaskType.PRACTICE))
+                    if (taskDto.Type.Equals(TaskType.Practica))
                     {
                         tasks.ClassName = "practica";
                     }
-                    else if (taskDto.Type.Equals(TaskType.EXAM))
+                    else if (taskDto.Type.Equals(TaskType.Examen))
                     {
                         tasks.ClassName = "examen";
                     }

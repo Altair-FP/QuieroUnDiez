@@ -21,22 +21,64 @@
         @ViewBag.successMessage
     </div>
 }
-
-<p class="text-right">
-
-    <a asp-action="Create"> <img src="~/images/plus.png" alt="Añadir asignatura" style="width:2%" />Añadir Asignatura</a>
-</p>
-
-<section class="main">
-    <div class="container">
-        <div class="row">
+@if (ViewBag.role == "ADMIN")
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Student.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Student.Surname)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.InscriptionDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Subject.Name)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
             @foreach (var item in Model)
             {
-               
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Student.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Student.Surname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InscriptionDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subject.Name)
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="text-right">
+
+        <a asp-action="Create"> <img src="~/images/plus.png" alt="Añadir asignatura" style="width:2%" />Añadir Asignatura</a> |
+        <a asp-action="Create" asp-controller="Subjects">Crear asignatura nueva</a>
+    </p>
+
+    <section class="main">
+        <div class="container">
+            <div class="row">
+                @foreach (var item in Model)
+                {
+
                     <div class="col-sm-4">
                         <div class="wrap wrap--1 ">
-                            <a asp-action="Details" asp-route-id="@item.ID" class="text-decoration-none" style="color:white">
-                                <div class="containe containe--1" style="background:linear-gradient(hsla(0, 0%, 100%, .1), hsla(0, 0%, 100%, .1)), url('@ViewBag.imagenes[contador]')">
+                            <a asp-action="Details" asp-route-id="@item.ID" class="text-decoration-none" style="color:black">
+                                <div class="containe containe--1 border grosor @ViewBag.imagenes[contador]">
                                     <div>
                                         <p>@item.Subject.Acronym</p>
                                     </div>
@@ -60,7 +102,7 @@
                                         else
                                         {
 
-                                           
+
                                             <i class="fas fa-tasks">@ViewBag.TasksProximas[aux].Count</i>
                                             aux++;
                                         }
@@ -70,18 +112,20 @@
                             </a>
                         </div>
                     </div>
-               
 
-                contador++;
-                if (contador == ViewBag.imagenes.Count)
-                {
-                    contador = 0;
+
+                    contador++;
+                    if (contador == ViewBag.imagenes.Count)
+                    {
+                        contador = 0;
+                    }
                 }
-            }
-            
+
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+}
+
 
 
 

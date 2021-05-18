@@ -764,7 +764,7 @@ var Enumerator = function () {
   rejected with the reason of the first passed promise to be rejected. It casts all
   elements of the passed iterable to promises as it runs this algorithm.
 
-  Example:
+  Examenple:
 
   ```javascript
   let promise1 = resolve(1);
@@ -779,9 +779,9 @@ var Enumerator = function () {
 
   If any of the `promises` given to `all` are rejected, the first promise
   that is rejected will be given as an argument to the returned promises's
-  rejection handler. For example:
+  rejection handler. For Examenple:
 
-  Example:
+  Examenple:
 
   ```javascript
   let promise1 = resolve(1);
@@ -813,7 +813,7 @@ function all(entries) {
   `Promise.race` returns a new promise which is settled in the same way as the
   first passed promise to settle.
 
-  Example:
+  Examenple:
 
   ```javascript
   let promise1 = new Promise(function(resolve, reject){
@@ -835,7 +835,7 @@ function all(entries) {
   ```
 
   `Promise.race` is deterministic in that only the state of the first
-  settled promise matters. For example, even if other promises given to the
+  settled promise matters. For Examenple, even if other promises given to the
   `promises` array argument are resolved, but the first settled promise has
   become rejected before the other promises became fulfilled, the returned
   promise will become rejected:
@@ -861,7 +861,7 @@ function all(entries) {
   });
   ```
 
-  An example real-world use case is implementing timeouts:
+  An Examenple real-world use case is implementing timeouts:
 
   ```javascript
   Promise.race([ajax('foo.json'), timeout(5000)])
@@ -1129,9 +1129,9 @@ var Promise$2 = function () {
     // If `findCommentsByAuthor` rejects, we'll have the reason here
   });
   ```
-   Simple Example
+   Simple Examenple
   --------------
-   Synchronous Example
+   Synchronous Examenple
    ```javascript
   let result;
    try {
@@ -1141,7 +1141,7 @@ var Promise$2 = function () {
     // failure
   }
   ```
-   Errback Example
+   Errback Examenple
    ```js
   findResult(function(result, err){
     if (err) {
@@ -1151,7 +1151,7 @@ var Promise$2 = function () {
     }
   });
   ```
-   Promise Example;
+   Promise Examenple;
    ```javascript
   findResult().then(function(result){
     // success
@@ -1159,9 +1159,9 @@ var Promise$2 = function () {
     // failure
   });
   ```
-   Advanced Example
+   Advanced Examenple
   --------------
-   Synchronous Example
+   Synchronous Examenple
    ```javascript
   let author, books;
    try {
@@ -1172,7 +1172,7 @@ var Promise$2 = function () {
     // failure
   }
   ```
-   Errback Example
+   Errback Examenple
    ```js
    function foundBooks(books) {
    }
@@ -1202,7 +1202,7 @@ var Promise$2 = function () {
     }
   });
   ```
-   Promise Example;
+   Promise Examenple;
    ```javascript
   findAuthor().
     then(findBooksByAuthor).
@@ -1252,7 +1252,7 @@ var Promise$2 = function () {
     `finally` will be invoked regardless of the promise's fate just as native
     try/catch/finally behaves
   
-    Synchronous example:
+    Synchronous Examenple:
   
     ```js
     findAuthor() {
@@ -1272,7 +1272,7 @@ var Promise$2 = function () {
     }
     ```
   
-    Asynchronous example:
+    Asynchronous Examenple:
   
     ```js
     findAuthor().catch(function(reason){

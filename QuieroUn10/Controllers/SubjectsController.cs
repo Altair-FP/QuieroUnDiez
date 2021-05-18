@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuieroUn10.Data;
 using QuieroUn10.Models;
+using Rotativa.AspNetCore;
 
 namespace QuieroUn10.Controllers
 {
@@ -24,6 +25,15 @@ namespace QuieroUn10.Controllers
         public async Task<IActionResult> Index()
         {
             return View(await _context.Subject.ToListAsync());
+        }
+
+        public async Task<IActionResult> ContactPDF()
+        {
+            // return View(await _context.Customers.ToListAsync());
+            return new ViewAsPdf("Index", await _context.Subject.ToListAsync())
+            {
+                // ...
+            };
         }
 
         // GET: Subjects/Details/5
@@ -59,7 +69,7 @@ namespace QuieroUn10.Controllers
                 return NotFound();
             }
 
-            subject.Active = true;
+            subject.Formal_Subject = true;
             _context.Update(subject);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -78,13 +88,13 @@ namespace QuieroUn10.Controllers
                 var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == id).FirstOrDefault();
                 if (usuario.Role.Name.Equals("ADMIN"))
                 {
-                    subject.Active = true;
+                    subject.Formal_Subject = true;
                     subject.Student_Create = false;
                     
                 }
                 else
                 {
-                    subject.Active = false;
+                    subject.Formal_Subject = false;
                     subject.Student_Create = true;
                 }
                
@@ -103,16 +113,11 @@ namespace QuieroUn10.Controllers
                     _context.Add(studentHasSubject);
                     await _context.SaveChangesAsync();
 
-                   /* var admins = _context.Admin.Include(a => a.UserAccount).ToList();
-                    foreach (var admin in admins)
-                    {
-                        Utilities.Utility.SendEmail(admin.UserAccount.Email, "Nueva asignatura creada", "Se ha creado una asignatura nueva, tiene que validarla para que se pueda usar.");
-
-                    }*/
+                  
                 }
                
                 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "StudentHasSubjects");
             }
             return View(subject);
         }

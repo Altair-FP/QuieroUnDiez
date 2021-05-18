@@ -27,7 +27,7 @@
     <hr />
     <a asp-action="Delete" asp-route-id="@Model.ID"><i class="fas fa-trash-alt text-danger" title="Eliminar asignatura"></i></a> |
     <a asp-action="Index"><i class="fas fa-home" title="Ir a la lista de asignaturas"></i></a>|
-    <a asp-action="Index" asp-controller="Chat" asp-route-id="@Model.SubjectId">Chat en vivo</a>
+    <a asp-action="Index" asp-controller="Chat" asp-route-id="@Model.SubjectId" asp-route-eli="@Model.ID">Chat en vivo</a>
 </div>
 
 <div class="bg-light shadow p-3 mb-5 mt-4  rounded">
@@ -48,7 +48,7 @@
 
                                 <div class="containe containe--1 text-center">
                                     <div>
-                                        <img src="~/images/pdf.png" alt="Alternate Text" class="w-75" />
+                                        <a asp-action="ViewFile" asp-controller="Docs" asp-route-id="@item.ID"><img src="~/images/pdf.png" alt="Alternate Text" class="w-75" /></a>  
                                     </div>
                                     <div>
                                         @if (item.DocSourceFileName.Length > 20)
@@ -97,25 +97,32 @@
                         <div class="card-body text-primary">
                             @if (ViewBag.listaExamenes.Count > 0)
                             {
-                                @foreach (var examen in ViewBag.listaExamenes)
+                                int loop = 0;
+                                @foreach (var Examen in ViewBag.listaExamenes)
                                 {
+                                    loop++;
                                     <div class="container">
                                         <div class="row">
-                                            <div class="col-sm-8" style="font-size:13px;">
-                                                <p class="card-text text-left"><strong>@examen.Title  @examen.Start.ToString("dd/MM/yyyy")</strong></p>
+                                            <div class="col-sm-8" style="font-size:12px;">
+                                                <p class="card-text text-left"><strong>@Examen.Title  @Examen.Start.ToString("dd/MM/yyyy")  @Examen.End?.ToString("- dd/MM/yyyy")</strong></p>
                                             </div>
                                             <div class="col-sm-4 text-right">
-                                                <a class="d-inline" asp-action="Delete" asp-controller="Tasks" asp-route-id="@examen.ID" asp-route-eli="@Model.ID"><i class="fas fa-trash-alt text-danger" title="Eliminar tarea"></i></a>
-                                                <a class="d-inline" asp-action="Details" asp-controller="Tasks" asp-route-id="@examen.ID" asp-route-eli="@Model.ID"><i class="fas fa-info-circle text-success" title="Detalles de la tarea"></i></a>
+                                                <a class="d-inline" asp-action="Delete" asp-controller="Tasks" asp-route-id="@Examen.ID" asp-route-eli="@Model.ID"><i class="fas fa-trash-alt text-danger" title="Eliminar tarea"></i></a>
+                                                <a class="d-inline" asp-action="Details" asp-controller="Tasks" asp-route-id="@Examen.ID" asp-route-eli="@Model.ID"><i class="fas fa-info-circle text-success" title="Detalles de la tarea"></i></a>
                                             </div>
                                         </div>
                                     </div>
+
+                                    @if(loop < ViewBag.listaExamenes.Count)
+                                    {
+                                        <hr />
+                                    }
                                 }
                             }
                             else
                             {
                                 <div class="alert alert-info" role="alert">
-                                    No tienes ningun examen programado
+                                    No tienes ningun Examen programado
                                 </div>
                             }
 
@@ -129,12 +136,14 @@
 
                             @if (ViewBag.listaPracticas.Count > 0)
                             {
+                                int loop = 0;
                                 @foreach (var practica in ViewBag.listaPracticas)
                                 {
+                                    loop++;
                                     <div class="container">
                                         <div class="row">
-                                            <div class="col-sm-8" style="font-size:13px;">
-                                                <p class="card-text text-left"><strong>@practica.Title  @practica.Start.ToString("dd/MM/yyyy")</strong> </p>
+                                            <div class="col-sm-8" style="font-size:12px;">
+                                                <p class="card-text text-left"><strong>@practica.Title  @practica.Start.ToString("dd/MM/yyyy")  @practica.End?.ToString("- dd/MM/yyyy")</strong> </p>
                                             </div>
                                             <div class="col-sm-4 text-right">
                                                 <a class="d-inline" asp-action="Delete" asp-controller="Tasks" asp-route-id="@practica.ID" asp-route-eli="@Model.ID"><i class="fas fa-trash-alt text-danger" title="Eliminar tarea"></i></a>
@@ -142,6 +151,10 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @if (loop < ViewBag.listaPracticas.Count)
+                                    {
+                                        <hr />
+                                    }
                                 }
                             }
                             else
@@ -162,12 +175,15 @@
 
                             @if (ViewBag.listaEjercicios.Count > 0)
                             {
+                                int loop = 0;
                                 @foreach (Task ejercicio in ViewBag.listaEjercicios)
                                 {
+                                    loop++;
                                     <div class="container">
                                         <div class="row">
-                                            <div class="col-sm-8" style="font-size:13px;">
-                                                <p class="card-text text-left"><strong>@ejercicio.Title @ejercicio.Start.ToString("dd/MM/yyyy")</strong></p>
+                                            <div class="col-sm-8" style="font-size:12px;">
+                                                <p class="card-text text-left"><strong>@ejercicio.Title @ejercicio.Start.ToString("dd/MM/yyyy") @ejercicio.End?.ToString("- dd/MM/yyyy")</strong></p>
+
                                             </div>
                                             <div class="col-sm-4 text-right">
                                                 <a class="d-inline" asp-action="Delete" asp-controller="Tasks" asp-route-id="@ejercicio.ID" asp-route-eli="@Model.ID"><i class="fas fa-trash-alt text-danger" title="Eliminar tarea"></i></a>
@@ -175,6 +191,11 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    @if (loop < ViewBag.listaEjercicios.Count)
+                                    {
+                                        <hr />
+                                    }
                                 }
                             }
                             else

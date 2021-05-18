@@ -7,6 +7,6 @@ namespace QuieroUn10.ENUM
 {
     public enum TaskType
     {
-        EXAM,PRACTICE,EXERCISE
+        Examen,Practica,Ejercicio
     }
 }

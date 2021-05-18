@@ -23,7 +23,7 @@ namespace QuieroUn10.Utilities
             SmtpClient smtp = new SmtpClient();
 
             email.To.Add(new MailAddress(emailTo));
-            email.From = new MailAddress("altairGym2020@gmail.com");
+            email.From = new MailAddress("quieroundiez.info@gmail.com");
             email.Subject = subject;
             email.SubjectEncoding = System.Text.Encoding.UTF8;
             email.Body = body;
@@ -35,7 +35,7 @@ namespace QuieroUn10.Utilities
             smtp.Port = 587;
             smtp.EnableSsl = true;
             smtp.UseDefaultCredentials = false;
-            smtp.Credentials = new NetworkCredential("altairGym2020@gmail.com", "alaplaya");
+            smtp.Credentials = new NetworkCredential("quieroundiez.info@gmail.com", "QuieroUnDiez21ACV");
 
             smtp.Send(email);
             email.Dispose();

@@ -127,7 +127,7 @@ namespace QuieroUn10.Data
                new Menu
                {
                    ID = 4,
-                   Controller = "Admins",
+                   Controller = "AdminDtoes",
                    Action = "Index",
                    Label = "Admins"
                },
@@ -200,6 +200,13 @@ namespace QuieroUn10.Data
                    Controller = "StudentDtoes",
                    Action = "Details",
                    Label = "Profile"
+               },
+               new Menu
+               {
+                   ID = 15,
+                   Controller = "Methods",
+                   Action = "Index",
+                   Label = "Método Pomodoro"
                }
            );
 
@@ -253,30 +260,13 @@ namespace QuieroUn10.Data
                     RoleId = 1,
                     MenuId = 8
                 },
-                new RoleHasMenu
-                {
-                    ID = 9,
-                    RoleId = 1,
-                    MenuId = 9
-                },
-                new RoleHasMenu
-                {
-                    ID = 10,
-                    RoleId = 1,
-                    MenuId = 10
-                },
-                new RoleHasMenu
-                {
-                    ID = 11,
-                    RoleId = 1,
-                    MenuId = 11
-                },
-                new RoleHasMenu
-                {
-                    ID = 12,
-                    RoleId = 1,
-                    MenuId = 12
-                },
+                 new RoleHasMenu
+                 {
+                     ID = 9,
+                     RoleId = 1,
+                     MenuId = 11
+                 },
+
                 //Menu Student
                 new RoleHasMenu
                 {
@@ -301,6 +291,12 @@ namespace QuieroUn10.Data
                     ID = 16,
                     RoleId = 2,
                     MenuId = 14
+                },
+                new RoleHasMenu
+                {
+                    ID = 17,
+                    RoleId = 2,
+                    MenuId = 15
                 }
             );
 

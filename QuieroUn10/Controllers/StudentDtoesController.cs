@@ -120,6 +120,9 @@ namespace QuieroUn10.Controllers
                 _context.Add(student);
                 await _context.SaveChangesAsync();
 
+                Utility.SendEmail(userAccount.Email, "Bienvenido a Quiero Un Diez", "Gracias por formar parte de nuestra familia. Esperamos que le guste nuestro servicio y cualquier duda, solo tiene que enviarnos un email. Gracias.");
+
+
                 return RedirectToAction("Index", "Login");
             }
             return View(studentDto);

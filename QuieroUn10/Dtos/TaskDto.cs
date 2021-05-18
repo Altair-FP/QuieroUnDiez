@@ -12,7 +12,7 @@ namespace QuieroUn10.Dtos
 
         [Required]
         public String Title { get; set; }
-        [Required]
+
         public String Description { get; set; }
 
         [Required]

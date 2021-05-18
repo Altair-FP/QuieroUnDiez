@@ -15,7 +15,7 @@ namespace QuieroUn10.Models
         public string Name { get; set; }
 
         [Required]
-        public bool Active { get; set; }
+        public bool Formal_Subject { get; set; }
 
         [Required]
         public bool Student_Create { get; set; }

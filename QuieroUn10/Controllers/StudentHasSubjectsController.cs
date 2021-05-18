@@ -27,18 +27,22 @@ namespace QuieroUn10.Controllers
         public async Task<IActionResult> Index(string errorMessage, string successMessage)
         {
             List<String> imagenes = new List<string>();
-            imagenes.Add("https://i.pinimg.com/736x/11/20/26/1120265a38c5926950d9b680954d6561.jpg");
-            imagenes.Add("https://img.freepik.com/foto-gratis/textura-papel-arrugado-azul_23-2148383718.jpg?size=626&ext=jpg");
-            imagenes.Add("https://image.freepik.com/foto-gratis/textura-papel-arrugado-negro_1194-6941.jpg");
-            imagenes.Add("https://i.pinimg.com/736x/f7/fd/33/f7fd33a89cfe128d4d7159a6011bd95d.jpg");
-            imagenes.Add("https://i.pinimg.com/736x/f8/4c/a9/f84ca916c0a746ef3bb3779ff0d62533.jpg");
+            imagenes.Add("border-primary bg2-primary");
+            imagenes.Add("border-secondary bg2-secondary");
+            imagenes.Add("border-success bg2-success");
+            imagenes.Add("border-danger bg2-danger");
+            imagenes.Add("border-warning bg2-warning");
+            imagenes.Add("border-dark bg2-dark");
+
+
             ViewBag.imagenes = imagenes;
+            
             ViewBag.errorMessage = errorMessage;
             ViewBag.successMessage = successMessage;
             var id = Convert.ToInt32(HttpContext.Session.GetString("user"));
             var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == id).FirstOrDefault();
             var student = _context.Student.Where(s => s.UserAccountId == usuario.ID).FirstOrDefault();
-           
+            ViewBag.role = usuario.Role.Name;
             var quieroUnDiezDBContex = new List<StudentHasSubject>();
             if (usuario.Role.Name.Equals("ADMIN"))
             {
@@ -48,17 +52,20 @@ namespace QuieroUn10.Controllers
             {
                 //Solo te tienen que salir el número de las tasks futuras.
                 
-                ViewBag.TasksProximas = _context.StudentHasSubject.Include(s => s.Tasks).Where(s => s.StudentId == student.ID && s.Subject.Active ).Select(s=>s.Tasks.Where(t => t.Start.Date >= DateTime.Now.Date)).ToList();
+                ViewBag.TasksProximas = _context.StudentHasSubject.Include(s => s.Tasks).Where(s => s.StudentId == student.ID ).Select(s=>s.Tasks.Where(t => t.Start.Date >= DateTime.Now.Date)).ToList();
 
-                quieroUnDiezDBContex = _context.StudentHasSubject.Include(s => s.Student).Include(s => s.Subject).Include(s=>s.Tasks).Include(s=>s.Docs).Where(s=>s.StudentId == student.ID && s.Subject.Active).ToList();
+                quieroUnDiezDBContex = _context.StudentHasSubject.Include(s => s.Student).Include(s => s.Subject).Include(s=>s.Tasks).Include(s=>s.Docs).Where(s=>s.StudentId == student.ID ).ToList();
             }
 
             return View(quieroUnDiezDBContex);
         }
 
         // GET: StudentHasSubjects/Details/5
-        public async Task<IActionResult> Details(int? id, string? successMessage)
+        public async Task<IActionResult> Details(int? id, string? successMessage, string? errorMessage)
         {
+            var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
+            var student = _context.Student.Where(s => s.UserAccountId == usuario.ID).FirstOrDefault();
             if (id == null)
             {
                 return NotFound();
@@ -69,6 +76,7 @@ namespace QuieroUn10.Controllers
                 .Include(s => s.Subject)
                 .FirstOrDefaultAsync(m => m.ID == id);
             ViewBag.successMessage = successMessage;
+            ViewBag.errorMessage = errorMessage;
 
             if (studentHasSubject == null)
             {
@@ -76,12 +84,20 @@ namespace QuieroUn10.Controllers
             }
             else
             {
-                var listaDocumentos = _context.Doc.Where(d => d.StudentHasSubjectId == id).ToList();
-                ViewBag.listaDocumentos = listaDocumentos;
+                if(studentHasSubject.StudentId == student.ID)
+                {
+                    var listaDocumentos = _context.Doc.Where(d => d.StudentHasSubjectId == id).ToList();
+                    ViewBag.listaDocumentos = listaDocumentos;
 
-                ViewBag.listaExamenes = _context.Task.Where(t => t.StudentHasSubjectId == id && t.Type.Equals(TaskType.EXAM) && t.Start.Date >= DateTime.Now.Date).ToList();
-                ViewBag.listaPracticas = _context.Task.Where(t => t.StudentHasSubjectId == id && t.Type.Equals(TaskType.PRACTICE) && t.Start.Date >= DateTime.Now.Date).ToList();
-                ViewBag.listaEjercicios = _context.Task.Where(t => t.StudentHasSubjectId == id && t.Type.Equals(TaskType.EXERCISE) && t.Start.Date >= DateTime.Now.Date).ToList();
+                    ViewBag.listaExamenes = _context.Task.Where(t => t.StudentHasSubjectId == id && t.Type.Equals(TaskType.Examen) && t.Start.Date >= DateTime.Now.Date).ToList();
+                    ViewBag.listaPracticas = _context.Task.Where(t => t.StudentHasSubjectId == id && t.Type.Equals(TaskType.Practica) && t.Start.Date >= DateTime.Now.Date).ToList();
+                    ViewBag.listaEjercicios = _context.Task.Where(t => t.StudentHasSubjectId == id && t.Type.Equals(TaskType.Ejercicio) && t.Start.Date >= DateTime.Now.Date).ToList();
+                }
+                else
+                {
+                    return RedirectToAction("Index", "StudentHasSubjects", new { errorMessage = "Esa asignatura usted no la tiene asignada."});
+                }
+
             }
 
             return View(studentHasSubject);
@@ -90,7 +106,7 @@ namespace QuieroUn10.Controllers
         // GET: StudentHasSubjects/Create
         public IActionResult Create()
         {
-            ViewData["SubjectId"] = new SelectList(_context.Subject, "ID", "Name");
+            ViewData["SubjectId"] = new SelectList(_context.Subject.Where(s=>s.Formal_Subject), "ID", "Name");
             return View();
         }
 
@@ -111,26 +127,35 @@ namespace QuieroUn10.Controllers
                 var listaAsignaturas = _context.StudentHasSubject.Where(i => i.StudentId == student.ID).ToList();
                 var listaAsignaturasPropias = new List<Subject>();
 
+
                 foreach (var asig in listaAsignaturas)
                 {
                     listaAsignaturasPropias.Add(_context.Subject.Where(s => s.ID == asig.SubjectId).FirstOrDefault());
                 }
                 Subject subject = _context.Subject.Where(c => c.ID == studentHasSubjectDto.SubjectId).FirstOrDefault();
-                if (listaAsignaturasPropias.Contains(subject))
+                if(subject != null)
                 {
-                    return RedirectToAction("Index", "StudentHasSubjects", new { errorMessage = "La asignatura ya está añadida." });
+                    if (listaAsignaturasPropias.Contains(subject))
+                    {
+                        return RedirectToAction("Index", "StudentHasSubjects", new { errorMessage = "La asignatura ya está añadida." });
+                    }
+                    else
+                    {
+                        StudentHasSubject studentHasSubject = new StudentHasSubject();
+                        studentHasSubject.InscriptionDate = DateTime.Now;
+                        studentHasSubject.StudentId = student.ID;
+                        studentHasSubject.SubjectId = studentHasSubjectDto.SubjectId;
+                        studentHasSubject.Docs = new List<Doc>();
+                        studentHasSubject.Tasks = new List<Task>();
+                        _context.Add(studentHasSubject);
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 else
                 {
-                    StudentHasSubject studentHasSubject = new StudentHasSubject();
-                    studentHasSubject.InscriptionDate = DateTime.Now;
-                    studentHasSubject.StudentId = student.ID;
-                    studentHasSubject.SubjectId = studentHasSubjectDto.SubjectId;
-                    studentHasSubject.Docs = new List<Doc>();
-                    studentHasSubject.Tasks = new List<Task>();
-                    _context.Add(studentHasSubject);
-                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Index", "StudentHasSubjects", new { errorMessage = "La asignatura no se ha encontrado." });
                 }
+               
 
 
                 return RedirectToAction("Index", "StudentHasSubjects", new { successMessage = "La asignatura se ha añadido correctamente." });
@@ -140,7 +165,7 @@ namespace QuieroUn10.Controllers
         }
 
         // GET: StudentHasSubjects/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+       /* public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -192,7 +217,7 @@ namespace QuieroUn10.Controllers
             ViewData["StudentId"] = new SelectList(_context.Student, "ID", "Name", studentHasSubject.StudentId);
             ViewData["SubjectId"] = new SelectList(_context.Subject, "ID", "Acronym", studentHasSubject.SubjectId);
             return View(studentHasSubject);
-        }
+        }*/
 
         // GET: StudentHasSubjects/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -220,8 +245,18 @@ namespace QuieroUn10.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var studentHasSubject = await _context.StudentHasSubject.FindAsync(id);
+            var subject = _context.Subject.Where(s => s.ID == studentHasSubject.SubjectId).FirstOrDefault();
+            
             _context.StudentHasSubject.Remove(studentHasSubject);
             await _context.SaveChangesAsync();
+
+            if (!subject.Formal_Subject)
+            {
+                //Eliminamos tambien la asignatura
+                _context.Subject.Remove(subject);
+                await _context.SaveChangesAsync();
+            }
+
             return RedirectToAction(nameof(Index));
         }
 

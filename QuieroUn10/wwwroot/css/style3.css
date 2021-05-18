@@ -1,0 +1,101 @@
+﻿html, body {
+    width: auto;
+    height: auto;
+    min-height: 100%;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,e5e5e5+100 */
+    background: rgb(255, 255, 255); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(229, 229, 229, 1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(229, 229, 229, 1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(229, 229, 229, 1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e5e5e5', GradientType=0); /* IE6-9 */
+}
+
+.title {
+    font-size: 128px;
+    font-family: 'Covered By Your Grace', cursive;
+    height: 200px;
+    width: 250px;
+    min-height: 200px;
+    line-height: 200px;
+    color: #F44336;
+}
+
+.clock-title {
+    font-size: 64px;
+    font-family: 'Covered By Your Grace', cursive;
+    color: #F44336;
+}
+
+.margin-top {
+    margin-top: 20px;
+}
+
+.flip-clock-divider .flip-clock-label {
+    font-size: 16px;
+    font-family: 'Covered By Your Grace', cursive;
+    color: #F44336;
+}
+
+.flip-clock-wrapper ul {
+    background: #F44336;
+}
+
+    .flip-clock-wrapper ul li a div.up:after {
+        background-color: #F44336;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .flip-clock-wrapper ul li a div div.inn {
+        color: #fff;
+        text-shadow: 0 1px 1px #555;
+        background-color: #F44336;
+    }
+
+.session-clock, .break-clock {
+    display: inline-block;
+    width: auto;
+}
+
+.btn-edit {
+    width: 64px;
+    font-size: 36px;
+    color: white;
+    background: #F44336;
+}
+
+.margin-right {
+    margin-right: 25px;
+}
+
+.btn-main {
+    width: 225px;
+    font-size: 36px;
+    color: white;
+    background: #F44336;
+    font-family: 'Covered By Your Grace', cursive;
+    margin: 10px 0;
+}
+
+    .btn-main:hover {
+        color: white;
+    }
+
+    .btn-main:focus {
+        color: white;
+        outline: none;
+    }
+
+.btn-edit:hover {
+    color: white;
+}
+
+.btn-edit:focus {
+    color: white;
+    outline: none;
+}
+
+#credit {
+    font-size: 32px;
+    color: #F44336;
+    font-family: 'Covered By Your Grace', cursive;
+}
