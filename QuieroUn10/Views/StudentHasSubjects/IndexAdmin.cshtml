@@ -1,0 +1,91 @@
+﻿@model QuieroUn10.Dtos.FormStudenHasSubjectsDto
+
+@{
+
+    ViewData["Title"] = "Asignaturas de estudiantes";
+}
+
+<link rel="stylesheet" href="~/css/cards.css" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+<h1 class="text-center">Asignaturas de estudiantes</h1>
+@if (ViewBag.errorMessage != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.errorMessage
+    </div>
+}
+@if (ViewBag.successMessage != null)
+{
+    <div class="alert alert-success" role="alert">
+        @ViewBag.successMessage
+    </div>
+}
+@if (ViewBag.role == "ADMIN")
+{
+
+<form asp-action="IndexAdmin" class="mb-3 mt-3 shadow-lg p-3 mb-5 bg-white rounded">
+    <label>Student Name:</label>
+    <input asp-for="StudentName" class="border border-dark rounded-pill" />
+    <label>Subject Name:</label>
+    <input asp-for="SubjectName" class="border border-dark rounded-pill" />
+    <br />
+    <label>Creation Date:</label>
+    <input asp-for="CreationDateI" class="border border-dark rounded-pill" />
+    -
+    <input asp-for="CreationDateF" class="border border-dark rounded-pill" />
+
+    <div class="form-group w-25 ">
+        
+        <select onchange="this.form.submit()" class="form-control border-dark rounded-pill" style="font-size:14px;" asp-for="Ordering" asp-items="@ViewBag.selectLista">
+        </select>
+    </div>
+
+    <button type="submit" class="border-0 bg-white"> <i class="far fa-check-circle" title="Mostrar resultados"></i>   </button>
+
+
+    <a asp-action="IndexAdmin"><i class="far fa-trash-alt text-danger" title="Limpiar formulario"></i></a>
+</form>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Student Name
+                </th>
+                <th>
+                    Student Surname
+                </th>
+                <th>
+                    Inscription Date
+                </th>
+                <th>
+                    Subject Name
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.lista)
+            {
+                <tr>
+                    <td>
+                        @item.Student.Name
+                    </td>
+                    <td>
+                        @item.Student.Surname
+                    </td>
+                    <td>
+                        @item.InscriptionDate.ToString("dd/MM/yyyy")
+                    </td>
+                    <td>
+                        @item.Subject.Name
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+
+

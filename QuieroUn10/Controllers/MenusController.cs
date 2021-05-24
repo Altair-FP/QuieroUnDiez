@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuieroUn10.Data;
+using QuieroUn10.Filter;
 using QuieroUn10.Models;
 
 namespace QuieroUn10.Controllers
 {
+    [ServiceFilter(typeof(Security))]
+    [ServiceFilter(typeof(SecurityAdmin))]
     public class MenusController : Controller
     {
         private readonly QuieroUnDiezDBContex _context;
@@ -123,15 +127,24 @@ namespace QuieroUn10.Controllers
             {
                 return NotFound();
             }
-
-            var menu = await _context.Menu
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (menu == null)
+            var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
+            if (usuario.Role.Name.Equals("ADMIN"))
             {
-                return NotFound();
+                var menu = await _context.Menu
+                .FirstOrDefaultAsync(m => m.ID == id);
+                if (menu == null)
+                {
+                    return NotFound();
+                }
+
+                return View(menu);
+            }
+            else
+            {
+                return RedirectToAction("Index", "StudentHasSubjects", new { errorMessage = "No tiene permiso para eliminar el menu" });
             }
 
-            return View(menu);
         }
 
         // POST: Menus/Delete/5
@@ -140,9 +153,19 @@ namespace QuieroUn10.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var menu = await _context.Menu.FindAsync(id);
-            _context.Menu.Remove(menu);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
+            if (usuario.Role.Name.Equals("ADMIN"))
+            {
+                _context.Menu.Remove(menu);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return RedirectToAction("Index", "StudentHasSubjects", new { errorMessage = "No tiene permiso para eliminar el menu" });
+            }
+
         }
 
         private bool MenuExists(int id)

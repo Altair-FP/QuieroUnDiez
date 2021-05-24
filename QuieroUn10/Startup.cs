@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using QuieroUn10.Data;
+using QuieroUn10.Filter;
 using QuieroUn10.Hubs;
 
 namespace QuieroUn10
@@ -28,6 +29,10 @@ namespace QuieroUn10
         {
             services.AddControllersWithViews();
             services.AddSession();
+            services.AddScoped<Security>();
+            services.AddScoped<SecurityAdmin>();
+            services.AddScoped<SecurityStudent>();
+            services.AddScoped<SecurityStudentAdmin>();
             services.AddSignalR();
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
@@ -40,14 +45,7 @@ namespace QuieroUn10
             services.AddDbContext<QuieroUnDiezDBContex>(options => options
             .UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddAuthentication()
-            .AddGoogle(options =>
-            {
-                IConfigurationSection googleAuthNSection =
-                Configuration.GetSection("Authentication:Google");
-                options.ClientId = googleAuthNSection["ClientId"];
-                options.ClientSecret = googleAuthNSection["ClientSecret"];
-            });
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

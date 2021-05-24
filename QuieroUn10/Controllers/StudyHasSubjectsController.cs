@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuieroUn10.Data;
+using QuieroUn10.Filter;
 using QuieroUn10.Models;
 
 namespace QuieroUn10.Controllers
 {
+    [ServiceFilter(typeof(Security))]
+    [ServiceFilter(typeof(SecurityAdmin))]
     public class StudyHasSubjectsController : Controller
     {
         private readonly QuieroUnDiezDBContex _context;
@@ -155,17 +159,27 @@ namespace QuieroUn10.Controllers
             {
                 return NotFound();
             }
+            var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
 
-            var studyHasSubject = await _context.StudyHasSubject
+            if (usuario.Role.Name.Equals("ADMIN"))
+            {
+                var studyHasSubject = await _context.StudyHasSubject
                 .Include(s => s.Study)
                 .Include(s => s.Subject)
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (studyHasSubject == null)
+                if (studyHasSubject == null)
+                {
+                    return NotFound();
+                }
+
+                return View(studyHasSubject);
+            }
+            else
             {
-                return NotFound();
+                return RedirectToAction("Index", "StudentHasSubjects", new { errorMessage = "No tiene permiso para eliminar un estudio y sus asignaturas" });
             }
 
-            return View(studyHasSubject);
         }
 
         // POST: StudyHasSubjects/Delete/5
@@ -173,10 +187,22 @@ namespace QuieroUn10.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var studyHasSubject = await _context.StudyHasSubject.FindAsync(id);
-            _context.StudyHasSubject.Remove(studyHasSubject);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
+
+            if (usuario.Role.Name.Equals("ADMIN"))
+            {
+                var studyHasSubject = await _context.StudyHasSubject.FindAsync(id);
+                _context.StudyHasSubject.Remove(studyHasSubject);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return RedirectToAction("Index", "StudentHasSubjects", new { errorMessage = "No tiene permiso para eliminar un estudio y sus asignaturas" });
+            }
+
+
         }
 
         private bool StudyHasSubjectExists(int id)

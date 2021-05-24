@@ -11,11 +11,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using QuieroUn10.Data;
 using QuieroUn10.Dtos;
+using QuieroUn10.Filter;
 using QuieroUn10.Models;
 using Task = QuieroUn10.Models.Task;
 
 namespace QuieroUn10.Controllers
 {
+    [ServiceFilter(typeof(Security))]
+    [ServiceFilter(typeof(SecurityStudentAdmin))]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

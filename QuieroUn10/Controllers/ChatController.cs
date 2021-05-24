@@ -6,12 +6,16 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QuieroUn10.Data;
+using QuieroUn10.Filter;
 using QuieroUn10.Models;
 
 namespace QuieroUn10.Controllers
 {
+    [ServiceFilter(typeof(Security))]
+    [ServiceFilter(typeof(SecurityStudent))]
     public class ChatController : Controller
     {
+        
         private readonly QuieroUnDiezDBContex _context;
 
         public ChatController(QuieroUnDiezDBContex context)

@@ -1,46 +1,43 @@
 ﻿@{ ViewData["Title"] = "Login";
     Layout = null; }
 
+<title>Login</title>
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 <link rel="stylesheet" href="~/css/site.css" />
 <link rel="stylesheet" href="~/css/login.css" />
 
 
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="~/fonts/icomoon/style.css">
+<link rel="stylesheet" href="~/fonts/icomoon/style.css">
 
-    <link rel="stylesheet" href="~/css/owl.carousel.min.css">
+<link rel="stylesheet" href="~/css/owl.carousel.min.css">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="~/css/bootstrap.min.css">
 
-    <!-- Style -->
-    <link rel="stylesheet" href="~/css/style2.css">
+<!-- Style -->
+<link rel="stylesheet" href="~/css/style2.css">
 @if (ViewBag.errorMessage != null)
 {
-    @if (ViewBag.errorMessage == "Se ha habilitado la cuenta del vendedor correctamente")
-    {
-        <div class="alert alert-success" role="alert">
-            @ViewBag.errorMessage
-        </div>
-    }
-    else
-    {
-        <div class="alert alert-danger" role="alert">
-            @ViewBag.errorMessage
-        </div>
-    }
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.errorMessage
+    </div>
+}
+@if (ViewBag.successMessage != null)
+{
+    <div class="alert alert-success" role="alert">
+        @ViewBag.successMessage
+    </div>
 }
 
-<meta name="google-signin-client_id" content="171811978197-7gtkdaa34rsl9s2l4jtc69r26mg0lnq5.apps.googleusercontent.com">
 
 <body>
     <div class="text-right">
         <img src="~/images/titulo.png" class="w-25" alt="Alternate Text" />
     </div>
-    <div  class="content cambiar">   
+    <div class="content cambiar">
         <div class="container">
             <div class="row">
 
@@ -92,7 +89,6 @@
                                     <a href="#" class="google">
                                         <span class="icon-google mr-3"></span>
                                     </a>
-                                    <div class="g-signin2" data-onsuccess="onSignIn"></div>
                                 </div>
                             </form>
                         </div>

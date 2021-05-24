@@ -9,12 +9,15 @@ using Microsoft.EntityFrameworkCore;
 using QuieroUn10.Data;
 using QuieroUn10.Dtos;
 using QuieroUn10.ENUM;
+using QuieroUn10.Filter;
 using QuieroUn10.Models;
 using Rotativa.AspNetCore;
 using Task = QuieroUn10.Models.Task;
 
 namespace QuieroUn10.Controllers
 {
+    [ServiceFilter(typeof(Security))]
+    [ServiceFilter(typeof(SecurityStudent))]
     public class TasksController : Controller
     {
         private readonly QuieroUnDiezDBContex _context;
@@ -25,13 +28,15 @@ namespace QuieroUn10.Controllers
         }
 
         // GET: Tasks Aquí solo puede acceder el Admin
-        public async Task<IActionResult> Index(int? id, int eli)
+        public async Task<IActionResult> Index(int? id, int eli, string? errorMessage, string? successMessage)
         {
             var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
             var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
             StudentHasSubject studentHasSubject = _context.StudentHasSubject.Include(s => s.Student).Where(s => s.Student.UserAccountId == usuario.ID).FirstOrDefault();
             ViewBag.eli = id;
             ViewBag.eli2 = eli;
+            ViewBag.errorMessage = errorMessage;
+            ViewBag.successMessage = successMessage;
             var quieroUnDiezDBContex = _context.Task.Include(t => t.StudentHasSubject).ThenInclude(s=>s.Student).Where(t=>t.StudentHasSubject.Student.UserAccountId == usuario.ID && t.StudentHasSubject.SubjectId == eli);
            return View(await quieroUnDiezDBContex.ToListAsync());
 
@@ -128,12 +133,12 @@ namespace QuieroUn10.Controllers
                 await _context.SaveChangesAsync();
                 if(tasks.End == null)
                 {
-                    Utilities.Utility.SendEmail(usuario.Email, "Nueva tarea programada", "Se ha registrado una nueva tarea con el nombre de: " + tasks.Title + "para el dia " + tasks.Start + ". La tarea es de tipo: " + tasks.Type);
+                    Utilities.Utility.SendEmail(usuario.Email, "Nueva tarea programada", "Se ha registrado una nueva tarea con el nombre de: " + tasks.Title + "para el dia " + tasks.Start.ToString("dd/MM/yyyy") + ". La tarea es de tipo: " + tasks.Type);
 
                 }
                 else
                 {
-                    Utilities.Utility.SendEmail(usuario.Email, "Nueva tarea programada", "Se ha registrado una nueva tarea con el nombre de: " + tasks.Title + "para el dia " + tasks.Start + ". La tarea es de tipo: " + tasks.Type);
+                    Utilities.Utility.SendEmail(usuario.Email, "Nueva tarea programada", "Se ha registrado una nueva tarea con el nombre de: " + tasks.Title + " que tiene de dia de inicio el dia " + tasks.Start.ToString("dd/MM/yyyy") +" y termina el dia "+ tasks.End?.ToString("dd/MM/yyyy") + ". La tarea es de tipo: " + tasks.Type);
 
                 }
 
@@ -156,24 +161,43 @@ namespace QuieroUn10.Controllers
             }
             TaskDto taskDto = new TaskDto();
             var task = await _context.Task.FindAsync(id);
-            taskDto.Description = task.Description;
-            taskDto.End = task.End;
-            taskDto.Start = task.Start;
-            taskDto.Title = task.Title;
-            taskDto.Type = task.Type;
-            ViewBag.id = id;
-            ViewBag.eli = eli;
-            if (task == null)
+            var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
+            var studentHasSubject = _context.StudentHasSubject.Include(s => s.Student).Where(s => s.ID == task.StudentHasSubjectId).FirstOrDefault();
+            if (studentHasSubject.Student.UserAccountId == usuario.ID)
             {
-                return NotFound();
+
+                taskDto.Description = task.Description;
+                taskDto.End = task.End;
+                taskDto.Start = task.Start;
+                taskDto.Title = task.Title;
+                taskDto.Type = task.Type;
+                ViewBag.id = id;
+                ViewBag.eli = eli;
+                if (task == null)
+                {
+                    return NotFound();
+                }
+                List<TaskType> taskType = new List<TaskType>();
+                taskType.Add(TaskType.Examen);
+                taskType.Add(TaskType.Ejercicio);
+                taskType.Add(TaskType.Practica);
+                ViewData["Type"] = taskType.ToList();
+                ViewData["StudentHasSubjectId"] = new SelectList(_context.StudentHasSubject, "ID", "ID", task.StudentHasSubjectId);
+                return View(taskDto);
             }
-            List<TaskType> taskType = new List<TaskType>();
-            taskType.Add(TaskType.Examen);
-            taskType.Add(TaskType.Ejercicio);
-            taskType.Add(TaskType.Practica);
-            ViewData["Type"] = taskType.ToList();
-            ViewData["StudentHasSubjectId"] = new SelectList(_context.StudentHasSubject, "ID", "ID", task.StudentHasSubjectId);
-            return View(taskDto);
+            else
+            {
+                if (usuario.Role.Name.Equals("ADMIN"))
+                {
+                    return RedirectToAction("Index", "Subjects", new { errorMessage = "No tienes permiso para editar tareas de otros usuarios" });
+                }
+                else
+                {
+                    return RedirectToAction("Index", "StudentHasSubjects", new { errorMessage = "No tienes permiso para editar tareas de otros usuarios" });
+                }
+            }
+
         }
 
         // POST: Tasks/Edit/5
@@ -184,6 +208,8 @@ namespace QuieroUn10.Controllers
         public async Task<IActionResult> Edit(int id, int eli, [Bind("Title,Description,Start,End,Type")] TaskDto taskDto)
         {
             Task tasks = _context.Task.Where(t => t.ID == id).FirstOrDefault();
+            var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
             if (tasks == null)
             {
                 return NotFound();
@@ -193,32 +219,48 @@ namespace QuieroUn10.Controllers
             {
                 try
                 {
-
-                    tasks.Title = taskDto.Title;
-                    tasks.Description = taskDto.Description;
-                    tasks.Start = taskDto.Start;
-                    tasks.End = taskDto.End;
-                    tasks.Type = taskDto.Type;
-
-                    if (taskDto.Type.Equals(TaskType.Practica))
+                    var studentHasSubject = _context.StudentHasSubject.Include(s => s.Student).Where(s => s.ID == tasks.StudentHasSubjectId).FirstOrDefault();
+                    if (studentHasSubject.Student.UserAccountId == usuario.ID)
                     {
-                        tasks.ClassName = "practica";
-                    }
-                    else if (taskDto.Type.Equals(TaskType.Examen))
-                    {
-                        tasks.ClassName = "examen";
+                        tasks.Title = taskDto.Title;
+                        tasks.Description = taskDto.Description;
+                        tasks.Start = taskDto.Start;
+                        tasks.End = taskDto.End;
+                        tasks.Type = taskDto.Type;
+
+                        if (taskDto.Type.Equals(TaskType.Practica))
+                        {
+                            tasks.ClassName = "practica";
+                        }
+                        else if (taskDto.Type.Equals(TaskType.Examen))
+                        {
+                            tasks.ClassName = "examen";
+                        }
+                        else
+                        {
+                            tasks.ClassName = "ejercicio";
+                        }
+
+                        _context.Update(tasks);
+                        await _context.SaveChangesAsync();
                     }
                     else
                     {
-                        tasks.ClassName = "ejercicio";
+                        if (usuario.Role.Name.Equals("ADMIN"))
+                        {
+                            return RedirectToAction("Index", "Subjects", new { errorMessage = "No tienes permiso para editar tareas de otros usuarios" });
+                        }
+                        else
+                        {
+                            return RedirectToAction("Index", "StudentHasSubjects", new { errorMessage = "No tienes permiso para editar tareas de otros usuarios" });
+                        }
                     }
 
-                    _context.Update(tasks);
-                    await _context.SaveChangesAsync();
+
 
                     //Editamos tambien el calendar task
 
-                    
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -244,17 +286,35 @@ namespace QuieroUn10.Controllers
             {
                 return NotFound();
             }
-
-            var task = await _context.Task
-                .Include(t => t.StudentHasSubject)
-                .FirstOrDefaultAsync(m => m.ID == id);
-            ViewBag.eli = eli;
-            if (task == null)
+            var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
+            if (usuario.Role.Name.Equals("STUDENT"))
             {
-                return NotFound();
+                var task = await _context.Task
+                   .Include(t => t.StudentHasSubject)
+                   .FirstOrDefaultAsync(m => m.ID == id);
+                ViewBag.eli = eli;
+                if (task == null)
+                {
+                    return NotFound();
+                }
+                var studentHasSubject = _context.StudentHasSubject.Include(s => s.Student).Where(s => s.ID == task.StudentHasSubjectId).FirstOrDefault();
+                if (studentHasSubject.Student.UserAccountId == usuario.ID)
+                {
+                    return View(task);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "StudentHasSubjects", new { errorMessage = "No tienes permiso para eliminar tareas de otros usuarios" });
+                }
+
+
+            }
+            else
+            {
+                return RedirectToAction("Index", "Subjects", new { errorMessage = "No tiene permiso para eliminar tareas" });
             }
 
-            return View(task);
         }
 
         // POST: Tasks/Delete/5
@@ -262,10 +322,32 @@ namespace QuieroUn10.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id, int eli)
         {
-            var task = await _context.Task.FindAsync(id);
-            _context.Task.Remove(task);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Details", "StudentHasSubjects", new { id = eli, successMessage = "Se ha eliminado la tarea correctamente." });
+            var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
+            if (usuario.Role.Name.Equals("STUDENT"))
+            {
+                var task = await _context.Task.FindAsync(id);
+
+                var studentHasSubject = _context.StudentHasSubject.Include(s => s.Student).Where(s => s.ID == task.StudentHasSubjectId).FirstOrDefault();
+                if (studentHasSubject.Student.UserAccountId == usuario.ID)
+                {
+                    _context.Task.Remove(task);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Details", "StudentHasSubjects", new { id = eli, successMessage = "Se ha eliminado la tarea correctamente." });
+                }
+                else
+                {
+                    return RedirectToAction("Index", "StudentHasSubjects", new { errorMessage = "No tienes permiso para eliminar tareas de otros usuarios" });
+                }
+
+
+            }
+            else
+            {
+                return RedirectToAction("Index", "Subjects", new { errorMessage = "No tiene permiso para eliminar tareas" });
+
+            }
+
         }
 
         private bool TaskExists(int id)

@@ -9,10 +9,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuieroUn10.Data;
 using QuieroUn10.Dtos;
+using QuieroUn10.Filter;
 using QuieroUn10.Models;
 
 namespace QuieroUn10.Controllers
 {
+    [ServiceFilter(typeof(Security))]
+    [ServiceFilter(typeof(SecurityStudent))]
     public class DocsController : Controller
     {
         private readonly QuieroUnDiezDBContex _context;
@@ -148,17 +151,36 @@ namespace QuieroUn10.Controllers
             {
                 return NotFound();
             }
-
-            var doc = await _context.Doc
-                .Include(d => d.StudentHasSubject)
-                .FirstOrDefaultAsync(m => m.ID == id);
-            ViewBag.eli = eli;
-            if (doc == null)
+            var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
+            
+            if (usuario.Role.Name.Equals("STUDENT"))
             {
-                return NotFound();
+
+                var doc = await _context.Doc
+                   .Include(d => d.StudentHasSubject)
+                   .FirstOrDefaultAsync(m => m.ID == id);
+                if (doc == null)
+                {
+                    return NotFound();
+                }
+                ViewBag.eli = eli;
+                var studentHasSubject = _context.StudentHasSubject.Include(s=>s.Student).Where(s => s.ID == doc.StudentHasSubjectId).FirstOrDefault();
+                if(studentHasSubject.Student.UserAccountId == usuario.ID)
+                {
+                    return View(doc);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "StudentHasSubjects", new {errorMessage = "No tienes permiso para eliminar documentos de otros usuarios" });
+                }
+
+            }
+            else
+            {
+                return RedirectToAction("Index", "Subjects", new { errorMessage = "No tiene permiso para eliminar documentos" });
             }
 
-            return View(doc);
         }
 
         // POST: Docs/Delete/5
@@ -166,10 +188,30 @@ namespace QuieroUn10.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id, int eli)
         {
-            var doc = await _context.Doc.FindAsync(id);
-            _context.Doc.Remove(doc);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Details", "StudentHasSubjects", new { id = eli });
+            var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
+            if (usuario.Role.Name.Equals("STUDENT"))
+            {
+
+                var doc = await _context.Doc.FindAsync(id);
+                var studentHasSubject = _context.StudentHasSubject.Include(s => s.Student).Where(s => s.ID == doc.StudentHasSubjectId).FirstOrDefault();
+                if (studentHasSubject.Student.UserAccountId == usuario.ID)
+                {
+                    _context.Doc.Remove(doc);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Details", "StudentHasSubjects", new { id = eli, successMessage = "Se ha eliminado correctamente el documento" });
+                }
+                else
+                {
+                    return RedirectToAction("Index", "StudentHasSubjects", new { errorMessage = "No tienes permiso para eliminar documentos de otros usuarios" });
+                }
+
+            }
+            else
+            {
+                return RedirectToAction("Index", "Subjects", new { errorMessage = "No tiene permiso para eliminar documentos" });
+            }
+
         }
 
         private bool DocExists(int id)

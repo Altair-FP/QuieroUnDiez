@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuieroUn10.Data;
+using QuieroUn10.Filter;
 using QuieroUn10.Models;
 
 namespace QuieroUn10.Controllers
 {
+    [ServiceFilter(typeof(Security))]
     public class UserTokensController : Controller
     {
         private readonly QuieroUnDiezDBContex _context;

@@ -1,64 +1,129 @@
-﻿@model IEnumerable<QuieroUn10.Models.Subject>
+﻿@model QuieroUn10.Dtos.FormSubjectDto
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Asignaturas";
+}
+
+@if (ViewBag.errorMessage != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.errorMessage
+    </div>
+}
+@if (ViewBag.successMessage != null)
+{
+    <div class="alert alert-success" role="alert">
+        @ViewBag.successMessage
+    </div>
 }
 
 <h1 class="text-center">Listado de todas las asignaturas</h1>
 
-<p>
-    <a asp-action="Create">Crear nueva</a> |
-    <a asp-action="ContactPDF">Imprimir listado</a>
+
+
+<form asp-action="Index" class="mb-3 mt-3 shadow-lg p-3 mb-5 bg-white rounded">
+    <label>Name:</label>
+    <input asp-for="Name" class="border border-dark rounded-pill" />
+    <label>Course:</label>
+    <input asp-for="Course" class="border border-dark rounded-pill" />
+    <br />
+    <label>Formal Subject:</label>
+    <i class="fas fa-check" title="Asignaturas formales"></i>
+    <input asp-for="Formal_SubjectT" />
+    <i class="fas fa-times" title="Asignaturas no formales"></i>
+    <input asp-for="Formal_SubjectF" />
+    <br />
+
+    <label>Student Create:</label>
+    <i class="fas fa-check" title="Asignaturas creadas por un alumno"></i>
+    <input asp-for="Student_CreateT" />
+    <i class="fas fa-times" title="Asignaturas que no han sido creadas por un alumno"></i>
+    <input asp-for="Student_CreateF" />
+    <br />
+    <button type="submit" class="border-0 bg-white" > <i class="far fa-check-circle" title="Mostrar resultados"></i>   </button>
+    
+    
+    <a asp-action="Index"><i class="far fa-trash-alt text-danger" title="Limpiar formulario"></i></a>
+</form>
+
+
+<p class="float-left d-inline">
+    <a asp-action="Create"><i class="far fa-plus-square text-dark" title="Crear una nueva" ></i></a> |
 </p>
+<form asp-action="ContactPDF" class="float-left d-inline">
+    <input type="hidden" asp-for="Name" />
+    <input type="hidden" asp-for="Formal_SubjectT" />
+    <input type="hidden" asp-for="Formal_SubjectF" />
+    <input type="hidden" asp-for="Student_CreateT" />
+    <input type="hidden" asp-for="Student_CreateF" />
+
+    <button type="submit" class="border-0 bg-white"> <i class="fas fa-print" title="Imprimir listado"></i>   </button>
+</form>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Course)
+                Course
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Acronym)
+                Acronym
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Formal_Subject)
+                Formal Subject
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Student_Create)
+                Student Create
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Course)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Acronym)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Formal_Subject)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Student_Create)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a> 
-                @if (item.Student_Create && !item.Formal_Subject)
-                {
-                    <a asp-action="HabDesH" asp-route-id="@item.ID">Habilitar</a>
-                }
-            </td>
-        </tr>
-}
+        @foreach (var subject in ViewBag.subjects)
+        {
+            <tr>
+                <td>
+                    @subject.Name
+                </td>
+                <td>
+                    @subject.Course
+                </td>
+                <td>
+                    @subject.Acronym
+                </td>
+                <td>
+                    @if (subject.Formal_Subject)
+                    {
+                        <input type="checkbox" name="formalSubject" checked="checked" disabled="disabled" />
+                    }
+                    else
+                    {
+                        <input class="check-box" type="checkbox" name="formalSubject" disabled="disabled" />
+                    }
+                </td>
+                <td>
+                    @if (subject.Student_Create)
+                    {
+                        <input type="checkbox" name="studentCreate" checked="checked" disabled="disabled" />
+                    }
+                    else
+                    {
+                        <input class="check-box" type="checkbox" name="studentCreate" disabled="disabled" />
+                    }
+
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@subject.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@subject.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@subject.ID">Delete</a>
+                    @if (subject.Student_Create && !subject.Formal_Subject)
+                    {
+                        <a asp-action="HabDesH" asp-route-id="@subject.ID">Habilitar</a>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

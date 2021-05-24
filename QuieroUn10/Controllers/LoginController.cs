@@ -24,10 +24,11 @@ namespace QuieroUn10.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index(string errorMessage, string username)
+        public async Task<IActionResult> Index(string? errorMessage,string? successMessage, string username)
         {
 
             ViewBag.errorMessage = errorMessage;
+            ViewBag.successMessage = successMessage;
             ViewBag.username = username;
 
             return View();
@@ -92,6 +93,7 @@ namespace QuieroUn10.Controllers
             ViewBag.errorMessage = errorMessage;
             return View(passwordDto);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword([Bind("Email,Token,Password,ConfirmPassword")] PasswordDto passwordDto)
@@ -166,7 +168,7 @@ namespace QuieroUn10.Controllers
             string body = "Click on the following link to reset the password: " + "<a href='" + reference + "'> Reset Password </a>";
 
             Utility.SendEmail(emailTo, subject, body);
-            return RedirectToAction("Index");
+            return RedirectToAction("Index",new { successMessage = "Se ha enviado un email para restaurar la contraseña" });
 
         }
 

@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuieroUn10.Data;
+using QuieroUn10.Filter;
 using QuieroUn10.Models;
 using QuieroUn10.Utilities;
 
 namespace QuieroUn10.Controllers
 {
+    [ServiceFilter(typeof(Security))]
+    [ServiceFilter(typeof(SecurityAdmin))]
     public class UserAccountsController : Controller
     {
         private readonly QuieroUnDiezDBContex _context;
@@ -21,9 +25,11 @@ namespace QuieroUn10.Controllers
         }
 
         // GET: UserAccounts
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? errorMessage, string? successMessage)
         {
             var quieroUnDiezDBContex = _context.UserAccount.Include(u => u.Role);
+            ViewBag.errorMessage = errorMessage;
+            ViewBag.successMessage = successMessage;
             return View(await quieroUnDiezDBContex.ToListAsync());
         }
 
@@ -132,15 +138,38 @@ namespace QuieroUn10.Controllers
                 return NotFound();
             }
 
-            var userAccount = await _context.UserAccount
+            var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
+            if (usuario.Role.Name.Equals("ADMIN"))
+            {
+                var userAccount = await _context.UserAccount
                 .Include(u => u.Role)
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (userAccount == null)
+                if (userAccount.Role.Name.Equals("STUDENT"))
+                {
+                    var studenHasSubject = _context.StudentHasSubject.Include(s => s.Student).Where(s => s.Student.UserAccountId == userAccount.ID).ToList();
+                    if (studenHasSubject.Count != 0)
+                    {
+                        ViewBag.errorMessage = "No se puede eliminar, este estudiante tiene asignaturas asignadas.";
+                    }
+                    else
+                    {
+                        ViewBag.successMessage = "Se puede eliminar, no tiene ninguna asignatura asignada.";
+                    }
+                }
+                if (userAccount == null)
+                {
+                    return NotFound();
+                }
+
+                return View(userAccount);
+            }
+            else
             {
-                return NotFound();
+                return RedirectToAction("Index","StudentHasSubjects", new { errorMessage = "No tiene permiso para eliminar un usuario"});
             }
 
-            return View(userAccount);
+                
         }
 
         // POST: UserAccounts/Delete/5
@@ -148,10 +177,37 @@ namespace QuieroUn10.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var userAccount = await _context.UserAccount.FindAsync(id);
-            _context.UserAccount.Remove(userAccount);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
+            if (usuario.Role.Name.Equals("ADMIN"))
+            {
+
+                var userAccount = await _context.UserAccount.FindAsync(id);
+                if (userAccount.Role.Name.Equals("ADMIN"))
+                {
+                    var admin = _context.Admin.Where(s => s.UserAccountId == userAccount.ID).FirstOrDefault();
+
+                    _context.Admin.Remove(admin);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    var student = _context.Student.Where(s => s.UserAccountId == userAccount.ID).FirstOrDefault();
+
+                    _context.Student.Remove(student);
+                    await _context.SaveChangesAsync();
+                }
+
+
+                _context.UserAccount.Remove(userAccount);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index), new { successMessage = "Se ha eliminado correctamente al usuario" });
+            }
+            else
+            {
+                return RedirectToAction("Index","StudentHasSubjects", new { errorMessage = "No tienes permiso para eliminar a un usuario"});
+            }
+
         }
 
         private bool UserAccountExists(int id)

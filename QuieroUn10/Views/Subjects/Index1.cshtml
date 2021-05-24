@@ -1,8 +1,9 @@
-﻿@model IEnumerable<QuieroUn10.Models.UserAccount>
+﻿@model IEnumerable<QuieroUn10.Models.Subject>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Asignaturas";
 }
+
 @if (ViewBag.errorMessage != null)
 {
     <div class="alert alert-danger" role="alert">
@@ -15,25 +16,26 @@
         @ViewBag.successMessage
     </div>
 }
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<h1 class="text-center">Listado de todas las asignaturas</h1>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Username)
+                @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Email)
+                @Html.DisplayNameFor(model => model.Course)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Active)
+                @Html.DisplayNameFor(model => model.Acronym)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Role)
+                @Html.DisplayNameFor(model => model.Formal_Subject)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Student_Create)
             </th>
             <th></th>
         </tr>
@@ -43,21 +45,28 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Username)
+                    @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Email)
+                    @Html.DisplayFor(modelItem => item.Course)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Active)
+                    @Html.DisplayFor(modelItem => item.Acronym)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Role.Name)
+                    @Html.DisplayFor(modelItem => item.Formal_Subject)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Student_Create)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                    @if (item.Student_Create && !item.Formal_Subject)
+                    {
+                        <a asp-action="HabDesH" asp-route-id="@item.ID">Habilitar</a>
+                    }
                 </td>
             </tr>
         }

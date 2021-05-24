@@ -15,9 +15,11 @@ namespace QuieroUn10.Models
         public string Name { get; set; }
 
         [Required]
+        [Display(Name="Formal Subject")]
         public bool Formal_Subject { get; set; }
 
         [Required]
+        [Display(Name = "Student Create")]
         public bool Student_Create { get; set; }
 
         [Required]

@@ -8,11 +8,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuieroUn10.Data;
 using QuieroUn10.Dtos;
+using QuieroUn10.Filter;
 using QuieroUn10.Models;
 using QuieroUn10.Utilities;
 
 namespace QuieroUn10.Controllers
 {
+    [ServiceFilter(typeof(Security))]
+    [ServiceFilter(typeof(SecurityAdmin))]
     public class AdminDtoesController : Controller
     {
         private readonly QuieroUnDiezDBContex _context;

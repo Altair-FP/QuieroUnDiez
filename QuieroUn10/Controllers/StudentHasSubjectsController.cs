@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LinqKit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,11 +10,15 @@ using Microsoft.EntityFrameworkCore;
 using QuieroUn10.Data;
 using QuieroUn10.Dtos;
 using QuieroUn10.ENUM;
+using QuieroUn10.Filter;
 using QuieroUn10.Models;
+using QuieroUn10.Sort;
 using Task = QuieroUn10.Models.Task;
 
 namespace QuieroUn10.Controllers
 {
+    [ServiceFilter(typeof(Security))]
+    [ServiceFilter(typeof(SecurityStudentAdmin))]
     public class StudentHasSubjectsController : Controller
     {
         private readonly QuieroUnDiezDBContex _context;
@@ -24,42 +29,105 @@ namespace QuieroUn10.Controllers
         }
 
         // GET: StudentHasSubjects
+        [ServiceFilter(typeof(SecurityStudent))]
         public async Task<IActionResult> Index(string errorMessage, string successMessage)
+          {
+              List<String> imagenes = new List<string>();
+              imagenes.Add("border-primary bg2-primary");
+              imagenes.Add("border-secondary bg2-secondary");
+              imagenes.Add("border-success bg2-success");
+              imagenes.Add("border-danger bg2-danger");
+              imagenes.Add("border-warning bg2-warning");
+              imagenes.Add("border-dark bg2-dark");
+              var quieroUnDiezDBContex = new List<StudentHasSubject>();
+
+              ViewBag.imagenes = imagenes;
+              ViewBag.errorMessage = errorMessage;
+              ViewBag.successMessage = successMessage;
+              var id = Convert.ToInt32(HttpContext.Session.GetString("user"));
+              var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == id).FirstOrDefault();
+              ViewBag.role = usuario.Role.Name;
+
+              //Solo te tienen que salir el número de las tasks futuras.
+              var student = _context.Student.Where(s => s.UserAccountId == usuario.ID).FirstOrDefault();
+              ViewBag.TasksProximas = _context.StudentHasSubject.Include(s => s.Tasks).Where(s => s.StudentId == student.ID ).Select(s=>s.Tasks.Where(t => t.Start.Date >= DateTime.Now.Date)).ToList();
+
+              quieroUnDiezDBContex = _context.StudentHasSubject.Include(s => s.Student).Include(s => s.Subject).Include(s => s.Tasks).Include(s => s.Docs).Where(s => s.StudentId == student.ID).ToList();
+
+              return View(quieroUnDiezDBContex);
+          }
+
+
+        [ServiceFilter(typeof(SecurityAdmin))]
+        public async Task<IActionResult> IndexAdmin(string errorMessage, string successMessage, FormStudenHasSubjectsDto form)
         {
-            List<String> imagenes = new List<string>();
-            imagenes.Add("border-primary bg2-primary");
-            imagenes.Add("border-secondary bg2-secondary");
-            imagenes.Add("border-success bg2-success");
-            imagenes.Add("border-danger bg2-danger");
-            imagenes.Add("border-warning bg2-warning");
-            imagenes.Add("border-dark bg2-dark");
-
-
-            ViewBag.imagenes = imagenes;
-            
             ViewBag.errorMessage = errorMessage;
             ViewBag.successMessage = successMessage;
             var id = Convert.ToInt32(HttpContext.Session.GetString("user"));
             var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == id).FirstOrDefault();
-            var student = _context.Student.Where(s => s.UserAccountId == usuario.ID).FirstOrDefault();
             ViewBag.role = usuario.Role.Name;
             var quieroUnDiezDBContex = new List<StudentHasSubject>();
             if (usuario.Role.Name.Equals("ADMIN"))
             {
-                 quieroUnDiezDBContex = _context.StudentHasSubject.Include(s => s.Student).Include(s => s.Subject).Include(s=>s.Docs).ToList();
-            }
-            else if (usuario.Role.Name.Equals("STUDENT"))
-            {
-                //Solo te tienen que salir el número de las tasks futuras.
-                
-                ViewBag.TasksProximas = _context.StudentHasSubject.Include(s => s.Tasks).Where(s => s.StudentId == student.ID ).Select(s=>s.Tasks.Where(t => t.Start.Date >= DateTime.Now.Date)).ToList();
+                var lista = _context.StudentHasSubject.Include(s => s.Student).Include(s => s.Subject).Include(s => s.Docs).ToList();
+                Dictionary<string, string> dictionaryOrderIng = new Dictionary<string, string>();
+                dictionaryOrderIng.Add("Order inscription date", "Order inscription date");
+                dictionaryOrderIng.Add("Order by descending date", "Order by descending date");
+                dictionaryOrderIng.Add("Order by ascending date", "Order by ascending date");
+                ViewBag.selectLista = new SelectList(dictionaryOrderIng, "Key", "Value");
+                var predicate = PredicateBuilder.New<StudentHasSubject>(true);
+                if (!String.IsNullOrEmpty(form.StudentName))
+                {
+                    predicate = predicate.And(i => i.Student.Name.ToUpper().Contains(form.StudentName.ToUpper()) || i.Student.Surname.ToUpper().Contains(form.StudentName.ToUpper()));
+                }
+                if (form.CreationDateI == new DateTime(0001, 01, 01) && form.CreationDateF == new DateTime(0001, 01, 01))
+                {
+                    predicate = predicate.And(i => i.InscriptionDate.Date <= DateTime.Now.Date);
+                }
+                if (form.CreationDateI != new DateTime(0001, 01, 01) && form.CreationDateF != new DateTime(0001, 01, 01))
+                {
+                    predicate = predicate.And(i => i.InscriptionDate.Date >= form.CreationDateI.Date && i.InscriptionDate.Date <= form.CreationDateF.Date);
+                }
+                if (form.CreationDateI == new DateTime(0001, 01, 01) && form.CreationDateF != new DateTime(0001, 01, 01))
+                {
+                    predicate = predicate.And(i => i.InscriptionDate.Date <= form.CreationDateF.Date);
+                }
 
-                quieroUnDiezDBContex = _context.StudentHasSubject.Include(s => s.Student).Include(s => s.Subject).Include(s=>s.Tasks).Include(s=>s.Docs).Where(s=>s.StudentId == student.ID ).ToList();
-            }
+                if (form.CreationDateI != new DateTime(0001, 01, 01) && form.CreationDateF == new DateTime(0001, 01, 01))
+                {
+                    predicate = predicate.And(i => i.InscriptionDate.Date >= form.CreationDateI.Date);
+                }
+                if (!String.IsNullOrEmpty(form.SubjectName))
+                {
+                    predicate = predicate.And(i => i.Subject.Name.ToUpper().Contains(form.SubjectName.ToUpper()));
+                }
 
-            return View(quieroUnDiezDBContex);
+
+                switch (form.Ordering)
+                {
+                    case SubjectsOrder.SUBJECTBYDATEASC:
+                        //orderItem = _context.Items.Include(a => a.ItemHasCategory).OrderBy(t => t.Name);
+                        lista = lista.OrderBy(t => t.InscriptionDate.Date).ThenBy(t => t.InscriptionDate.TimeOfDay).ToList();
+                        break;
+
+                    case SubjectsOrder.SUBJECTBYDATEDESC:
+                        // orderItem = _context.Items.Include(a => a.ItemHasCategory).OrderByDescending(t => t.Name);
+                        lista = lista.OrderByDescending(t => t.InscriptionDate.Date).ThenByDescending(t => t.InscriptionDate.TimeOfDay).ToList();
+                        break;
+                    default:
+                        lista = lista.OrderByDescending(t => t.InscriptionDate.Date).ThenByDescending(t => t.InscriptionDate.TimeOfDay).ToList();
+                        break;
+
+                }
+
+                ViewBag.lista = lista.Where(predicate).ToList();
+
+
+            }
+           
+
+            return View("IndexAdmin");
         }
-
         // GET: StudentHasSubjects/Details/5
         public async Task<IActionResult> Details(int? id, string? successMessage, string? errorMessage)
         {
@@ -226,17 +294,44 @@ namespace QuieroUn10.Controllers
             {
                 return NotFound();
             }
-
-            var studentHasSubject = await _context.StudentHasSubject
+            var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
+            if (usuario.Role.Name.Equals("ADMIN"))
+            {
+                var studentHasSubject = await _context.StudentHasSubject
                 .Include(s => s.Student)
                 .Include(s => s.Subject)
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (studentHasSubject == null)
+                if (studentHasSubject == null)
+                {
+                    return NotFound();
+                }
+
+                return View(studentHasSubject);
+            }
+            else
             {
-                return NotFound();
+                //Ver si la asignatura es tuya
+                var student = _context.Student.Where(s => s.UserAccountId == usuario.ID).FirstOrDefault();
+                var studentHasSubject = await _context.StudentHasSubject
+               .Include(s => s.Student)
+               .Include(s => s.Subject)
+               .FirstOrDefaultAsync(m => m.ID == id);
+                if (studentHasSubject == null)
+                {
+                    return NotFound();
+                }
+                if(studentHasSubject.StudentId == student.ID)
+                {
+                    return View(studentHasSubject);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "StudentHasSubjects", new { errorMessage = "No tienes permiso para eliminar a una asignatura de otro estudiante." });
+                }
+
             }
 
-            return View(studentHasSubject);
         }
 
         // POST: StudentHasSubjects/Delete/5
@@ -244,20 +339,55 @@ namespace QuieroUn10.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var studentHasSubject = await _context.StudentHasSubject.FindAsync(id);
-            var subject = _context.Subject.Where(s => s.ID == studentHasSubject.SubjectId).FirstOrDefault();
-            
-            _context.StudentHasSubject.Remove(studentHasSubject);
-            await _context.SaveChangesAsync();
 
-            if (!subject.Formal_Subject)
+            var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
+            if (usuario.Role.Name.Equals("ADMIN"))
             {
-                //Eliminamos tambien la asignatura
-                _context.Subject.Remove(subject);
+
+                var studentHasSubject = await _context.StudentHasSubject.FindAsync(id);
+                var subject = _context.Subject.Where(s => s.ID == studentHasSubject.SubjectId).FirstOrDefault();
+
+                _context.StudentHasSubject.Remove(studentHasSubject);
                 await _context.SaveChangesAsync();
+
+                if (!subject.Formal_Subject)
+                {
+                    //Eliminamos tambien la asignatura
+                    _context.Subject.Remove(subject);
+                    await _context.SaveChangesAsync();
+                }
+
+                return RedirectToAction(nameof(Index), new { successMessage = "Se ha eliminado correctamente al estudiante"});
+            }
+            else
+            {
+                //Ver si la asignatura es tuya
+                var student = _context.Student.Where(s => s.UserAccountId == usuario.ID).FirstOrDefault();
+                var studentHasSubject = await _context.StudentHasSubject.FindAsync(id);
+                if (studentHasSubject.StudentId == student.ID)
+                {
+                    var subject = _context.Subject.Where(s => s.ID == studentHasSubject.SubjectId).FirstOrDefault();
+
+                    _context.StudentHasSubject.Remove(studentHasSubject);
+                    await _context.SaveChangesAsync();
+
+                    if (!subject.Formal_Subject)
+                    {
+                        //Eliminamos tambien la asignatura
+                        _context.Subject.Remove(subject);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    return RedirectToAction(nameof(Index), new { successMessage = "Se ha eliminado correctamente al estudiante" });
+                }
+                else
+                {
+                    return RedirectToAction("Index", "StudentHasSubjects", new { errorMessage = "No tienes permiso para eliminar a una asignatura de otro estudiante." });
+
+                }
             }
 
-            return RedirectToAction(nameof(Index));
         }
 
         private bool StudentHasSubjectExists(int id)

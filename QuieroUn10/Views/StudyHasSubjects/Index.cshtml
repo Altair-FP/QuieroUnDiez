@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<QuieroUn10.Models.StudyHasSubject>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Listado de estudios y sus asignaturas.";
 }
 
 @if (ViewBag.errorMessage != null)
@@ -17,7 +17,7 @@
     </div>
 }
 
-<h1>Index</h1>
+<h1 class="text-center">Listado de estudios y sus asignaturas.</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -34,28 +34,48 @@
             <th>
                 @Html.DisplayNameFor(model => model.Subject.Course)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Subject.Acronym)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Subject.Formal_Subject)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Subject.Student_Create)
+            </th>
+
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Study.Acronym)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Subject.Acronym)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Subject.Course)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Study.Acronym)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Subject.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Subject.Course)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Subject.Acronym)
+            </td>
+            <th>
+                @Html.DisplayFor(modelItem => item.Subject.Formal_Subject)
+            </th>
+            <th>
+                @Html.DisplayFor(modelItem => item.Subject.Student_Create)
+            </th>
+
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>

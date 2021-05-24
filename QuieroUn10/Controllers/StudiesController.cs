@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuieroUn10.Data;
+using QuieroUn10.Filter;
 using QuieroUn10.Models;
 
 namespace QuieroUn10.Controllers
 {
+    [ServiceFilter(typeof(Security))]
+    [ServiceFilter(typeof(SecurityAdmin))]
     public class StudiesController : Controller
     {
         private readonly QuieroUnDiezDBContex _context;
@@ -20,8 +24,10 @@ namespace QuieroUn10.Controllers
         }
 
         // GET: Studies
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? errorMessage, string? successMessage)
         {
+            ViewBag.errorMessage = errorMessage;
+            ViewBag.successMessage = successMessage;
             return View(await _context.Studies.ToListAsync());
         }
 
@@ -123,15 +129,25 @@ namespace QuieroUn10.Controllers
             {
                 return NotFound();
             }
+            var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
 
-            var study = await _context.Studies
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (study == null)
+            if (usuario.Role.Name.Equals("ADMIN"))
             {
-                return NotFound();
+                var study = await _context.Studies
+                .FirstOrDefaultAsync(m => m.ID == id);
+                if (study == null)
+                {
+                    return NotFound();
+                }
+
+                return View(study);
+            }
+            else
+            {
+                return RedirectToAction("Index", "StudentHasSubjects", new { errorMessage = "No tiene permiso para eliminar un estudio" });
             }
 
-            return View(study);
         }
 
         // POST: Studies/Delete/5
@@ -140,9 +156,30 @@ namespace QuieroUn10.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var study = await _context.Studies.FindAsync(id);
-            _context.Studies.Remove(study);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
+
+            if (usuario.Role.Name.Equals("ADMIN"))
+            {
+                var studyHasSubject = _context.StudyHasSubject.Where(s => s.StudyId == id).ToList();
+
+                if (studyHasSubject.Count == 0)
+                {
+                    _context.Studies.Remove(study);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index), new { successMessage = "Se ha borrado el estudio correctamente." });
+                }
+                else
+                {
+                    return RedirectToAction(nameof(Index), new { errorMessage = "No se ha podido borrar. Hay " + studyHasSubject.Count + " asignaturas asignadas a este estudio" });
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "StudentHasSubjects", new { errorMessage = "No tiene permiso para eliminar un estudio" });
+
+            }
         }
 
         private bool StudyExists(int id)

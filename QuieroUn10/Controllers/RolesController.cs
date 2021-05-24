@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuieroUn10.Data;
+using QuieroUn10.Filter;
 using QuieroUn10.Models;
 
 namespace QuieroUn10.Controllers
 {
+    [ServiceFilter(typeof(Security))]
+    [ServiceFilter(typeof(SecurityAdmin))]
     public class RolesController : Controller
     {
         private readonly QuieroUnDiezDBContex _context;
@@ -130,8 +134,17 @@ namespace QuieroUn10.Controllers
             {
                 return NotFound();
             }
+            var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
+            if (usuario.Role.Name.Equals("ADMIN"))
+            {
+                return View(role);
+            }
+            else
+            {
+                return RedirectToAction("Index", "StudentHasSubjects", new { errorMessage = "No tiene permiso para eliminar un rol" });
+            }
 
-            return View(role);
         }
 
         // POST: Roles/Delete/5
@@ -140,9 +153,21 @@ namespace QuieroUn10.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var role = await _context.Role.FindAsync(id);
-            _context.Role.Remove(role);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
+            if (usuario.Role.Name.Equals("ADMIN"))
+            {
+                _context.Role.Remove(role);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return RedirectToAction("Index", "StudentHasSubjects", new { errorMessage = "No tiene permiso para eliminar un rol" });
+            }
+
+
         }
 
         private bool RoleExists(int id)

@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuieroUn10.Data;
 using QuieroUn10.Dtos;
+using QuieroUn10.Filter;
 using QuieroUn10.Models;
 using QuieroUn10.Utilities;
 
 namespace QuieroUn10.Controllers
 {
+
     public class StudentDtoesController : Controller
     {
         private readonly QuieroUnDiezDBContex _context;
@@ -23,7 +25,7 @@ namespace QuieroUn10.Controllers
         }
 
 
-
+        [ServiceFilter(typeof(SecurityStudent))]
         // GET: StudentDtoes/Details/5
         public async Task<IActionResult> Details(string errorMessage)
         {
@@ -97,7 +99,7 @@ namespace QuieroUn10.Controllers
                 userAccount.Username = studentDto.Username;
                 userAccount.Email = studentDto.Email;
                 //Aquí hay que encriptar la contraseña
-
+                userAccount.Active = false;
                 var contraseñaNuevaEncriptada = Utility.Encriptar(studentDto.Password);
                 userAccount.Password = contraseñaNuevaEncriptada;
                 userAccount.RoleId = role.ID;
@@ -129,6 +131,7 @@ namespace QuieroUn10.Controllers
 
         }
 
+        [ServiceFilter(typeof(SecurityStudent))]
         // GET: StudentDtoes/Edit/5
         public async Task<IActionResult> Edit()
         {
