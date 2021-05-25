@@ -136,7 +136,7 @@ namespace QuieroUn10.Controllers
             var student = _context.Student.Where(s => s.UserAccountId == usuario.ID).FirstOrDefault();
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             var studentHasSubject = await _context.StudentHasSubject
@@ -148,7 +148,7 @@ namespace QuieroUn10.Controllers
 
             if (studentHasSubject == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
             else
             {
@@ -174,7 +174,21 @@ namespace QuieroUn10.Controllers
         // GET: StudentHasSubjects/Create
         public IActionResult Create()
         {
-            ViewData["SubjectId"] = new SelectList(_context.Subject.Where(s=>s.Formal_Subject), "ID", "Name");
+            var id = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == id).FirstOrDefault();
+            var student = _context.Student.Where(s => s.UserAccountId == usuario.ID).FirstOrDefault();
+
+            //Aquí tengo una asignatura
+            var unaAsignatura = _context.StudentHasSubject.Where(s => s.StudentId == student.ID).FirstOrDefault();
+
+            //Buscamos de esa asignatura el study
+            var estudioAsignatura = _context.StudyHasSubject.Include(s=>s.Study).Where(s => s.SubjectId == unaAsignatura.ID).FirstOrDefault().Study;
+
+            var StudyHasSubject = _context.StudyHasSubject.Where(s => s.StudyId == estudioAsignatura.ID).ToList();
+       
+
+            ViewBag.subjects = _context.StudyHasSubject.Include(s=>s.Subject).Where(s => s.StudyId == estudioAsignatura.ID).ToList();
+ 
             return View();
         }
 
@@ -237,13 +251,13 @@ namespace QuieroUn10.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             var studentHasSubject = await _context.StudentHasSubject.FindAsync(id);
             if (studentHasSubject == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
             ViewData["StudentId"] = new SelectList(_context.Student, "ID", "Name", studentHasSubject.StudentId);
             ViewData["SubjectId"] = new SelectList(_context.Subject, "ID", "Acronym", studentHasSubject.SubjectId);
@@ -259,7 +273,7 @@ namespace QuieroUn10.Controllers
         {
             if (id != studentHasSubject.ID)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             if (ModelState.IsValid)
@@ -273,7 +287,7 @@ namespace QuieroUn10.Controllers
                 {
                     if (!StudentHasSubjectExists(studentHasSubject.ID))
                     {
-                        return NotFound();
+                        return  RedirectToAction("NotFound","Methods");
                     }
                     else
                     {
@@ -292,7 +306,7 @@ namespace QuieroUn10.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
             var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
             var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
@@ -304,7 +318,7 @@ namespace QuieroUn10.Controllers
                 .FirstOrDefaultAsync(m => m.ID == id);
                 if (studentHasSubject == null)
                 {
-                    return NotFound();
+                    return  RedirectToAction("NotFound","Methods");
                 }
 
                 return View(studentHasSubject);
@@ -319,10 +333,11 @@ namespace QuieroUn10.Controllers
                .FirstOrDefaultAsync(m => m.ID == id);
                 if (studentHasSubject == null)
                 {
-                    return NotFound();
+                    return  RedirectToAction("NotFound","Methods");
                 }
                 if(studentHasSubject.StudentId == student.ID)
                 {
+                    ViewBag.errorMessage = "Se eliminaran todos los documentos y tareas asociadas a esta asignatura.";
                     return View(studentHasSubject);
                 }
                 else
@@ -337,9 +352,9 @@ namespace QuieroUn10.Controllers
         // POST: StudentHasSubjects/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id, string? errorMessage)
         {
-
+            ViewBag.errorMessage = errorMessage;
             var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
             var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
             if (usuario.Role.Name.Equals("ADMIN"))

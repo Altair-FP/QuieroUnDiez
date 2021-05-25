@@ -1,14 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using QuieroUn10.Models;
-using QuieroUn10.Dtos;
 using Task = QuieroUn10.Models.Task;
 using QuieroUn10.Utilities;
 
+using System.Collections.Generic;
 /*//Comando a ejecutar en el cmd, en el directorio del proyecto, para crear los archivos de la migración
 dotnet ef migrations add nombreMigracion
 
@@ -50,10 +48,10 @@ namespace QuieroUn10.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            IConfiguration configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .Build();
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+
+            IConfiguration configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+
+            optionsBuilder.UseMySql(configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -184,7 +182,7 @@ namespace QuieroUn10.Data
                {
                    ID = 12,
                    Controller = "Tasks",
-                   Action = "Index",
+                   Action = "AllIndex",
                    Label = "Tasks"
                },
                new Menu
@@ -207,6 +205,13 @@ namespace QuieroUn10.Data
                    Controller = "Methods",
                    Action = "Index",
                    Label = "Método Pomodoro"
+               },
+               new Menu
+               {
+                   ID = 16,
+                   Controller = "StudentHasSubjects",
+                   Action = "IndexAdmin",
+                   Label = "Student Subject"
                }
            );
 
@@ -264,7 +269,7 @@ namespace QuieroUn10.Data
                  {
                      ID = 9,
                      RoleId = 1,
-                     MenuId = 11
+                     MenuId = 16
                  },
 
                 //Menu Student
@@ -317,7 +322,7 @@ namespace QuieroUn10.Data
                     Password = Utility.Encriptar("admin2"),
                     RoleId = 1,
                     Email = "admin2@gmail.com",
-                    Active = true
+                    Active = false
                 },
                  new UserAccount
                  {
@@ -327,6 +332,15 @@ namespace QuieroUn10.Data
                      RoleId = 2,
                      Email = "student1@gmail.com",
                      Active = true
+                 },
+                 new UserAccount
+                 {
+                     ID = 4,
+                     Username = "student2",
+                     Password = Utility.Encriptar("student2"),
+                     RoleId = 2,
+                     Email = "student2@gmail.com",
+                     Active = false
                  }
 
             );
@@ -363,8 +377,398 @@ namespace QuieroUn10.Data
                     Surname = "Cruz",
                     UserAccountId = 3,
                     Activate = false
+                },
+                 new Student
+                 {
+                     ID = 2,
+                     Birthdate = new DateTime(1999, 01, 14),
+                     CalendarTasks = new List<CalendarTask>(),
+                     Name = "Admin 2",
+                     Phone = "666444555",
+                     StudentHasSubjects = new List<StudentHasSubject>(),
+                     Surname = "Admin",
+                     UserAccountId = 4,
+                     Activate = false
+                 }
+           );
+
+            modelBuilder.Entity<Study>().HasData(
+                new Study
+                {
+                    ID = 1,
+                    Acronym = "DAW",
+                    Name = "Desarrollo de Aplicaciones Web",
+                    StudyHasSubjects = new List<StudyHasSubject>()
+                },
+                new Study
+                {
+                    ID = 2,
+                    Acronym = "DAM",
+                    Name = "Desarrollo de Aplicaciones Multiplataforma",
+                    StudyHasSubjects = new List<StudyHasSubject>()
+                },
+                new Study
+                {
+                    ID = 3,
+                    Acronym = "ASIR",
+                    Name = "Administración de Sistemas Informáticos en Red",
+                    StudyHasSubjects = new List<StudyHasSubject>()
                 }
            );
+
+            modelBuilder.Entity<Subject>().HasData(
+                new Subject
+                {
+                    ID = 1,
+                    Name = "Sistemas informáticos.",
+                    Acronym = "SSII",
+                    Course = "1",
+                    Formal_Subject = true,
+                    Student_Create = false,
+                    StudyHasSubjects = new List<StudyHasSubject>(),
+                    StudentHasSubjects = new List<StudentHasSubject>()
+                },
+                new Subject
+                {
+                    ID = 2,
+                    Name = "Bases de datos",
+                    Acronym = "BBDD",
+                    Course = "1",
+                    Formal_Subject = true,
+                    Student_Create = false,
+                    StudyHasSubjects = new List<StudyHasSubject>(),
+                    StudentHasSubjects = new List<StudentHasSubject>()
+                },
+                new Subject
+                {
+                    ID = 3,
+                    Name = "Programación",
+                    Acronym = "Programación",
+                    Course = "1",
+                    Formal_Subject = true,
+                    Student_Create = false,
+                    StudyHasSubjects = new List<StudyHasSubject>(),
+                    StudentHasSubjects = new List<StudentHasSubject>()
+                },
+                new Subject
+                {
+                    ID = 4,
+                    Name = "Lenguajes de marcas y sistemas de gestión de información",
+                    Acronym = "LM",
+                    Course = "1",
+                    Formal_Subject = true,
+                    Student_Create = false,
+                    StudyHasSubjects = new List<StudyHasSubject>(),
+                    StudentHasSubjects = new List<StudentHasSubject>()
+                },
+                new Subject
+                {
+                    ID = 5,
+                    Name = "Entornos de desarrollo",
+                    Acronym = "ED",
+                    Course = "1",
+                    Formal_Subject = true,
+                    Student_Create = false,
+                    StudyHasSubjects = new List<StudyHasSubject>(),
+                    StudentHasSubjects = new List<StudentHasSubject>()
+                },
+                new Subject
+                {
+                    ID = 6,
+                    Name = "Formación y orientación laboral",
+                    Acronym = "FOL.",
+                    Course = "1",
+                    Formal_Subject = true,
+                    Student_Create = false,
+                    StudyHasSubjects = new List<StudyHasSubject>(),
+                    StudentHasSubjects = new List<StudentHasSubject>()
+                },
+                new Subject
+                {
+                    ID = 7,
+                    Name = "Desarrollo web en entorno cliente",
+                    Acronym = "DWEC",
+                    Course = "2",
+                    Formal_Subject = true,
+                    Student_Create = false,
+                    StudyHasSubjects = new List<StudyHasSubject>(),
+                    StudentHasSubjects = new List<StudentHasSubject>()
+                },
+                new Subject
+                {
+                    ID = 8,
+                    Name = "Desarrollo web en entorno servidor",
+                    Acronym = "DWS",
+                    Course = "2",
+                    Formal_Subject = true,
+                    Student_Create = false,
+                    StudyHasSubjects = new List<StudyHasSubject>(),
+                    StudentHasSubjects = new List<StudentHasSubject>()
+                },
+                new Subject
+                {
+                    ID = 9,
+                    Name = "Despliegue de aplicaciones web",
+                    Acronym = "DAW",
+                    Course = "2",
+                    Formal_Subject = true,
+                    Student_Create = false,
+                    StudyHasSubjects = new List<StudyHasSubject>(),
+                    StudentHasSubjects = new List<StudentHasSubject>()
+                },
+                new Subject
+                {
+                    ID = 10,
+                    Name = "Diseño de interfaces Web",
+                    Acronym = "DIW",
+                    Course = "2",
+                    Formal_Subject = true,
+                    Student_Create = false,
+                    StudyHasSubjects = new List<StudyHasSubject>(),
+                    StudentHasSubjects = new List<StudentHasSubject>()
+                },
+                new Subject
+                {
+                    ID = 11,
+                    Name = "Empresa e iniciativa emprendedora",
+                    Acronym = "Empresa",
+                    Course = "2",
+                    Formal_Subject = true,
+                    Student_Create = false,
+                    StudyHasSubjects = new List<StudyHasSubject>(),
+                    StudentHasSubjects = new List<StudentHasSubject>()
+                },
+                new Subject
+                {
+                    ID = 12,
+                    Name = "Proyecto de desarrollo de aplicaciones web",
+                    Acronym = "TFG - DAW",
+                    Course = "2",
+                    Formal_Subject = true,
+                    Student_Create = false,
+                    StudyHasSubjects = new List<StudyHasSubject>(),
+                    StudentHasSubjects = new List<StudentHasSubject>()
+                },
+                 new Subject
+                 {
+                     ID = 13,
+                     Name = "Acceso a datos",
+                     Acronym = "AD",
+                     Course = "2",
+                     Formal_Subject = true,
+                     Student_Create = false,
+                     StudyHasSubjects = new List<StudyHasSubject>(),
+                     StudentHasSubjects = new List<StudentHasSubject>()
+                 },
+                  new Subject
+                  {
+                      ID = 14,
+                      Name = "Desarrollo de interfaces",
+                      Acronym = "DI",
+                      Course = "2",
+                      Formal_Subject = true,
+                      Student_Create = false,
+                      StudyHasSubjects = new List<StudyHasSubject>(),
+                      StudentHasSubjects = new List<StudentHasSubject>()
+                  },
+                  new Subject
+                  {
+                      ID = 15,
+                      Name = "Programación multimedia y dispositivos móviles.",
+                      Acronym = "PMDM",
+                      Course = "2",
+                      Formal_Subject = true,
+                      Student_Create = false,
+                      StudyHasSubjects = new List<StudyHasSubject>(),
+                      StudentHasSubjects = new List<StudentHasSubject>()
+                  },
+                  new Subject
+                  {
+                      ID = 16,
+                      Name = "Programación de servicios y procesos",
+                      Acronym = "PSP",
+                      Course = "2",
+                      Formal_Subject = true,
+                      Student_Create = false,
+                      StudyHasSubjects = new List<StudyHasSubject>(),
+                      StudentHasSubjects = new List<StudentHasSubject>()
+                  },
+                  new Subject
+                  {
+                      ID = 17,
+                      Name = "Sistemas de gestión empresarial",
+                      Acronym = "SGE",
+                      Course = "2",
+                      Formal_Subject = true,
+                      Student_Create = false,
+                      StudyHasSubjects = new List<StudyHasSubject>(),
+                      StudentHasSubjects = new List<StudentHasSubject>()
+                  },
+                   new Subject
+                   {
+                       ID = 18,
+                       Name = "Proyecto de desarrollo de aplicaciones multiplataforma",
+                       Acronym = "TFG - DAM",
+                       Course = "2",
+                       Formal_Subject = true,
+                       Student_Create = false,
+                       StudyHasSubjects = new List<StudyHasSubject>(),
+                       StudentHasSubjects = new List<StudentHasSubject>()
+                   }
+                ) ;
+
+            modelBuilder.Entity<StudyHasSubject>().HasData(
+                new StudyHasSubject()
+                {
+                    ID =1,
+                    StudyId = 1,
+                    SubjectId = 1
+                },
+                new StudyHasSubject()
+                {
+                    ID = 2,
+                    StudyId = 1,
+                    SubjectId = 2
+                },
+                new StudyHasSubject()
+                {
+                    ID = 3,
+                    StudyId = 1,
+                    SubjectId = 3
+                },
+                new StudyHasSubject()
+                {
+                    ID = 4,
+                    StudyId = 1,
+                    SubjectId = 4
+                },
+                new StudyHasSubject()
+                {
+                    ID = 5,
+                    StudyId = 1,
+                    SubjectId = 5
+                },
+                new StudyHasSubject()
+                {
+                    ID = 6,
+                    StudyId = 1,
+                    SubjectId = 6
+                },
+                new StudyHasSubject()
+                {
+                    ID = 7,
+                    StudyId = 1,
+                    SubjectId = 7
+                },
+                new StudyHasSubject()
+                {
+                    ID = 8,
+                    StudyId = 1,
+                    SubjectId = 8
+                },
+                new StudyHasSubject()
+                {
+                    ID = 9,
+                    StudyId = 1,
+                    SubjectId = 9
+                },
+                new StudyHasSubject()
+                {
+                    ID = 10,
+                    StudyId = 1,
+                    SubjectId = 10
+                },
+                new StudyHasSubject()
+                {
+                    ID = 11,
+                    StudyId = 1,
+                    SubjectId = 11
+                },
+                new StudyHasSubject()
+                {
+                    ID = 12,
+                    StudyId = 1,
+                    SubjectId = 12
+                },
+                new StudyHasSubject()
+                {
+                    ID = 13,
+                    StudyId = 2,
+                    SubjectId = 1
+                },
+                 new StudyHasSubject()
+                 {
+                     ID = 14,
+                     StudyId = 2,
+                     SubjectId = 2
+                 },
+                  new StudyHasSubject()
+                  {
+                      ID = 15,
+                      StudyId = 2,
+                      SubjectId = 3
+                  },
+                   new StudyHasSubject()
+                   {
+                       ID = 16,
+                       StudyId = 2,
+                       SubjectId = 4
+                   },
+                    new StudyHasSubject()
+                    {
+                        ID = 17,
+                        StudyId = 2,
+                        SubjectId = 5
+                    },
+                     new StudyHasSubject()
+                     {
+                         ID = 18,
+                         StudyId = 2,
+                         SubjectId = 6
+                     },
+                     new StudyHasSubject()
+                     {
+                         ID = 19,
+                         StudyId = 2,
+                         SubjectId = 13
+                     },
+                     new StudyHasSubject()
+                     {
+                         ID = 20,
+                         StudyId = 2,
+                         SubjectId = 14
+                     },
+                     new StudyHasSubject()
+                     {
+                         ID = 21,
+                         StudyId = 2,
+                         SubjectId = 15
+                     },
+                     new StudyHasSubject()
+                     {
+                         ID = 22,
+                         StudyId = 2,
+                         SubjectId = 16
+                     },
+                      new StudyHasSubject()
+                      {
+                          ID = 23,
+                          StudyId = 2,
+                          SubjectId = 11
+                      },
+                     new StudyHasSubject()
+                     {
+                         ID = 24,
+                         StudyId = 2,
+                         SubjectId = 17
+                     },
+                     new StudyHasSubject()
+                     {
+                         ID = 25,
+                         StudyId = 2,
+                         SubjectId = 18
+                     }
+                );
 
         }
 

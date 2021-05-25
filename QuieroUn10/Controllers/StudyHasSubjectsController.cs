@@ -37,7 +37,7 @@ namespace QuieroUn10.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             var studyHasSubject = await _context.StudyHasSubject
@@ -46,7 +46,7 @@ namespace QuieroUn10.Controllers
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (studyHasSubject == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             return View(studyHasSubject);
@@ -83,13 +83,13 @@ namespace QuieroUn10.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             var studyHasSubject = await _context.StudyHasSubject.FindAsync(id);
             if (studyHasSubject == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
             ViewData["StudyId"] = new SelectList(_context.Studies, "ID", "Acronym", studyHasSubject.StudyId);
             ViewData["SubjectId"] = new SelectList(_context.Subject, "ID", "Name", studyHasSubject.SubjectId);
@@ -105,7 +105,7 @@ namespace QuieroUn10.Controllers
         {
             if (id != studyHasSubject.ID)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             if (ModelState.IsValid)
@@ -138,7 +138,7 @@ namespace QuieroUn10.Controllers
                 {
                     if (!StudyHasSubjectExists(studyHasSubject.ID))
                     {
-                        return NotFound();
+                        return  RedirectToAction("NotFound","Methods");
                     }
                     else
                     {
@@ -157,7 +157,7 @@ namespace QuieroUn10.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
             var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
             var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
@@ -170,7 +170,7 @@ namespace QuieroUn10.Controllers
                 .FirstOrDefaultAsync(m => m.ID == id);
                 if (studyHasSubject == null)
                 {
-                    return NotFound();
+                    return  RedirectToAction("NotFound","Methods");
                 }
 
                 return View(studyHasSubject);

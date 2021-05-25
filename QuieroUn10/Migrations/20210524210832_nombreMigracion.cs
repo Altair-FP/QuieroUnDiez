@@ -1,9 +1,10 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace QuieroUn10.Migrations
 {
-    public partial class tMigracion : Migration
+    public partial class nombreMigracion : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,11 +12,11 @@ namespace QuieroUn10.Migrations
                 name: "MENU",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Controller = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    Action = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Label = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Controller = table.Column<string>(maxLength: 30, nullable: false),
+                    Action = table.Column<string>(maxLength: 20, nullable: false),
+                    Label = table.Column<string>(maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -26,11 +27,11 @@ namespace QuieroUn10.Migrations
                 name: "ROLE",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Enabled = table.Column<bool>(type: "bit", nullable: false)
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(maxLength: 30, nullable: false),
+                    Description = table.Column<string>(maxLength: 100, nullable: true),
+                    Enabled = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -41,10 +42,10 @@ namespace QuieroUn10.Migrations
                 name: "STUDY",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Acronym = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(maxLength: 50, nullable: false),
+                    Acronym = table.Column<string>(maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -55,11 +56,13 @@ namespace QuieroUn10.Migrations
                 name: "SUBJECT",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Course = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Acronym = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Formal_Subject = table.Column<bool>(nullable: false),
+                    Student_Create = table.Column<bool>(nullable: false),
+                    Course = table.Column<string>(maxLength: 50, nullable: false),
+                    Acronym = table.Column<string>(maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -70,10 +73,10 @@ namespace QuieroUn10.Migrations
                 name: "ROLE_HAS_MENU",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<int>(type: "int", nullable: false),
-                    MenuId = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    RoleId = table.Column<int>(nullable: false),
+                    MenuId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -96,13 +99,13 @@ namespace QuieroUn10.Migrations
                 name: "USER_ACCOUNT",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Username = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Active = table.Column<bool>(type: "bit", nullable: false),
-                    RoleId = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Username = table.Column<string>(maxLength: 10, nullable: false),
+                    Password = table.Column<string>(maxLength: 100, nullable: false),
+                    Email = table.Column<string>(maxLength: 100, nullable: true),
+                    Active = table.Column<bool>(nullable: false),
+                    RoleId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -119,10 +122,10 @@ namespace QuieroUn10.Migrations
                 name: "STUDY_HAS_SUBJECT",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    StudyId = table.Column<int>(type: "int", nullable: false),
-                    SubjectId = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    StudyId = table.Column<int>(nullable: false),
+                    SubjectId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -145,12 +148,12 @@ namespace QuieroUn10.Migrations
                 name: "ADMIN",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Surname = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
-                    UserAccountId = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(maxLength: 20, nullable: false),
+                    Surname = table.Column<string>(maxLength: 40, nullable: false),
+                    Phone = table.Column<string>(maxLength: 15, nullable: true),
+                    UserAccountId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -166,13 +169,14 @@ namespace QuieroUn10.Migrations
                 name: "STUDENT",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Birthdate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Surname = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
-                    UserAccountId = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(maxLength: 20, nullable: false),
+                    Surname = table.Column<string>(maxLength: 40, nullable: false),
+                    Phone = table.Column<string>(maxLength: 15, nullable: true),
+                    UserAccountId = table.Column<int>(nullable: false),
+                    Birthdate = table.Column<DateTime>(nullable: false),
+                    Activate = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -188,12 +192,12 @@ namespace QuieroUn10.Migrations
                 name: "USER_TOKEN",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GeneratedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Life = table.Column<int>(type: "int", nullable: false),
-                    UserAccountId = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Token = table.Column<string>(nullable: false),
+                    GeneratedDate = table.Column<DateTime>(nullable: false),
+                    Life = table.Column<int>(nullable: false),
+                    UserAccountId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -210,10 +214,11 @@ namespace QuieroUn10.Migrations
                 name: "CALENDAR_TASK",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Day = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    StudentId = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    DayStart = table.Column<DateTime>(nullable: false),
+                    DayEnd = table.Column<DateTime>(nullable: true),
+                    StudentId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -230,11 +235,11 @@ namespace QuieroUn10.Migrations
                 name: "STUDENT_HAS_SUBJECT",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    InscriptionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    StudentId = table.Column<int>(type: "int", nullable: false),
-                    SubjectId = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    InscriptionDate = table.Column<DateTime>(nullable: false),
+                    StudentId = table.Column<int>(nullable: false),
+                    SubjectId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -257,12 +262,12 @@ namespace QuieroUn10.Migrations
                 name: "DOC",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DocByte = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    DocSourceFileName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DocContentType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StudentHasSubjectId = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    DocByte = table.Column<byte[]>(nullable: true),
+                    DocSourceFileName = table.Column<string>(nullable: true),
+                    DocContentType = table.Column<string>(nullable: true),
+                    StudentHasSubjectId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -279,12 +284,17 @@ namespace QuieroUn10.Migrations
                 name: "TASK",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TaskDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    StudentHasSubjectId = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Title = table.Column<string>(nullable: false),
+                    Description = table.Column<string>(nullable: true),
+                    Start = table.Column<DateTime>(nullable: false),
+                    End = table.Column<DateTime>(nullable: true),
+                    AllDay = table.Column<bool>(nullable: false),
+                    ClassName = table.Column<string>(nullable: true),
+                    CreateDate = table.Column<DateTime>(nullable: false),
+                    Type = table.Column<int>(nullable: false),
+                    StudentHasSubjectId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -303,19 +313,21 @@ namespace QuieroUn10.Migrations
                 values: new object[,]
                 {
                     { 1, "Index", "UserAccounts", "User Accounts" },
-                    { 2, "Index", "Roles", "Roles" },
-                    { 3, "Index", "Students", "Students" },
-                    { 4, "Index", "Admins", "Admins" },
-                    { 5, "Index", "Menus", "Menus" },
-                    { 6, "Index", "Studies", "Studies" },
-                    { 7, "Index", "Subjects", "Subjects" },
-                    { 8, "Index", "StudyHasSubjects", "Study Has Subjects" },
+                    { 16, "IndexAdmin", "StudentHasSubjects", "Student Subject" },
+                    { 15, "Index", "Methods", "Método Pomodoro" },
+                    { 14, "Details", "StudentDtoes", "Profile" },
+                    { 13, "Details", "AdminDtoes", "Profile" },
+                    { 12, "Index", "Tasks", "Tasks" },
+                    { 11, "Index", "StudentHasSubjects", "Subjects" },
                     { 9, "Index", "CalendarTasks", "Calendar Tasks" },
                     { 10, "Index", "Docs", "Documents" },
-                    { 11, "Index", "StudentHasSubjects", "Student Subjects" },
-                    { 12, "Index", "Tasks", "Tasks" },
-                    { 13, "Details", "AdminDtoes", "Profile" },
-                    { 14, "Details", "StudentDtoes", "Profile" }
+                    { 7, "Index", "Subjects", "Subjects" },
+                    { 6, "Index", "Studies", "Studies" },
+                    { 5, "Index", "Menus", "Menus" },
+                    { 4, "Index", "AdminDtoes", "Admins" },
+                    { 3, "Index", "Students", "Students" },
+                    { 2, "Index", "Roles", "Roles" },
+                    { 8, "Index", "StudyHasSubjects", "Study Has Subjects" }
                 });
 
             migrationBuilder.InsertData(
@@ -323,8 +335,43 @@ namespace QuieroUn10.Migrations
                 columns: new[] { "ID", "Description", "Enabled", "Name" },
                 values: new object[,]
                 {
-                    { 1, null, false, "ADMIN" },
-                    { 2, null, false, "STUDENT" }
+                    { 2, null, false, "STUDENT" },
+                    { 1, null, false, "ADMIN" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "STUDY",
+                columns: new[] { "ID", "Acronym", "Name" },
+                values: new object[,]
+                {
+                    { 3, "ASIR", "Administración de Sistemas Informáticos en Red" },
+                    { 2, "DAM", "Desarrollo de Aplicaciones Multiplataforma" },
+                    { 1, "DAW", "Desarrollo de Aplicaciones Web" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "SUBJECT",
+                columns: new[] { "ID", "Acronym", "Course", "Formal_Subject", "Name", "Student_Create" },
+                values: new object[,]
+                {
+                    { 16, "PSP", "2", true, "Programación de servicios y procesos", false },
+                    { 15, "PMDM", "2", true, "Programación multimedia y dispositivos móviles.", false },
+                    { 14, "DI", "2", true, "Desarrollo de interfaces", false },
+                    { 13, "AD", "2", true, "Acceso a datos", false },
+                    { 12, "TFG - DAW", "2", true, "Proyecto de desarrollo de aplicaciones web", false },
+                    { 11, "Empresa", "2", true, "Empresa e iniciativa emprendedora", false },
+                    { 10, "DIW", "2", true, "Diseño de interfaces Web", false },
+                    { 17, "SGE", "2", true, "Sistemas de gestión empresarial", false },
+                    { 9, "DAW", "2", true, "Despliegue de aplicaciones web", false },
+                    { 7, "DWEC", "2", true, "Desarrollo web en entorno cliente", false },
+                    { 6, "FOL.", "1", true, "Formación y orientación laboral", false },
+                    { 5, "ED", "1", true, "Entornos de desarrollo", false },
+                    { 4, "LM", "1", true, "Lenguajes de marcas y sistemas de gestión de información", false },
+                    { 3, "Programación", "1", true, "Programación", false },
+                    { 2, "BBDD", "1", true, "Bases de datos", false },
+                    { 1, "SSII", "1", true, "Sistemas informáticos.", false },
+                    { 8, "DWS", "2", true, "Desarrollo web en entorno servidor", false },
+                    { 18, "TFG - DAM", "2", true, "Proyecto de desarrollo de aplicaciones multiplataforma", false }
                 });
 
             migrationBuilder.InsertData(
@@ -333,21 +380,51 @@ namespace QuieroUn10.Migrations
                 values: new object[,]
                 {
                     { 1, 1, 1 },
-                    { 15, 12, 2 },
-                    { 14, 10, 2 },
-                    { 13, 9, 2 },
-                    { 12, 12, 1 },
-                    { 11, 11, 1 },
+                    { 17, 15, 2 },
                     { 16, 14, 2 },
-                    { 9, 9, 1 },
-                    { 10, 10, 1 },
-                    { 7, 7, 1 },
+                    { 14, 12, 2 },
+                    { 13, 11, 2 },
+                    { 9, 16, 1 },
+                    { 8, 8, 1 },
+                    { 15, 9, 2 },
                     { 6, 6, 1 },
                     { 5, 5, 1 },
                     { 4, 4, 1 },
                     { 3, 3, 1 },
                     { 2, 2, 1 },
-                    { 8, 8, 1 }
+                    { 7, 7, 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "STUDY_HAS_SUBJECT",
+                columns: new[] { "ID", "StudyId", "SubjectId" },
+                values: new object[,]
+                {
+                    { 7, 1, 7 },
+                    { 8, 1, 8 },
+                    { 9, 1, 9 },
+                    { 10, 1, 10 },
+                    { 11, 1, 11 },
+                    { 19, 2, 13 },
+                    { 12, 1, 12 },
+                    { 20, 2, 14 },
+                    { 18, 2, 6 },
+                    { 21, 2, 15 },
+                    { 22, 2, 16 },
+                    { 23, 2, 11 },
+                    { 6, 1, 6 },
+                    { 14, 2, 2 },
+                    { 5, 1, 5 },
+                    { 16, 2, 4 },
+                    { 4, 1, 4 },
+                    { 15, 2, 3 },
+                    { 3, 1, 3 },
+                    { 24, 2, 17 },
+                    { 2, 1, 2 },
+                    { 13, 2, 1 },
+                    { 1, 1, 1 },
+                    { 17, 2, 5 },
+                    { 25, 2, 18 }
                 });
 
             migrationBuilder.InsertData(
@@ -355,25 +432,29 @@ namespace QuieroUn10.Migrations
                 columns: new[] { "ID", "Active", "Email", "Password", "RoleId", "Username" },
                 values: new object[,]
                 {
-                    { 1, true, "admin1@gmail.com", "YQBkAG0AaQBuADEA", 1, "admin1" },
-                    { 2, true, "admin2@gmail.com", "YQBkAG0AaQBuADIA", 1, "admin2" },
-                    { 3, true, "student1@gmail.com", "cwB0AHUAZABlAG4AdAAxAA==", 2, "student1" }
+                    { 4, false, "student2@gmail.com", "cwB0AHUAZABlAG4AdAAyAA==", 2, "student2" },
+                    { 3, true, "student1@gmail.com", "cwB0AHUAZABlAG4AdAAxAA==", 2, "student1" },
+                    { 2, false, "admin2@gmail.com", "YQBkAG0AaQBuADIA", 1, "admin2" },
+                    { 1, true, "admin1@gmail.com", "YQBkAG0AaQBuADEA", 1, "admin1" }
                 });
 
             migrationBuilder.InsertData(
                 table: "ADMIN",
                 columns: new[] { "ID", "Name", "Phone", "Surname", "UserAccountId" },
-                values: new object[] { 1, "Admin1", "698756483", "Admin1", 1 });
-
-            migrationBuilder.InsertData(
-                table: "ADMIN",
-                columns: new[] { "ID", "Name", "Phone", "Surname", "UserAccountId" },
-                values: new object[] { 2, "Admin2", "698756483", "Admin2", 2 });
+                values: new object[,]
+                {
+                    { 1, "Admin1", "698756483", "Admin1", 1 },
+                    { 2, "Admin2", "698756483", "Admin2", 2 }
+                });
 
             migrationBuilder.InsertData(
                 table: "STUDENT",
-                columns: new[] { "ID", "Birthdate", "Name", "Phone", "Surname", "UserAccountId" },
-                values: new object[] { 1, new DateTime(1999, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified), "Alejandro", "620730065", "Cruz", 3 });
+                columns: new[] { "ID", "Activate", "Birthdate", "Name", "Phone", "Surname", "UserAccountId" },
+                values: new object[,]
+                {
+                    { 1, false, new DateTime(1999, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified), "Alejandro", "620730065", "Cruz", 3 },
+                    { 2, false, new DateTime(1999, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified), "Admin 2", "666444555", "Admin", 4 }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ADMIN_UserAccountId",

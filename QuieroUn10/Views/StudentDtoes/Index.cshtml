@@ -13,28 +13,28 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Username)
+                Nombre de usuario
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Password)
+               Contraseña
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ConfirmPassword)
+                Confirmar Contraseña
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Email)
+                Email
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Nombre
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Surname)
+                Apellidos
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Phone)
+                Teléfono
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Birthdate)
+                Fecha de nacimiento
             </th>
             <th></th>
         </tr>
@@ -67,9 +67,9 @@
                 @Html.DisplayFor(modelItem => item.Birthdate)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.ID"><i class="fas fa-edit text-primary" title="Editar "></i></a> |
+                <a asp-action="Details" asp-route-id="@item.ID"><i class="fas fa-info-circle text-success" title="Detalles"></i></a> |
+                <a asp-action="Delete" asp-route-id="@item.ID"><i class="fas fa-trash-alt text-danger" title="Eliminar"></i></a>
             </td>
         </tr>
 }

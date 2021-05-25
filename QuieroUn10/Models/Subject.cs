@@ -11,7 +11,7 @@ namespace QuieroUn10.Models
     {
         public int ID { get; set; }
         [Required]
-        [StringLength(50, ErrorMessage = "El campo {0} tiene una longitud máxima de 50 caracteres")]
+        [StringLength(100, ErrorMessage = "El campo {0} tiene una longitud máxima de 50 caracteres")]
         public string Name { get; set; }
 
         [Required]

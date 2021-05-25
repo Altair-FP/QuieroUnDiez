@@ -95,7 +95,7 @@ namespace QuieroUn10.Controllers
 
             if (myDoc == null)
             {
-                return NotFound();
+                return RedirectToAction("NotFound","Methods");
             }
 
             if (myDoc.DocByte == null)
@@ -122,7 +122,7 @@ namespace QuieroUn10.Controllers
             var myDoc = await _context.Doc.FirstOrDefaultAsync(m => m.ID == id && m.StudentHasSubject.StudentId == student.ID);
             if (myDoc == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             if (myDoc.DocByte == null)
@@ -149,7 +149,7 @@ namespace QuieroUn10.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
             var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
             var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
@@ -162,7 +162,7 @@ namespace QuieroUn10.Controllers
                    .FirstOrDefaultAsync(m => m.ID == id);
                 if (doc == null)
                 {
-                    return NotFound();
+                    return  RedirectToAction("NotFound","Methods");
                 }
                 ViewBag.eli = eli;
                 var studentHasSubject = _context.StudentHasSubject.Include(s=>s.Student).Where(s => s.ID == doc.StudentHasSubjectId).FirstOrDefault();

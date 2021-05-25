@@ -13,6 +13,7 @@ using QuieroUn10.Filter;
 using QuieroUn10.Models;
 using Rotativa.AspNetCore;
 
+
 namespace QuieroUn10.Controllers
 {
     [ServiceFilter(typeof(Security))]
@@ -145,14 +146,14 @@ namespace QuieroUn10.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             var subject = await _context.Subject
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (subject == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             return View(subject);
@@ -171,7 +172,7 @@ namespace QuieroUn10.Controllers
                .FirstOrDefault(m => m.ID == id);
             if (subject == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
            
@@ -262,13 +263,13 @@ namespace QuieroUn10.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             var subject = await _context.Subject.FindAsync(id);
             if (subject == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
             return View(subject);
         }
@@ -282,7 +283,7 @@ namespace QuieroUn10.Controllers
         {
             if (id != subject.ID)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             if (ModelState.IsValid)
@@ -296,7 +297,7 @@ namespace QuieroUn10.Controllers
                 {
                     if (!SubjectExists(subject.ID))
                     {
-                        return NotFound();
+                        return  RedirectToAction("NotFound","Methods");
                     }
                     else
                     {
@@ -313,7 +314,7 @@ namespace QuieroUn10.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
             var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
             var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
@@ -336,7 +337,7 @@ namespace QuieroUn10.Controllers
                 }
                 if (subject == null)
                 {
-                    return NotFound();
+                    return  RedirectToAction("NotFound","Methods");
                 }
 
                 return View(subject);

@@ -33,7 +33,7 @@ namespace QuieroUn10.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             var userToken = await _context.UserToken
@@ -41,7 +41,7 @@ namespace QuieroUn10.Controllers
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (userToken == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             return View(userToken);
@@ -76,13 +76,13 @@ namespace QuieroUn10.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             var userToken = await _context.UserToken.FindAsync(id);
             if (userToken == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
             ViewData["UserAccountId"] = new SelectList(_context.UserAccount, "ID", "Password", userToken.UserAccountId);
             return View(userToken);
@@ -97,7 +97,7 @@ namespace QuieroUn10.Controllers
         {
             if (id != userToken.ID)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             if (ModelState.IsValid)
@@ -111,7 +111,7 @@ namespace QuieroUn10.Controllers
                 {
                     if (!UserTokenExists(userToken.ID))
                     {
-                        return NotFound();
+                        return  RedirectToAction("NotFound","Methods");
                     }
                     else
                     {
@@ -129,7 +129,7 @@ namespace QuieroUn10.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             var userToken = await _context.UserToken
@@ -137,7 +137,7 @@ namespace QuieroUn10.Controllers
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (userToken == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             return View(userToken);

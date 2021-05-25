@@ -32,13 +32,28 @@ namespace QuieroUn10.Controllers
         {
             var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
             var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
+            StudentHasSubject studentHasSubject = _context.StudentHasSubject.Include(s => s.Student).Include(s=>s.Subject).Where(s => s.Student.UserAccountId == usuario.ID).FirstOrDefault();
+            ViewBag.eli = id;
+            ViewBag.eli2 = eli;
+            ViewBag.nombreAsig = studentHasSubject.Subject.Name;
+            ViewBag.errorMessage = errorMessage;
+            ViewBag.successMessage = successMessage;
+            var quieroUnDiezDBContex = _context.Task.Include(t => t.StudentHasSubject).ThenInclude(s=>s.Student).Where(t=>t.StudentHasSubject.Student.UserAccountId == usuario.ID && t.StudentHasSubject.SubjectId == eli);
+           return View(await quieroUnDiezDBContex.ToListAsync());
+
+        }
+
+        public async Task<IActionResult> AllIndex(int? id, int eli, string? errorMessage, string? successMessage)
+        {
+            var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
             StudentHasSubject studentHasSubject = _context.StudentHasSubject.Include(s => s.Student).Where(s => s.Student.UserAccountId == usuario.ID).FirstOrDefault();
             ViewBag.eli = id;
             ViewBag.eli2 = eli;
             ViewBag.errorMessage = errorMessage;
             ViewBag.successMessage = successMessage;
-            var quieroUnDiezDBContex = _context.Task.Include(t => t.StudentHasSubject).ThenInclude(s=>s.Student).Where(t=>t.StudentHasSubject.Student.UserAccountId == usuario.ID && t.StudentHasSubject.SubjectId == eli);
-           return View(await quieroUnDiezDBContex.ToListAsync());
+            var quieroUnDiezDBContex = _context.Task.Include(t => t.StudentHasSubject).ThenInclude(s => s.Student).Where(t => t.StudentHasSubject.Student.UserAccountId == usuario.ID );
+            return View(await quieroUnDiezDBContex.ToListAsync());
 
         }
         public async Task<IActionResult> ContactPDF(int? id, int eli)
@@ -56,7 +71,7 @@ namespace QuieroUn10.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             var task = await _context.Task
@@ -66,7 +81,7 @@ namespace QuieroUn10.Controllers
             ViewBag.eli = eli;
             if (task == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             return View(task);
@@ -157,7 +172,7 @@ namespace QuieroUn10.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
             TaskDto taskDto = new TaskDto();
             var task = await _context.Task.FindAsync(id);
@@ -176,7 +191,7 @@ namespace QuieroUn10.Controllers
                 ViewBag.eli = eli;
                 if (task == null)
                 {
-                    return NotFound();
+                    return  RedirectToAction("NotFound","Methods");
                 }
                 List<TaskType> taskType = new List<TaskType>();
                 taskType.Add(TaskType.Examen);
@@ -212,7 +227,7 @@ namespace QuieroUn10.Controllers
             var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
             if (tasks == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             if (ModelState.IsValid)
@@ -266,7 +281,7 @@ namespace QuieroUn10.Controllers
                 {
                     if (!TaskExists(tasks.ID))
                     {
-                        return NotFound();
+                        return  RedirectToAction("NotFound","Methods");
                     }
                     else
                     {
@@ -284,7 +299,7 @@ namespace QuieroUn10.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
             var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
             var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
@@ -296,7 +311,7 @@ namespace QuieroUn10.Controllers
                 ViewBag.eli = eli;
                 if (task == null)
                 {
-                    return NotFound();
+                    return  RedirectToAction("NotFound","Methods");
                 }
                 var studentHasSubject = _context.StudentHasSubject.Include(s => s.Student).Where(s => s.ID == task.StudentHasSubjectId).FirstOrDefault();
                 if (studentHasSubject.Student.UserAccountId == usuario.ID)

@@ -35,7 +35,7 @@ namespace QuieroUn10.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             var roleHasMenu = await _context.RoleHasMenu
@@ -44,7 +44,7 @@ namespace QuieroUn10.Controllers
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (roleHasMenu == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             return View(roleHasMenu);
@@ -81,13 +81,13 @@ namespace QuieroUn10.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             var roleHasMenu = await _context.RoleHasMenu.FindAsync(id);
             if (roleHasMenu == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
             ViewData["MenuId"] = new SelectList(_context.Set<Menu>(), "ID", "Action", roleHasMenu.MenuId);
             ViewData["RoleId"] = new SelectList(_context.Role, "ID", "Name", roleHasMenu.RoleId);
@@ -103,7 +103,7 @@ namespace QuieroUn10.Controllers
         {
             if (id != roleHasMenu.ID)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             if (ModelState.IsValid)
@@ -117,7 +117,7 @@ namespace QuieroUn10.Controllers
                 {
                     if (!RoleHasMenuExists(roleHasMenu.ID))
                     {
-                        return NotFound();
+                        return  RedirectToAction("NotFound","Methods");
                     }
                     else
                     {
@@ -136,7 +136,7 @@ namespace QuieroUn10.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             var roleHasMenu = await _context.RoleHasMenu
@@ -145,7 +145,7 @@ namespace QuieroUn10.Controllers
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (roleHasMenu == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
             var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
             var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();

@@ -16,5 +16,9 @@ namespace QuieroUn10.Controllers
         {
             return View();
         }
+        public IActionResult NotFound()
+        {
+            return View();
+        }
     }
 }

@@ -28,6 +28,10 @@ namespace QuieroUn10
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            IConfiguration configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .Build();
+
             services.AddSession();
             services.AddScoped<Security>();
             services.AddScoped<SecurityAdmin>();
@@ -38,14 +42,8 @@ namespace QuieroUn10
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
-            IConfiguration configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
-            .Build();
 
-            services.AddDbContext<QuieroUnDiezDBContex>(options => options
-            .UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
-
-            
+            services.AddDbContext<QuieroUnDiezDBContex>(options => options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -2,7 +2,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuieroUn10.Data;
@@ -10,37 +9,35 @@ using QuieroUn10.Data;
 namespace QuieroUn10.Migrations
 {
     [DbContext(typeof(QuieroUnDiezDBContex))]
-    [Migration("20210315203056_nombreMigracion")]
+    [Migration("20210524210832_nombreMigracion")]
     partial class nombreMigracion
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.3")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "3.1.13")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("QuieroUn10.Models.Admin", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("varchar(20) CHARACTER SET utf8mb4")
+                        .HasMaxLength(20);
 
                     b.Property<string>("Phone")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("varchar(15) CHARACTER SET utf8mb4")
+                        .HasMaxLength(15);
 
                     b.Property<string>("Surname")
                         .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("nvarchar(40)");
+                        .HasColumnType("varchar(40) CHARACTER SET utf8mb4")
+                        .HasMaxLength(40);
 
                     b.Property<int>("UserAccountId")
                         .HasColumnType("int");
@@ -74,11 +71,13 @@ namespace QuieroUn10.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("Day")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("DayEnd")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("DayStart")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
@@ -94,17 +93,16 @@ namespace QuieroUn10.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<byte[]>("DocByte")
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("longblob");
 
                     b.Property<string>("DocContentType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("DocSourceFileName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<int>("StudentHasSubjectId")
                         .HasColumnType("int");
@@ -120,23 +118,22 @@ namespace QuieroUn10.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<string>("Action")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("varchar(20) CHARACTER SET utf8mb4")
+                        .HasMaxLength(20);
 
                     b.Property<string>("Controller")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasColumnType("varchar(30) CHARACTER SET utf8mb4")
+                        .HasMaxLength(30);
 
                     b.Property<string>("Label")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("varchar(20) CHARACTER SET utf8mb4")
+                        .HasMaxLength(20);
 
                     b.HasKey("ID");
 
@@ -168,7 +165,7 @@ namespace QuieroUn10.Migrations
                         {
                             ID = 4,
                             Action = "Index",
-                            Controller = "Admins",
+                            Controller = "AdminDtoes",
                             Label = "Admins"
                         },
                         new
@@ -218,7 +215,7 @@ namespace QuieroUn10.Migrations
                             ID = 11,
                             Action = "Index",
                             Controller = "StudentHasSubjects",
-                            Label = "Student Subjects"
+                            Label = "Subjects"
                         },
                         new
                         {
@@ -240,6 +237,20 @@ namespace QuieroUn10.Migrations
                             Action = "Details",
                             Controller = "StudentDtoes",
                             Label = "Profile"
+                        },
+                        new
+                        {
+                            ID = 15,
+                            Action = "Index",
+                            Controller = "Methods",
+                            Label = "Método Pomodoro"
+                        },
+                        new
+                        {
+                            ID = 16,
+                            Action = "IndexAdmin",
+                            Controller = "StudentHasSubjects",
+                            Label = "Student Subject"
                         });
                 });
 
@@ -247,20 +258,19 @@ namespace QuieroUn10.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
 
                     b.Property<bool>("Enabled")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasColumnType("varchar(30) CHARACTER SET utf8mb4")
+                        .HasMaxLength(30);
 
                     b.HasKey("ID");
 
@@ -285,8 +295,7 @@ namespace QuieroUn10.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<int>("MenuId")
                         .HasColumnType("int");
@@ -354,49 +363,37 @@ namespace QuieroUn10.Migrations
                         new
                         {
                             ID = 9,
-                            MenuId = 9,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            ID = 10,
-                            MenuId = 10,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            ID = 11,
-                            MenuId = 11,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            ID = 12,
-                            MenuId = 12,
+                            MenuId = 16,
                             RoleId = 1
                         },
                         new
                         {
                             ID = 13,
-                            MenuId = 9,
+                            MenuId = 11,
                             RoleId = 2
                         },
                         new
                         {
                             ID = 14,
-                            MenuId = 10,
+                            MenuId = 12,
                             RoleId = 2
                         },
                         new
                         {
                             ID = 15,
-                            MenuId = 12,
+                            MenuId = 9,
                             RoleId = 2
                         },
                         new
                         {
                             ID = 16,
                             MenuId = 14,
+                            RoleId = 2
+                        },
+                        new
+                        {
+                            ID = 17,
+                            MenuId = 15,
                             RoleId = 2
                         });
                 });
@@ -405,28 +402,27 @@ namespace QuieroUn10.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<bool>("Activate")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime>("Birthdate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("varchar(20) CHARACTER SET utf8mb4")
+                        .HasMaxLength(20);
 
                     b.Property<string>("Phone")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("varchar(15) CHARACTER SET utf8mb4")
+                        .HasMaxLength(15);
 
                     b.Property<string>("Surname")
                         .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("nvarchar(40)");
+                        .HasColumnType("varchar(40) CHARACTER SET utf8mb4")
+                        .HasMaxLength(40);
 
                     b.Property<int>("UserAccountId")
                         .HasColumnType("int");
@@ -447,6 +443,16 @@ namespace QuieroUn10.Migrations
                             Phone = "620730065",
                             Surname = "Cruz",
                             UserAccountId = 3
+                        },
+                        new
+                        {
+                            ID = 2,
+                            Activate = false,
+                            Birthdate = new DateTime(1999, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Admin 2",
+                            Phone = "666444555",
+                            Surname = "Admin",
+                            UserAccountId = 4
                         });
                 });
 
@@ -454,11 +460,10 @@ namespace QuieroUn10.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("InscriptionDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
@@ -479,30 +484,48 @@ namespace QuieroUn10.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<string>("Acronym")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50);
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50);
 
                     b.HasKey("ID");
 
                     b.ToTable("STUDY");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Acronym = "DAW",
+                            Name = "Desarrollo de Aplicaciones Web"
+                        },
+                        new
+                        {
+                            ID = 2,
+                            Acronym = "DAM",
+                            Name = "Desarrollo de Aplicaciones Multiplataforma"
+                        },
+                        new
+                        {
+                            ID = 3,
+                            Acronym = "ASIR",
+                            Name = "Administración de Sistemas Informáticos en Red"
+                        });
                 });
 
             modelBuilder.Entity("QuieroUn10.Models.StudyHasSubject", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<int>("StudyId")
                         .HasColumnType("int");
@@ -517,50 +540,386 @@ namespace QuieroUn10.Migrations
                     b.HasIndex("SubjectId");
 
                     b.ToTable("STUDY_HAS_SUBJECT");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            StudyId = 1,
+                            SubjectId = 1
+                        },
+                        new
+                        {
+                            ID = 2,
+                            StudyId = 1,
+                            SubjectId = 2
+                        },
+                        new
+                        {
+                            ID = 3,
+                            StudyId = 1,
+                            SubjectId = 3
+                        },
+                        new
+                        {
+                            ID = 4,
+                            StudyId = 1,
+                            SubjectId = 4
+                        },
+                        new
+                        {
+                            ID = 5,
+                            StudyId = 1,
+                            SubjectId = 5
+                        },
+                        new
+                        {
+                            ID = 6,
+                            StudyId = 1,
+                            SubjectId = 6
+                        },
+                        new
+                        {
+                            ID = 7,
+                            StudyId = 1,
+                            SubjectId = 7
+                        },
+                        new
+                        {
+                            ID = 8,
+                            StudyId = 1,
+                            SubjectId = 8
+                        },
+                        new
+                        {
+                            ID = 9,
+                            StudyId = 1,
+                            SubjectId = 9
+                        },
+                        new
+                        {
+                            ID = 10,
+                            StudyId = 1,
+                            SubjectId = 10
+                        },
+                        new
+                        {
+                            ID = 11,
+                            StudyId = 1,
+                            SubjectId = 11
+                        },
+                        new
+                        {
+                            ID = 12,
+                            StudyId = 1,
+                            SubjectId = 12
+                        },
+                        new
+                        {
+                            ID = 13,
+                            StudyId = 2,
+                            SubjectId = 1
+                        },
+                        new
+                        {
+                            ID = 14,
+                            StudyId = 2,
+                            SubjectId = 2
+                        },
+                        new
+                        {
+                            ID = 15,
+                            StudyId = 2,
+                            SubjectId = 3
+                        },
+                        new
+                        {
+                            ID = 16,
+                            StudyId = 2,
+                            SubjectId = 4
+                        },
+                        new
+                        {
+                            ID = 17,
+                            StudyId = 2,
+                            SubjectId = 5
+                        },
+                        new
+                        {
+                            ID = 18,
+                            StudyId = 2,
+                            SubjectId = 6
+                        },
+                        new
+                        {
+                            ID = 19,
+                            StudyId = 2,
+                            SubjectId = 13
+                        },
+                        new
+                        {
+                            ID = 20,
+                            StudyId = 2,
+                            SubjectId = 14
+                        },
+                        new
+                        {
+                            ID = 21,
+                            StudyId = 2,
+                            SubjectId = 15
+                        },
+                        new
+                        {
+                            ID = 22,
+                            StudyId = 2,
+                            SubjectId = 16
+                        },
+                        new
+                        {
+                            ID = 23,
+                            StudyId = 2,
+                            SubjectId = 11
+                        },
+                        new
+                        {
+                            ID = 24,
+                            StudyId = 2,
+                            SubjectId = 17
+                        },
+                        new
+                        {
+                            ID = 25,
+                            StudyId = 2,
+                            SubjectId = 18
+                        });
                 });
 
             modelBuilder.Entity("QuieroUn10.Models.Subject", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<string>("Acronym")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50);
 
                     b.Property<string>("Course")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50);
+
+                    b.Property<bool>("Formal_Subject")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
+
+                    b.Property<bool>("Student_Create")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("ID");
 
                     b.ToTable("SUBJECT");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Acronym = "SSII",
+                            Course = "1",
+                            Formal_Subject = true,
+                            Name = "Sistemas informáticos.",
+                            Student_Create = false
+                        },
+                        new
+                        {
+                            ID = 2,
+                            Acronym = "BBDD",
+                            Course = "1",
+                            Formal_Subject = true,
+                            Name = "Bases de datos",
+                            Student_Create = false
+                        },
+                        new
+                        {
+                            ID = 3,
+                            Acronym = "Programación",
+                            Course = "1",
+                            Formal_Subject = true,
+                            Name = "Programación",
+                            Student_Create = false
+                        },
+                        new
+                        {
+                            ID = 4,
+                            Acronym = "LM",
+                            Course = "1",
+                            Formal_Subject = true,
+                            Name = "Lenguajes de marcas y sistemas de gestión de información",
+                            Student_Create = false
+                        },
+                        new
+                        {
+                            ID = 5,
+                            Acronym = "ED",
+                            Course = "1",
+                            Formal_Subject = true,
+                            Name = "Entornos de desarrollo",
+                            Student_Create = false
+                        },
+                        new
+                        {
+                            ID = 6,
+                            Acronym = "FOL.",
+                            Course = "1",
+                            Formal_Subject = true,
+                            Name = "Formación y orientación laboral",
+                            Student_Create = false
+                        },
+                        new
+                        {
+                            ID = 7,
+                            Acronym = "DWEC",
+                            Course = "2",
+                            Formal_Subject = true,
+                            Name = "Desarrollo web en entorno cliente",
+                            Student_Create = false
+                        },
+                        new
+                        {
+                            ID = 8,
+                            Acronym = "DWS",
+                            Course = "2",
+                            Formal_Subject = true,
+                            Name = "Desarrollo web en entorno servidor",
+                            Student_Create = false
+                        },
+                        new
+                        {
+                            ID = 9,
+                            Acronym = "DAW",
+                            Course = "2",
+                            Formal_Subject = true,
+                            Name = "Despliegue de aplicaciones web",
+                            Student_Create = false
+                        },
+                        new
+                        {
+                            ID = 10,
+                            Acronym = "DIW",
+                            Course = "2",
+                            Formal_Subject = true,
+                            Name = "Diseño de interfaces Web",
+                            Student_Create = false
+                        },
+                        new
+                        {
+                            ID = 11,
+                            Acronym = "Empresa",
+                            Course = "2",
+                            Formal_Subject = true,
+                            Name = "Empresa e iniciativa emprendedora",
+                            Student_Create = false
+                        },
+                        new
+                        {
+                            ID = 12,
+                            Acronym = "TFG - DAW",
+                            Course = "2",
+                            Formal_Subject = true,
+                            Name = "Proyecto de desarrollo de aplicaciones web",
+                            Student_Create = false
+                        },
+                        new
+                        {
+                            ID = 13,
+                            Acronym = "AD",
+                            Course = "2",
+                            Formal_Subject = true,
+                            Name = "Acceso a datos",
+                            Student_Create = false
+                        },
+                        new
+                        {
+                            ID = 14,
+                            Acronym = "DI",
+                            Course = "2",
+                            Formal_Subject = true,
+                            Name = "Desarrollo de interfaces",
+                            Student_Create = false
+                        },
+                        new
+                        {
+                            ID = 15,
+                            Acronym = "PMDM",
+                            Course = "2",
+                            Formal_Subject = true,
+                            Name = "Programación multimedia y dispositivos móviles.",
+                            Student_Create = false
+                        },
+                        new
+                        {
+                            ID = 16,
+                            Acronym = "PSP",
+                            Course = "2",
+                            Formal_Subject = true,
+                            Name = "Programación de servicios y procesos",
+                            Student_Create = false
+                        },
+                        new
+                        {
+                            ID = 17,
+                            Acronym = "SGE",
+                            Course = "2",
+                            Formal_Subject = true,
+                            Name = "Sistemas de gestión empresarial",
+                            Student_Create = false
+                        },
+                        new
+                        {
+                            ID = 18,
+                            Acronym = "TFG - DAM",
+                            Course = "2",
+                            Formal_Subject = true,
+                            Name = "Proyecto de desarrollo de aplicaciones multiplataforma",
+                            Student_Create = false
+                        });
                 });
 
             modelBuilder.Entity("QuieroUn10.Models.Task", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    b.Property<bool>("AllDay")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("ClassName")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<DateTime?>("End")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("Start")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("StudentHasSubjectId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("TaskDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -576,28 +935,27 @@ namespace QuieroUn10.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<bool>("Active")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Email")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("varchar(10) CHARACTER SET utf8mb4")
+                        .HasMaxLength(10);
 
                     b.HasKey("ID");
 
@@ -618,7 +976,7 @@ namespace QuieroUn10.Migrations
                         new
                         {
                             ID = 2,
-                            Active = true,
+                            Active = false,
                             Email = "admin2@gmail.com",
                             Password = "YQBkAG0AaQBuADIA",
                             RoleId = 1,
@@ -632,6 +990,15 @@ namespace QuieroUn10.Migrations
                             Password = "cwB0AHUAZABlAG4AdAAxAA==",
                             RoleId = 2,
                             Username = "student1"
+                        },
+                        new
+                        {
+                            ID = 4,
+                            Active = false,
+                            Email = "student2@gmail.com",
+                            Password = "cwB0AHUAZABlAG4AdAAyAA==",
+                            RoleId = 2,
+                            Username = "student2"
                         });
                 });
 
@@ -639,18 +1006,17 @@ namespace QuieroUn10.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("GeneratedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("Life")
                         .HasColumnType("int");
 
                     b.Property<string>("Token")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<int>("UserAccountId")
                         .HasColumnType("int");
@@ -669,8 +1035,6 @@ namespace QuieroUn10.Migrations
                         .HasForeignKey("UserAccountId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.Navigation("UserAccount");
                 });
 
             modelBuilder.Entity("QuieroUn10.Models.CalendarTask", b =>
@@ -680,8 +1044,6 @@ namespace QuieroUn10.Migrations
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("QuieroUn10.Models.Doc", b =>
@@ -691,8 +1053,6 @@ namespace QuieroUn10.Migrations
                         .HasForeignKey("StudentHasSubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("StudentHasSubject");
                 });
 
             modelBuilder.Entity("QuieroUn10.Models.RoleHasMenu", b =>
@@ -708,10 +1068,6 @@ namespace QuieroUn10.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Menu");
-
-                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("QuieroUn10.Models.Student", b =>
@@ -721,8 +1077,6 @@ namespace QuieroUn10.Migrations
                         .HasForeignKey("UserAccountId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.Navigation("UserAccount");
                 });
 
             modelBuilder.Entity("QuieroUn10.Models.StudentHasSubject", b =>
@@ -738,10 +1092,6 @@ namespace QuieroUn10.Migrations
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Student");
-
-                    b.Navigation("Subject");
                 });
 
             modelBuilder.Entity("QuieroUn10.Models.StudyHasSubject", b =>
@@ -757,10 +1107,6 @@ namespace QuieroUn10.Migrations
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Study");
-
-                    b.Navigation("Subject");
                 });
 
             modelBuilder.Entity("QuieroUn10.Models.Task", b =>
@@ -770,8 +1116,6 @@ namespace QuieroUn10.Migrations
                         .HasForeignKey("StudentHasSubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("StudentHasSubject");
                 });
 
             modelBuilder.Entity("QuieroUn10.Models.UserAccount", b =>
@@ -781,8 +1125,6 @@ namespace QuieroUn10.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("QuieroUn10.Models.UserToken", b =>
@@ -792,51 +1134,6 @@ namespace QuieroUn10.Migrations
                         .HasForeignKey("UserAccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("UserAccount");
-                });
-
-            modelBuilder.Entity("QuieroUn10.Models.Menu", b =>
-                {
-                    b.Navigation("RoleHasMenus");
-                });
-
-            modelBuilder.Entity("QuieroUn10.Models.Role", b =>
-                {
-                    b.Navigation("RoleHasMenus");
-
-                    b.Navigation("UserAccounts");
-                });
-
-            modelBuilder.Entity("QuieroUn10.Models.Student", b =>
-                {
-                    b.Navigation("CalendarTasks");
-
-                    b.Navigation("StudentHasSubjects");
-                });
-
-            modelBuilder.Entity("QuieroUn10.Models.StudentHasSubject", b =>
-                {
-                    b.Navigation("Docs");
-
-                    b.Navigation("Tasks");
-                });
-
-            modelBuilder.Entity("QuieroUn10.Models.Study", b =>
-                {
-                    b.Navigation("StudyHasSubjects");
-                });
-
-            modelBuilder.Entity("QuieroUn10.Models.Subject", b =>
-                {
-                    b.Navigation("StudentHasSubjects");
-
-                    b.Navigation("StudyHasSubjects");
-                });
-
-            modelBuilder.Entity("QuieroUn10.Models.UserAccount", b =>
-                {
-                    b.Navigation("UserTokens");
                 });
 #pragma warning restore 612, 618
         }

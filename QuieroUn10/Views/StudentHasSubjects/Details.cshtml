@@ -26,8 +26,8 @@
 <div>
     <hr />
     <a asp-action="Delete" asp-route-id="@Model.ID"><i class="fas fa-trash-alt text-danger" title="Eliminar asignatura"></i></a> |
-    <a asp-action="Index"><i class="fas fa-home" title="Ir a la lista de asignaturas"></i></a>|
-    <a asp-action="Index" asp-controller="Chat" asp-route-id="@Model.SubjectId" asp-route-eli="@Model.ID">Chat en vivo</a>
+    <a asp-action="Index"><i class="fas fa-home" title="Ir a la lista de asignaturas"></i></a>
+    <a asp-action="Index" asp-controller="Chat" asp-route-id="@Model.SubjectId" asp-route-eli="@Model.ID" class="float-right pb-3" ><i class="fab fa-line text-success fa-3x" title="Chat en vivo"></i></a>
 </div>
 
 <div class="bg-light shadow p-3 mb-5 mt-4  rounded">
@@ -48,7 +48,8 @@
 
                                 <div class="containe containe--1 text-center">
                                     <div>
-                                        <a asp-action="ViewFile" asp-controller="Docs" asp-route-id="@item.ID"><img src="~/images/pdf.png" alt="Alternate Text" class="w-75" /></a>  
+                                        <a asp-action="ViewFile" asp-controller="Docs" asp-route-id="@item.ID"> <i class="far fa-file-pdf fa-9x" style="color:red"></i></a>
+
                                     </div>
                                     <div>
                                         @if (item.DocSourceFileName.Length > 20)

@@ -62,7 +62,7 @@ namespace QuieroUn10.Controllers
          {
              if (id == null)
              {
-                 return NotFound();
+                 return  RedirectToAction("NotFound","Methods");
              }
 
              var calendarTask = await _context.CalendarTask
@@ -70,7 +70,7 @@ namespace QuieroUn10.Controllers
                  .FirstOrDefaultAsync(m => m.ID == id);
              if (calendarTask == null)
              {
-                 return NotFound();
+                 return  RedirectToAction("NotFound","Methods");
              }
 
              return View(calendarTask);
@@ -83,13 +83,13 @@ namespace QuieroUn10.Controllers
          {
              if (id == null)
              {
-                 return NotFound();
+                 return  RedirectToAction("NotFound","Methods");
              }
 
              var calendarTask = await _context.CalendarTask.FindAsync(id);
              if (calendarTask == null)
              {
-                 return NotFound();
+                 return  RedirectToAction("NotFound","Methods");
              }
              ViewData["StudentId"] = new SelectList(_context.Student, "ID", "Name", calendarTask.StudentId);
              return View(calendarTask);
@@ -104,7 +104,7 @@ namespace QuieroUn10.Controllers
          {
              if (id != calendarTask.ID)
              {
-                 return NotFound();
+                 return  RedirectToAction("NotFound","Methods");
              }
 
              if (ModelState.IsValid)
@@ -118,7 +118,7 @@ namespace QuieroUn10.Controllers
                  {
                      if (!CalendarTaskExists(calendarTask.ID))
                      {
-                         return NotFound();
+                         return  RedirectToAction("NotFound","Methods");
                      }
                      else
                      {
@@ -137,7 +137,7 @@ namespace QuieroUn10.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
             var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
             var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
@@ -149,7 +149,7 @@ namespace QuieroUn10.Controllers
                     .FirstOrDefaultAsync(m => m.ID == id);
                 if (calendarTask == null)
                 {
-                    return NotFound();
+                    return  RedirectToAction("NotFound","Methods");
                 }
                 var student = _context.Student.Where(s => s.ID == calendarTask.StudentId).FirstOrDefault();
                 if (student.UserAccountId == usuario.ID)

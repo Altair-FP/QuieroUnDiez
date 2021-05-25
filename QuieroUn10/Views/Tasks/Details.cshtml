@@ -11,19 +11,19 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
+            Nombre
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Title)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
+            Descripción
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Description)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Start)
+           Comienzo
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Start)
@@ -31,20 +31,20 @@
         @if (Model.End != null)
         {
             <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.End)
+                Fin
             </dt>
             <dd class="col-sm-10">
                 @Html.DisplayFor(model => model.End)
             </dd>
         }
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Type)
+            Tipología
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Type)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.StudentHasSubject.Subject.Name)
+            Nombre de la asignatura
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.StudentHasSubject.Subject.Name)

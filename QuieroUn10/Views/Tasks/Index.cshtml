@@ -4,26 +4,28 @@
     ViewData["Title"] = "Tareas";
 }
 
-<h1>Todas las tareas</h1>
+<h1 class="text-center">Todas las tareas de la asignatura: </h1>
+<br />
+<h1 class="text-center"> @ViewBag.nombreAsig</h1>
 <a asp-action="ContactPDF" asp-route-eli="@ViewBag.eli2" asp-route-id="@ViewBag.eli">Imprimir tareas</a>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                Nombre
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                Descripción
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Type)
+                Tipología
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Start)
+                Comienzo
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.End)
+                Fin
             </th>
             <th></th>
         </tr>

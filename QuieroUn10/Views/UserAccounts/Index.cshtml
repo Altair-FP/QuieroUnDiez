@@ -55,9 +55,16 @@
                     @Html.DisplayFor(modelItem => item.Role.Name)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.ID"><i class="fas fa-edit text-primary" title="Editar "></i></a> |
+                    <a asp-action="Details" asp-route-id="@item.ID"><i class="fas fa-info-circle text-success" title="Detalles del usuario"></i></a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID"><i class="fas fa-trash-alt text-danger" title="Eliminar usuario"></i></a>
+                    @if (item.Active && (item.Role.Name == "STUDENT" ))
+                    {
+                <a asp-action="DesHab" asp-route-id="@item.ID" class="text-decoration-none text-body"> | <i class="fas fa-user-slash text-danger" title="Deshabilitar"></i></a> }
+                                else if (!item.Active && (item.Role.Name == "STUDENT"))
+                                {
+                <a asp-action="DesHab" asp-route-id="@item.ID" class="text-decoration-none text-body">| <i class="fas fa-user-plus text-success" title="Habilitar"></i></a>}
+
                 </td>
             </tr>
         }

@@ -37,7 +37,7 @@ namespace QuieroUn10.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             var student = await _context.Student
@@ -45,7 +45,7 @@ namespace QuieroUn10.Controllers
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (student == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             return View(student);
@@ -57,7 +57,7 @@ namespace QuieroUn10.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
             var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
             var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
@@ -76,7 +76,7 @@ namespace QuieroUn10.Controllers
                 }
                 if (student == null)
                 {
-                    return NotFound();
+                    return  RedirectToAction("NotFound","Methods");
                 }
 
                 return View(student);

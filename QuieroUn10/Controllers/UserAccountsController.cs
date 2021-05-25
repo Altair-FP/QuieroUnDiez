@@ -38,7 +38,7 @@ namespace QuieroUn10.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             var userAccount = await _context.UserAccount
@@ -46,7 +46,7 @@ namespace QuieroUn10.Controllers
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (userAccount == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             return View(userAccount);
@@ -81,13 +81,13 @@ namespace QuieroUn10.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             var userAccount = await _context.UserAccount.FindAsync(id);
             if (userAccount == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
             ViewData["RoleId"] = new SelectList(_context.Set<Role>(), "ID", "Name", userAccount.RoleId);
             return View(userAccount);
@@ -102,7 +102,7 @@ namespace QuieroUn10.Controllers
         {
             if (id != userAccount.ID)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             if (ModelState.IsValid)
@@ -117,7 +117,7 @@ namespace QuieroUn10.Controllers
                 {
                     if (!UserAccountExists(userAccount.ID))
                     {
-                        return NotFound();
+                        return  RedirectToAction("NotFound","Methods");
                     }
                     else
                     {
@@ -135,7 +135,7 @@ namespace QuieroUn10.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
@@ -159,7 +159,7 @@ namespace QuieroUn10.Controllers
                 }
                 if (userAccount == null)
                 {
-                    return NotFound();
+                    return  RedirectToAction("NotFound","Methods");
                 }
 
                 return View(userAccount);
@@ -208,6 +208,46 @@ namespace QuieroUn10.Controllers
                 return RedirectToAction("Index","StudentHasSubjects", new { errorMessage = "No tienes permiso para eliminar a un usuario"});
             }
 
+        }
+        public async Task<IActionResult> DesHab(int? id)
+        {
+            string habDes = "";
+            var idUserAccount = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var ifAdmin = _context.Admin.Include(r => r.UserAccount).Where(e => e.UserAccountId == idUserAccount).ToList();
+            if (ifAdmin.Count == 0)
+            {
+                return RedirectToAction("Index", "Home", new { errorMessage = "Debes ser un admin para deshabilitar" });
+            }
+            else
+            {
+
+                //Deshabilitamos
+                var usuario = _context.UserAccount.Where(r => r.ID == id).FirstOrDefault();
+                if (usuario.Active)
+                {
+                    usuario.Active = false;
+                    habDes = "deshabilitada";
+                }
+                else
+                {
+                    usuario.Active = true;
+                    habDes = "habilitada";
+                }
+                _context.Update(usuario);
+                await _context.SaveChangesAsync();
+
+                //Enviar el email con el token
+                string emailTo = usuario.Email;
+                string reference = "https://localhost:44349/Login/";
+
+
+                string subject = "Cuenta " + habDes;
+                string body = "Desde Quiero Un Diez le informamos que su cuenta de usuario ha sido " + habDes + ". Para mas informacion" +
+                    " acceda a nuestra pagina web. ->" + "<a href='" + reference + "'> Quiero Un Diez</a>";
+
+                Utility.SendEmail(emailTo, subject, body);
+            }
+            return RedirectToAction("Index", "UserAccounts", new { successMessage = "La cuenta del usuario ha sido " + habDes + " correctamente" });
         }
 
         private bool UserAccountExists(int id)

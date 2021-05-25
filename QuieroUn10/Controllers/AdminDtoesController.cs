@@ -39,13 +39,13 @@ namespace QuieroUn10.Controllers
             var id = Convert.ToInt32(HttpContext.Session.GetString("user"));
             if (id == 0)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             var admin = _context.Admin.Include(r => r.UserAccount).Where(r => r.UserAccountId == id).FirstOrDefault();
             if (admin == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             AdminDto adminDto = new AdminDto();
@@ -123,13 +123,13 @@ namespace QuieroUn10.Controllers
 
             if (id == 0)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
             var admin = _context.Admin.Include(r => r.UserAccount).Where(r => r.UserAccountId == id).FirstOrDefault();
 
             if (admin == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             AdminDto adminDto = new AdminDto();
@@ -155,7 +155,7 @@ namespace QuieroUn10.Controllers
         {
             if (id != adminDto.ID)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             if (ModelState.IsValid)
@@ -165,7 +165,7 @@ namespace QuieroUn10.Controllers
                 var userAccount = _context.UserAccount.Where(u => u.ID == userAccountId).FirstOrDefault();
                 if (nombreUser == null || userAccount == null)
                 {
-                    return NotFound();
+                    return  RedirectToAction("NotFound","Methods");
                 }
                 else
                 {
@@ -201,7 +201,7 @@ namespace QuieroUn10.Controllers
                     {
                         if (!AdminDtoExists(adminDto.ID))
                         {
-                            return NotFound();
+                            return  RedirectToAction("NotFound","Methods");
                         }
                         else
                         {

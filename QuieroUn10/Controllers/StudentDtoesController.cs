@@ -34,13 +34,13 @@ namespace QuieroUn10.Controllers
 
             if (id == 0)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
             var student = _context.Student.Include(r => r.UserAccount).Where(r => r.UserAccountId == id).FirstOrDefault();
 
             if (student == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
             StudentDto studentDto = new StudentDto();
             studentDto.Birthdate = student.Birthdate;
@@ -138,12 +138,12 @@ namespace QuieroUn10.Controllers
             var id = Convert.ToInt32(HttpContext.Session.GetString("user"));
             if (id == 0)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
             var student = _context.Student.Include(r => r.UserAccount).Where(r => r.UserAccountId == id).FirstOrDefault();
             if (student == null)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             StudentDto studentDto = new StudentDto();
@@ -161,7 +161,22 @@ namespace QuieroUn10.Controllers
             return View(studentDto);
         }
 
+        [ServiceFilter(typeof(SecurityStudent))]
+        public async Task<IActionResult> DeshabilitarCuenta()
+        {
+            //No hago ninguna comprobación porque la cuenta que se desactiva es la cuenta que está iniciada sesión
+            var userAccountId = Convert.ToInt32(HttpContext.Session.GetString("user"));
+            var userAccount = _context.UserAccount.Where(u => u.ID == userAccountId).FirstOrDefault();
+            Student student = _context.Student.Include(s => s.UserAccount).Where(s => s.UserAccountId == userAccountId).FirstOrDefault();
+            student.UserAccount.Active = false;
+            _context.Update(student);
+            await _context.SaveChangesAsync();
+            Utility.SendEmail(userAccount.Email, "Se ha desactivado su cuenta", "Hemos desactivado su cuenta ya que usted nos lo ha indicado, si desea volver a abrirla, solo debe ponerse en contacto con nosotros. Gracias y espero que haya disfrutado de la aplicación.");
 
+
+            HttpContext.Session.Remove("user");
+            return RedirectToAction("Index","Login", new { successMessage = "Se ha desactivado su cuenta correctamente. Le echaremos de menos." });
+        }
 
         // POST: StudentDtoes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
@@ -172,7 +187,7 @@ namespace QuieroUn10.Controllers
         {
             if (id != studentDto.ID)
             {
-                return NotFound();
+                return  RedirectToAction("NotFound","Methods");
             }
 
             if (ModelState.IsValid)
@@ -182,7 +197,7 @@ namespace QuieroUn10.Controllers
                 var userAccount = _context.UserAccount.Where(u => u.ID == userAccountId).FirstOrDefault();
                 if (nombreUser == null || userAccount == null)
                 {
-                    return NotFound();
+                    return  RedirectToAction("NotFound","Methods");
                 }
                 else
                 {
@@ -218,7 +233,7 @@ namespace QuieroUn10.Controllers
                     {
                         if (!StudentDtoExists(studentDto.ID))
                         {
-                            return NotFound();
+                            return  RedirectToAction("NotFound","Methods");
                         }
                         else
                         {
