@@ -238,7 +238,7 @@ namespace QuieroUn10.Controllers
 
                 //Enviar el email con el token
                 string emailTo = usuario.Email;
-                string reference = "https://localhost:44349/Login/";
+                string reference = "https://quieroundiez.alejandrocruz.es/Login/";
 
 
                 string subject = "Cuenta " + habDes;

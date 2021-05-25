@@ -157,7 +157,7 @@ namespace QuieroUn10.Controllers
 
             //Enviar el email con el token
             string emailTo = GetEmailByUserID(UserAccountID);
-            string reference = "https://localhost:44333/Login/ResetPassword?email=" + emailTo + "&token=" + token.Token;
+            string reference = "https://quieroundiez.alejandrocruz.es/Login/ResetPassword?email=" + emailTo + "&token=" + token.Token;
 
             if (emailTo.Equals(""))
             {

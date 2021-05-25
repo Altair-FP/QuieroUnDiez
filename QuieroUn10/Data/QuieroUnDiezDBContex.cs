@@ -51,7 +51,7 @@ namespace QuieroUn10.Data
 
             IConfiguration configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
 
-            optionsBuilder.UseMySql(configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging();
+            optionsBuilder.UseMySql(configuration.GetConnectionString("DefaultConnection"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -162,7 +162,7 @@ namespace QuieroUn10.Data
                    ID = 9,
                    Controller = "CalendarTasks",
                    Action = "Index",
-                   Label = "Calendar Tasks"
+                   Label = "Calendario de tareas"
                },
                new Menu
                {
@@ -176,14 +176,14 @@ namespace QuieroUn10.Data
                    ID = 11,
                    Controller = "StudentHasSubjects",
                    Action = "Index",
-                   Label = "Subjects"
+                   Label = "Asignaturas"
                },
                new Menu
                {
                    ID = 12,
                    Controller = "Tasks",
                    Action = "AllIndex",
-                   Label = "Tasks"
+                   Label = "Tareas"
                },
                new Menu
                {
@@ -197,7 +197,7 @@ namespace QuieroUn10.Data
                    ID = 14,
                    Controller = "StudentDtoes",
                    Action = "Details",
-                   Label = "Profile"
+                   Label = "Perfil"
                },
                new Menu
                {

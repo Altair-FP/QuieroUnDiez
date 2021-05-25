@@ -317,7 +317,7 @@ namespace QuieroUn10.Migrations
                     { 15, "Index", "Methods", "Método Pomodoro" },
                     { 14, "Details", "StudentDtoes", "Profile" },
                     { 13, "Details", "AdminDtoes", "Profile" },
-                    { 12, "Index", "Tasks", "Tasks" },
+                    { 12, "AllIndex", "Tasks", "Tasks" },
                     { 11, "Index", "StudentHasSubjects", "Subjects" },
                     { 9, "Index", "CalendarTasks", "Calendar Tasks" },
                     { 10, "Index", "Docs", "Documents" },

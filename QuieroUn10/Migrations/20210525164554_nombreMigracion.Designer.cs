@@ -9,7 +9,7 @@ using QuieroUn10.Data;
 namespace QuieroUn10.Migrations
 {
     [DbContext(typeof(QuieroUnDiezDBContex))]
-    [Migration("20210524210832_nombreMigracion")]
+    [Migration("20210525164554_nombreMigracion")]
     partial class nombreMigracion
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -220,7 +220,7 @@ namespace QuieroUn10.Migrations
                         new
                         {
                             ID = 12,
-                            Action = "Index",
+                            Action = "AllIndex",
                             Controller = "Tasks",
                             Label = "Tasks"
                         },
