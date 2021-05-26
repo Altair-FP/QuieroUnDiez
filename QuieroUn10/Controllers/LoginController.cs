@@ -35,7 +35,7 @@ namespace QuieroUn10.Controllers
         }
 
 
-        public IActionResult Login(String username, String password)
+        public IActionResult Login(String username, String password, bool checking)
         {
 
             if (String.IsNullOrEmpty(username) || String.IsNullOrEmpty(password))

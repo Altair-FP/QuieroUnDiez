@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Asignaturas";
+    Layout = null;
 }
 
 @if (ViewBag.errorMessage != null)
@@ -17,58 +18,80 @@
     </div>
 }
 
-<h1 class="text-center">Listado de todas las asignaturas</h1>
+<html xmlns="http://www.w3.org/1999/xhtml">
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Course)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Acronym)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Formal_Subject)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Student_Create)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Course)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Acronym)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Formal_Subject)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Student_Create)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.ID"><i class="fas fa-edit text-primary" title="Editar "></i></a> |
-                    <a asp-action="Details" asp-route-id="@item.ID"><i class="fas fa-info-circle text-success" title="Detalles"></i></a> |
-                    <a asp-action="Delete" asp-route-id="@item.ID"><i class="fas fa-trash-alt text-danger" title="Eliminar"></i></a>
-                    @if (item.Student_Create && !item.Formal_Subject)
-                    {
-                        <a asp-action="HabDesH" asp-route-id="@item.ID"><i class="far fa-bookmark text-warning" title="Habilitar"></i></a>
-                    }
-                </td>
-            </tr>
+<head>
+    <title>Index1</title>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/site.css" />
+    <style type="text/css">
+        table {
+            width: 100%;
         }
-    </tbody>
-</table>
+
+        td {
+            text-align: left;
+            border-bottom: 1px solid #808080;
+        }
+        th {
+            text-align: center;
+            border-bottom: 1px solid black;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="text-center">Listado de todas las asignaturas</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Course)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Acronym)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Formal_Subject)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Student_Create)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Course)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Acronym)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Formal_Subject)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Student_Create)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+

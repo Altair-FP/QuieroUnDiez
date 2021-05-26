@@ -135,8 +135,12 @@ namespace QuieroUn10.Controllers
                 predicate = predicate.And(i => i.Course == formSubjectDto.Course.ToString());
             }
 
-            return new ViewAsPdf("Index1", _context.Subject.Where(predicate).ToList());
+            return new ViewAsPdf("Index1", _context.Subject.Where(predicate).ToList())
             {
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+                PageOrientation =Rotativa.AspNetCore.Options.Orientation.Portrait,
+                PageMargins = { Left = 20, Right = 20}
+                
                 // ...
             };
         }

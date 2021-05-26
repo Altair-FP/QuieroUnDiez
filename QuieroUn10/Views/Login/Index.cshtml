@@ -49,7 +49,7 @@
                         <div class="col-md-8">
                             <div class="mb-4">
                                 <h3>Sign In</h3>
-                                <p class="mb-4">Lorem ipsum dolor sit amet elit. Sapiente sit aut eos consectetur adipisicing.</p>
+                                <p class="mb-4">Bienvenido a Quiero Un Diez, aquí podrás crear tu propio calendario de tareas y se creará automaticamente, recibir notificaciones y mucho más.</p>
                             </div>
                             <form method="post" asp-action="Login">
                                 <div class="form-group first">
@@ -59,13 +59,12 @@
                                 <div class="form-group last mb-4">
                                     <label for="password">Contraseña</label>
                                     <input type="password" class="form-control" id="password" name="password">
-
                                 </div>
 
                                 <div class="d-flex mb-2 align-items-center">
-                                    <label class="control control--checkbox mb-0">
+                                    <label for="checking" class="control control--checkbox mb-0" >
                                         <span class="caption">Recuérdame</span>
-                                        <input type="checkbox" checked="checked" />
+                                        <input type="checkbox" id="checking" name="checking"  >
                                         <div class="control__indicator"></div>
                                     </label>
                                     <span class="ml-auto"><a class="forgot-pass" asp-controller="Login" asp-action="RememberPassword">¿Has olvidado tu contraseña?</a></span>
@@ -77,19 +76,19 @@
 
                                 <input type="submit" value="Login" class="btn btn-block btn-primary">
 
-                                <span class="d-block text-left my-4 text-muted">&mdash; or login with &mdash;</span>
+                                <!-- <span class="d-block text-left my-4 text-muted">&mdash; or login with &mdash;</span>
 
-                                <div class="social-login">
-                                    <a href="#" class="facebook">
-                                        <span class="icon-facebook mr-3"></span>
-                                    </a>
-                                    <a href="#" class="twitter">
-                                        <span class="icon-twitter mr-3"></span>
-                                    </a>
-                                    <a href="#" class="google">
-                                        <span class="icon-google mr-3"></span>
-                                    </a>
-                                </div>
+     <div class="social-login">
+         <a href="#" class="facebook">
+             <span class="icon-facebook mr-3"></span>
+         </a>
+         <a href="#" class="twitter">
+             <span class="icon-twitter mr-3"></span>
+         </a>
+         <a href="#" class="google">
+             <span class="icon-google mr-3"></span>
+         </a>
+     </div>-->
                             </form>
                         </div>
                     </div>
@@ -100,11 +99,20 @@
         </div>
     </div>
 
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/main.js"></script>
+    <script>
+        var checkbox = document.getElementById('checking');
+        checkbox.addEventListener("change", validaCheckbox, false);
+        function validaCheckbox() {
+            var checked = checkbox.checked;
+            if (checked) {
+                checkbox.value = true;
+            }
+        }
+    </script>
 </body>
 
 
