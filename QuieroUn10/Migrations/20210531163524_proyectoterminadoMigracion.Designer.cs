@@ -9,14 +9,14 @@ using QuieroUn10.Data;
 namespace QuieroUn10.Migrations
 {
     [DbContext(typeof(QuieroUnDiezDBContex))]
-    [Migration("20210525164554_nombreMigracion")]
-    partial class nombreMigracion
+    [Migration("20210531163524_proyectoterminadoMigracion")]
+    partial class proyectoterminadoMigracion
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.13")
+                .HasAnnotation("ProductVersion", "3.1.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("QuieroUn10.Models.Admin", b =>
@@ -165,7 +165,7 @@ namespace QuieroUn10.Migrations
                         {
                             ID = 4,
                             Action = "Index",
-                            Controller = "AdminDtoes",
+                            Controller = "Admins",
                             Label = "Admins"
                         },
                         new
@@ -201,7 +201,7 @@ namespace QuieroUn10.Migrations
                             ID = 9,
                             Action = "Index",
                             Controller = "CalendarTasks",
-                            Label = "Calendar Tasks"
+                            Label = "Calendario de tareas"
                         },
                         new
                         {
@@ -215,14 +215,14 @@ namespace QuieroUn10.Migrations
                             ID = 11,
                             Action = "Index",
                             Controller = "StudentHasSubjects",
-                            Label = "Subjects"
+                            Label = "Asignaturas"
                         },
                         new
                         {
                             ID = 12,
                             Action = "AllIndex",
                             Controller = "Tasks",
-                            Label = "Tasks"
+                            Label = "Tareas"
                         },
                         new
                         {
@@ -236,7 +236,7 @@ namespace QuieroUn10.Migrations
                             ID = 14,
                             Action = "Details",
                             Controller = "StudentDtoes",
-                            Label = "Profile"
+                            Label = "Perfil"
                         },
                         new
                         {
@@ -368,6 +368,12 @@ namespace QuieroUn10.Migrations
                         },
                         new
                         {
+                            ID = 10,
+                            MenuId = 13,
+                            RoleId = 1
+                        },
+                        new
+                        {
                             ID = 13,
                             MenuId = 11,
                             RoleId = 2
@@ -439,9 +445,9 @@ namespace QuieroUn10.Migrations
                             ID = 1,
                             Activate = false,
                             Birthdate = new DateTime(1999, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Alejandro",
-                            Phone = "620730065",
-                            Surname = "Cruz",
+                            Name = "Student 1",
+                            Phone = "666444555",
+                            Surname = "Student 1",
                             UserAccountId = 3
                         },
                         new
@@ -449,9 +455,9 @@ namespace QuieroUn10.Migrations
                             ID = 2,
                             Activate = false,
                             Birthdate = new DateTime(1999, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Admin 2",
+                            Name = "Student 2",
                             Phone = "666444555",
-                            Surname = "Admin",
+                            Surname = "Student 2",
                             UserAccountId = 4
                         });
                 });
@@ -969,7 +975,7 @@ namespace QuieroUn10.Migrations
                             ID = 1,
                             Active = true,
                             Email = "admin1@gmail.com",
-                            Password = "YQBkAG0AaQBuADEA",
+                            Password = "QQBsAHQAYQBpAHIAMQAyADMAJAAlAA==",
                             RoleId = 1,
                             Username = "admin1"
                         },
@@ -978,7 +984,7 @@ namespace QuieroUn10.Migrations
                             ID = 2,
                             Active = false,
                             Email = "admin2@gmail.com",
-                            Password = "YQBkAG0AaQBuADIA",
+                            Password = "QQBsAHQAYQBpAHIAMQAyADMAJAAlAA==",
                             RoleId = 1,
                             Username = "admin2"
                         },
@@ -987,7 +993,7 @@ namespace QuieroUn10.Migrations
                             ID = 3,
                             Active = true,
                             Email = "student1@gmail.com",
-                            Password = "cwB0AHUAZABlAG4AdAAxAA==",
+                            Password = "QQBsAHQAYQBpAHIAMQAyADMAJAAlAA==",
                             RoleId = 2,
                             Username = "student1"
                         },
@@ -996,7 +1002,7 @@ namespace QuieroUn10.Migrations
                             ID = 4,
                             Active = false,
                             Email = "student2@gmail.com",
-                            Password = "cwB0AHUAZABlAG4AdAAyAA==",
+                            Password = "QQBsAHQAYQBpAHIAMQAyADMAJAAlAA==",
                             RoleId = 2,
                             Username = "student2"
                         });

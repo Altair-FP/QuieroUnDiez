@@ -193,6 +193,7 @@ namespace QuieroUn10.Controllers
             {
 
                 //Creamos un studyHasSubject con cualquier asignatura del estudiante
+                
                 StudyHasSubject studyHasSubject = new StudyHasSubject();
                 studyHasSubject.SubjectId = id;
                 studyHasSubject.StudyId = studyHasSubjects.StudyId;
@@ -202,7 +203,7 @@ namespace QuieroUn10.Controllers
                 subject.Formal_Subject = true;
                 _context.Update(subject);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { successMessage = "Se ha habilitado la asignatura. Ya pertenece a un plan de estudio." });
             }
             else
             {

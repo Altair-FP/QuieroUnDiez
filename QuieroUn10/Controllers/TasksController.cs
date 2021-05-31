@@ -32,7 +32,7 @@ namespace QuieroUn10.Controllers
         {
             var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
             var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
-            StudentHasSubject studentHasSubject = _context.StudentHasSubject.Include(s => s.Student).Include(s=>s.Subject).Where(s => s.Student.UserAccountId == usuario.ID).FirstOrDefault();
+            StudentHasSubject studentHasSubject = _context.StudentHasSubject.Include(s => s.Student).Include(s=>s.Subject).Where(s => s.Student.UserAccountId == usuario.ID && s.SubjectId == eli).FirstOrDefault();
             ViewBag.eli = id;
             ViewBag.eli2 = eli;
             ViewBag.nombreAsig = studentHasSubject.Subject.Name;
@@ -61,7 +61,7 @@ namespace QuieroUn10.Controllers
             var idC = Convert.ToInt32(HttpContext.Session.GetString("user"));
             var usuario = _context.UserAccount.Include(r => r.Role).Where(r => r.ID == idC).FirstOrDefault();
             // return View(await _context.Customers.ToListAsync());
-            return new ViewAsPdf("Index", await _context.Task.Include(t => t.StudentHasSubject).ThenInclude(s => s.Student).Where(t => t.StudentHasSubject.Student.UserAccountId == usuario.ID && t.StudentHasSubject.SubjectId == eli).ToListAsync())
+            return new ViewAsPdf("IndexPDF", await _context.Task.Include(t => t.StudentHasSubject).ThenInclude(s => s.Student).Where(t => t.StudentHasSubject.Student.UserAccountId == usuario.ID && t.StudentHasSubject.SubjectId == eli).ToListAsync())
             {
                 // ...
             };

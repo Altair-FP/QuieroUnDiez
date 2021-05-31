@@ -60,6 +60,8 @@ namespace QuieroUn10.Controllers
                 }
                 else
                 {
+
+
                     HttpContext.Session.SetString("user", user.First().ID.ToString());
                     //HttpContext.Session.GetString("user");
                     Utility.Menus = _context.RoleHasMenu.Include(r => r.Menu)

@@ -42,7 +42,7 @@ namespace QuieroUn10
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
-
+            
             services.AddDbContext<QuieroUnDiezDBContex>(options => options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
         }
 
@@ -56,10 +56,11 @@ namespace QuieroUn10
             }
             else
             {
-                Rotativa.AspNetCore.RotativaConfiguration.Setup((Microsoft.AspNetCore.Hosting.IHostingEnvironment)env, "/usr/bin");
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
+                Rotativa.AspNetCore.RotativaConfiguration.Setup((Microsoft.AspNetCore.Hosting.IHostingEnvironment)env, "/usr/bin");
+
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -70,10 +71,11 @@ namespace QuieroUn10
             app.UseSession();
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<ChatHub>("/chatHub");
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Login}/{action=Index}/{id?}/{eli?}");
-                endpoints.MapHub<ChatHub>("/chatHub");
             });
 
             //Rotativa.AspNetCore.RotativaConfiguration.Setup((Microsoft.AspNetCore.Hosting.IHostingEnvironment)env, "..\\Rotativa\\bin\\");

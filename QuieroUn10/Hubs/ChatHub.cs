@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace QuieroUn10.Hubs
 {
+
     public class ChatHub : Hub
     {
         public async Task SendMessage(int id, string user, string message)

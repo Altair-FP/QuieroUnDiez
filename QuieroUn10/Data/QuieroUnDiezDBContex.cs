@@ -125,7 +125,7 @@ namespace QuieroUn10.Data
                new Menu
                {
                    ID = 4,
-                   Controller = "AdminDtoes",
+                   Controller = "Admins",
                    Action = "Index",
                    Label = "Admins"
                },
@@ -271,6 +271,12 @@ namespace QuieroUn10.Data
                      RoleId = 1,
                      MenuId = 16
                  },
+                 new RoleHasMenu
+                 {
+                     ID = 10,
+                     RoleId = 1,
+                     MenuId = 13
+                 },
 
                 //Menu Student
                 new RoleHasMenu
@@ -310,7 +316,7 @@ namespace QuieroUn10.Data
                 {
                     ID = 1,
                     Username = "admin1",
-                    Password = Utility.Encriptar("admin1"),
+                    Password = Utility.Encriptar("Altair123$%"),
                     RoleId = 1,
                     Email = "admin1@gmail.com",
                     Active = true
@@ -319,7 +325,7 @@ namespace QuieroUn10.Data
                 {
                     ID = 2,
                     Username = "admin2",
-                    Password = Utility.Encriptar("admin2"),
+                    Password = Utility.Encriptar("Altair123$%"),
                     RoleId = 1,
                     Email = "admin2@gmail.com",
                     Active = false
@@ -328,7 +334,7 @@ namespace QuieroUn10.Data
                  {
                      ID = 3,
                      Username = "student1",
-                     Password = Utility.Encriptar("student1"),
+                     Password = Utility.Encriptar("Altair123$%"),
                      RoleId = 2,
                      Email = "student1@gmail.com",
                      Active = true
@@ -337,7 +343,7 @@ namespace QuieroUn10.Data
                  {
                      ID = 4,
                      Username = "student2",
-                     Password = Utility.Encriptar("student2"),
+                     Password = Utility.Encriptar("Altair123$%"),
                      RoleId = 2,
                      Email = "student2@gmail.com",
                      Active = false
@@ -371,10 +377,10 @@ namespace QuieroUn10.Data
                     ID =1,
                     Birthdate = new DateTime(1999,01,14),
                     CalendarTasks = new List<CalendarTask>(),
-                    Name = "Alejandro",
-                    Phone = "620730065",
+                    Name = "Student 1",
+                    Phone = "666444555",
                     StudentHasSubjects = new List<StudentHasSubject>(),
-                    Surname = "Cruz",
+                    Surname = "Student 1",
                     UserAccountId = 3,
                     Activate = false
                 },
@@ -383,10 +389,10 @@ namespace QuieroUn10.Data
                      ID = 2,
                      Birthdate = new DateTime(1999, 01, 14),
                      CalendarTasks = new List<CalendarTask>(),
-                     Name = "Admin 2",
+                     Name = "Student 2",
                      Phone = "666444555",
                      StudentHasSubjects = new List<StudentHasSubject>(),
-                     Surname = "Admin",
+                     Surname = "Student 2",
                      UserAccountId = 4,
                      Activate = false
                  }

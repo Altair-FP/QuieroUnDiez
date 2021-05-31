@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace QuieroUn10.Migrations
 {
-    public partial class nombreMigracion : Migration
+    public partial class proyectoterminadoMigracion : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -315,16 +315,16 @@ namespace QuieroUn10.Migrations
                     { 1, "Index", "UserAccounts", "User Accounts" },
                     { 16, "IndexAdmin", "StudentHasSubjects", "Student Subject" },
                     { 15, "Index", "Methods", "Método Pomodoro" },
-                    { 14, "Details", "StudentDtoes", "Profile" },
+                    { 14, "Details", "StudentDtoes", "Perfil" },
                     { 13, "Details", "AdminDtoes", "Profile" },
-                    { 12, "AllIndex", "Tasks", "Tasks" },
-                    { 11, "Index", "StudentHasSubjects", "Subjects" },
-                    { 9, "Index", "CalendarTasks", "Calendar Tasks" },
+                    { 12, "AllIndex", "Tasks", "Tareas" },
+                    { 11, "Index", "StudentHasSubjects", "Asignaturas" },
+                    { 9, "Index", "CalendarTasks", "Calendario de tareas" },
                     { 10, "Index", "Docs", "Documents" },
                     { 7, "Index", "Subjects", "Subjects" },
                     { 6, "Index", "Studies", "Studies" },
                     { 5, "Index", "Menus", "Menus" },
-                    { 4, "Index", "AdminDtoes", "Admins" },
+                    { 4, "Index", "Admins", "Admins" },
                     { 3, "Index", "Students", "Students" },
                     { 2, "Index", "Roles", "Roles" },
                     { 8, "Index", "StudyHasSubjects", "Study Has Subjects" }
@@ -382,17 +382,18 @@ namespace QuieroUn10.Migrations
                     { 1, 1, 1 },
                     { 17, 15, 2 },
                     { 16, 14, 2 },
-                    { 14, 12, 2 },
-                    { 13, 11, 2 },
-                    { 9, 16, 1 },
-                    { 8, 8, 1 },
                     { 15, 9, 2 },
+                    { 13, 11, 2 },
+                    { 10, 13, 1 },
+                    { 9, 16, 1 },
+                    { 14, 12, 2 },
+                    { 7, 7, 1 },
                     { 6, 6, 1 },
                     { 5, 5, 1 },
                     { 4, 4, 1 },
                     { 3, 3, 1 },
                     { 2, 2, 1 },
-                    { 7, 7, 1 }
+                    { 8, 8, 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -405,22 +406,22 @@ namespace QuieroUn10.Migrations
                     { 9, 1, 9 },
                     { 10, 1, 10 },
                     { 11, 1, 11 },
-                    { 19, 2, 13 },
-                    { 12, 1, 12 },
                     { 20, 2, 14 },
+                    { 12, 1, 12 },
+                    { 19, 2, 13 },
                     { 18, 2, 6 },
                     { 21, 2, 15 },
                     { 22, 2, 16 },
                     { 23, 2, 11 },
                     { 6, 1, 6 },
-                    { 14, 2, 2 },
+                    { 2, 1, 2 },
                     { 5, 1, 5 },
                     { 16, 2, 4 },
                     { 4, 1, 4 },
                     { 15, 2, 3 },
                     { 3, 1, 3 },
+                    { 14, 2, 2 },
                     { 24, 2, 17 },
-                    { 2, 1, 2 },
                     { 13, 2, 1 },
                     { 1, 1, 1 },
                     { 17, 2, 5 },
@@ -432,10 +433,10 @@ namespace QuieroUn10.Migrations
                 columns: new[] { "ID", "Active", "Email", "Password", "RoleId", "Username" },
                 values: new object[,]
                 {
-                    { 4, false, "student2@gmail.com", "cwB0AHUAZABlAG4AdAAyAA==", 2, "student2" },
-                    { 3, true, "student1@gmail.com", "cwB0AHUAZABlAG4AdAAxAA==", 2, "student1" },
-                    { 2, false, "admin2@gmail.com", "YQBkAG0AaQBuADIA", 1, "admin2" },
-                    { 1, true, "admin1@gmail.com", "YQBkAG0AaQBuADEA", 1, "admin1" }
+                    { 4, false, "student2@gmail.com", "QQBsAHQAYQBpAHIAMQAyADMAJAAlAA==", 2, "student2" },
+                    { 3, true, "student1@gmail.com", "QQBsAHQAYQBpAHIAMQAyADMAJAAlAA==", 2, "student1" },
+                    { 2, false, "admin2@gmail.com", "QQBsAHQAYQBpAHIAMQAyADMAJAAlAA==", 1, "admin2" },
+                    { 1, true, "admin1@gmail.com", "QQBsAHQAYQBpAHIAMQAyADMAJAAlAA==", 1, "admin1" }
                 });
 
             migrationBuilder.InsertData(
@@ -452,8 +453,8 @@ namespace QuieroUn10.Migrations
                 columns: new[] { "ID", "Activate", "Birthdate", "Name", "Phone", "Surname", "UserAccountId" },
                 values: new object[,]
                 {
-                    { 1, false, new DateTime(1999, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified), "Alejandro", "620730065", "Cruz", 3 },
-                    { 2, false, new DateTime(1999, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified), "Admin 2", "666444555", "Admin", 4 }
+                    { 1, false, new DateTime(1999, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified), "Student 1", "666444555", "Student 1", 3 },
+                    { 2, false, new DateTime(1999, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified), "Student 2", "666444555", "Student 2", 4 }
                 });
 
             migrationBuilder.CreateIndex(

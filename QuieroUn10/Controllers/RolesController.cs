@@ -101,7 +101,12 @@ namespace QuieroUn10.Controllers
             {
                 try
                 {
-                    _context.Update(role);
+                    Role role1 = _context.Role.Where(s => s.ID == id).FirstOrDefault();
+                    role1.Name = role.Name;
+                    role1.Description = role.Description;
+                    role1.Enabled = role.Enabled;
+
+                    _context.Update(role1);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
